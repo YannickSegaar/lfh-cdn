@@ -218,11 +218,11 @@
       type: 'text',
       payload: { message: 'Curious about heliskiing in Northern BC?' }
     });
-  }, 3000);
+  }, 1000);
   setTimeout(function() {
     window.voiceflow.chat.proactive.push({
       type: 'text',
-      payload: { message: 'I can help you plan your adventure!' }
+      payload: { message: 'I can show you around!' }
     });
   }, 3000);
   setTimeout(function() {

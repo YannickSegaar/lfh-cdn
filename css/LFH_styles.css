@@ -1,225 +1,118 @@
-/**
- * Last Frontier Heliskiing - Voiceflow Custom Theme
- *
- * This stylesheet customizes the Voiceflow chat widget to match
- * the Last Frontier brand identity.
- *
- * Reference: https://github.com/voiceflow/react-chat
- * Docs: https://docs.voiceflow.com/docs/advanced-styling
- */
+/* ===========================================
+   Last Frontier Voiceflow Styles
+   =========================================== */
 
-/* ==========================================================================
-   Font Imports
-   ========================================================================== */
+/* Header title - 15px font size, no truncation */
+.vfrc-header--title,
+[class*="vfrc-header"] [class*="title"] {
+  font-family: 'Nexa Rust Sans Black 2', sans-serif !important;
 
-@font-face {
-  font-family: 'Nexa Rust Sans Black';
-  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+  /* Prevent truncation */
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+
+  /* Header title font size */
+  font-size: 15px !important;
+  line-height: 1.3 !important;
+
+  /* Word wrapping for long text */
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
-@font-face {
-  font-family: 'Nexa Rust Sans Black 2';
-  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+/* Assistant info title - 20px font size, no truncation */
+.vfrc-assistant-info--title,
+[class*="assistant-info"] [class*="title"] {
+  font-family: 'Nexa Rust Sans Black 2', sans-serif !important;
+
+  /* Prevent truncation */
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+
+  /* Assistant info title font size */
+  font-size: 20px !important;
+  line-height: 1.3 !important;
+
+  /* Word wrapping for long text */
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
-/* ==========================================================================
-   CSS Variables (Design Tokens)
-   ========================================================================== */
-
-:root {
-  /* Brand Colors - Official Last Frontier palette */
-  --lf-red: #cc3333;           /* Pantone 485 */
-  --lf-red-hover: #b32d2d;     /* Darker shade for hover states */
-  --lf-black: #000000;
-  --lf-white: #FFFFFF;
-  --lf-light-gray: #F5F5F5;
-  --lf-medium-gray: #E0E0E0;
-  --lf-dark-gray: #333333;
-  --lf-text: #333333;
-
-  /* Typography */
-  --lf-font-headline: 'Nexa Rust Sans Black 2', 'Arial Black', sans-serif;
-  --lf-font-body: 'Nexa Rust Sans Black', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  /* Spacing */
-  --lf-radius-sm: 4px;
-  --lf-radius-md: 8px;
-  --lf-radius-lg: 12px;
+/* Apply Nexa Rust Sans Black 2 to launcher widget text */
+.vfrc-launcher,
+.vfrc-launcher * {
+  font-family: 'Nexa Rust Sans Black 2', sans-serif !important;
 }
 
-/* ==========================================================================
-   Chat Container
-   ========================================================================== */
+/* Apply Nexa Rust Sans Black 2 to "Start new chat" button */
+.vfrc-prompt button,
+.vfrc-prompt-button,
+[class*="prompt"] button,
+[class*="start-new"] button,
+.vfrc-footer__start-button,
+.vfrc-confirm button,
+.vfrc-confirmation button,
+[class*="confirmation"] button:first-child,
+.vfrc-widget button[class*="primary"],
+.vfrc-modal button[class*="primary"] {
+  font-family: 'Nexa Rust Sans Black 2', sans-serif !important;
+}
 
+/* Background image on main chat container ONLY */
 .vfrc-chat {
-  font-family: var(--lf-font-body);
+  background-image: url('https://yannicksegaar.github.io/lfh-cdn/images/LFH_chatinterface_background_map.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
 }
 
-/* ==========================================================================
-   Header & Title
-   ========================================================================== */
-
-.vfrc-header,
-.vfrc-assistant-info--title {
-  font-family: var(--lf-font-headline) !important;
-  background-color: var(--lf-white);
+/* Reset background for all inner elements */
+.vfrc-chat * {
+  background-image: none;
 }
 
-.vfrc-header-title {
-  font-family: var(--lf-font-headline);
-  font-size: 18px;
-  color: var(--lf-dark-gray);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* Rugged edge pattern on header bottom */
+.vfrc-header {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1 !important;
 }
 
-/* ==========================================================================
-   Messages
-   ========================================================================== */
-
-/* Assistant/System messages */
-.vfrc-message--assistant {
-  background-color: var(--lf-light-gray);
-  color: var(--lf-text);
-  border-radius: var(--lf-radius-md);
+.vfrc-header::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: -18px !important;
+  height: 20px !important;
+  background-image: url('https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/top-section-pattern.png') !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+  transform: scaleY(-1) !important;
 }
 
-.vfrc-system-response .vfrc-message {
-  font-family: var(--lf-font-body) !important;
+/* Transparent footer */
+.vfrc-footer,
+[class*="vfrc-footer"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
-/* User messages */
-.vfrc-message--user {
-  background-color: var(--lf-red);
-  color: var(--lf-white);
-  border-radius: var(--lf-radius-md);
+/* Fix send button area - ensure clean background */
+.vfrc-footer button,
+.vfrc-footer [class*="button"],
+[class*="vfrc-footer"] button,
+[class*="vfrc-footer"] [class*="button"] {
+  background-image: none !important;
 }
 
-.vfrc-user-response .vfrc-message {
-  font-family: var(--lf-font-body) !important;
-}
-
-/* ==========================================================================
-   Buttons & CTAs
-   ========================================================================== */
-
-.vfrc-button {
-  background-color: var(--lf-red);
-  color: var(--lf-white);
-  border: none;
-  border-radius: var(--lf-radius-sm);
-  font-family: var(--lf-font-body) !important;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: background-color 0.2s ease;
-}
-
-.vfrc-button:hover {
-  background-color: var(--lf-red-hover);
-}
-
-/* ==========================================================================
-   Input Area
-   ========================================================================== */
-
-.vfrc-input,
-.vfrc-input::placeholder {
-  font-family: var(--lf-font-body) !important;
-  border: 1px solid var(--lf-medium-gray);
-  border-radius: var(--lf-radius-md);
-}
-
-.vfrc-input:focus {
-  border-color: var(--lf-red);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(204, 51, 51, 0.2);
-}
-
-/* ==========================================================================
-   Avatar
-   ========================================================================== */
-
-.vfrc-avatar {
-  border-radius: 50%;
-  border: 2px solid var(--lf-red);
-}
-
-/* ==========================================================================
-   Launcher Button (if using widget mode)
-   ========================================================================== */
-
-.vfrc-launcher {
-  background-color: var(--lf-red);
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.vfrc-launcher:hover {
-  background-color: var(--lf-red-hover);
-  transform: scale(1.05);
-}
-
-/* ==========================================================================
-   Cards & Carousels
-   ========================================================================== */
-
-.vfrc-card {
-  border-radius: var(--lf-radius-md);
-  border: 1px solid var(--lf-medium-gray);
-  overflow: hidden;
-}
-
-.vfrc-card-title {
-  font-family: var(--lf-font-headline);
-  font-size: 16px;
-  color: var(--lf-dark-gray);
-}
-
-/* ==========================================================================
-   Scrollbar Styling
-   ========================================================================== */
-
-.vfrc-chat::-webkit-scrollbar {
-  width: 6px;
-}
-
-.vfrc-chat::-webkit-scrollbar-track {
-  background: var(--lf-light-gray);
-}
-
-.vfrc-chat::-webkit-scrollbar-thumb {
-  background: var(--lf-medium-gray);
-  border-radius: 3px;
-}
-
-.vfrc-chat::-webkit-scrollbar-thumb:hover {
-  background: var(--lf-dark-gray);
-}
-
-/* ==========================================================================
-   Proactive Messages
-   ========================================================================== */
-
-.vfrc-proactive {
-  font-size: 14px !important;
-  font-weight: normal !important;
-}
-
+/* Notification-style proactive messages (red pill badges) */
 .vfrc-proactive__card {
-  background-color: #FFFFFF !important;
-  border-radius: 12px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Notification-style proactive message bubble */
-.vfrc-proactive-message {
   background-color: #e62b1e !important;
   color: #FFFFFF !important;
   font-weight: 600 !important;
@@ -227,4 +120,44 @@
   border-radius: 20px !important;
   padding: 8px 16px !important;
   box-shadow: 0 2px 8px rgba(230, 43, 30, 0.3) !important;
+}
+
+/* White close button to match red background */
+.vfrc-proactive__close-button {
+  color: #FFFFFF !important;
+  background-color: rgba(230, 43, 30, 0.8) !important;
+  border-radius: 50% !important;
+}
+
+/* Hide default three-dot typing indicator (replaced by WaitingAnimation extension) */
+.vfrc-system-response--indicator {
+  display: none !important;
+}
+
+/* Strip padding from all extension message wrappers */
+[class^="vfrc-message--extension-"],
+[class*=" vfrc-message--extension-"] {
+  padding: 0px !important;
+}
+
+/* Hide avatar next to extension messages (spinner replaces it) */
+.vfrc-system-response .vfrc-avatar {
+  display: none;
+}
+
+/* Hide timestamps on extension messages */
+.vfrc-timestamp {
+  display: none;
+}
+
+/* Tighten system response action buttons (carousel/choice chips) */
+.vfrc-system-response--actions {
+  padding-left: 20px !important;
+  padding-right: 10px !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  flex-direction: column !important;
+  align-content: stretch !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
 }
