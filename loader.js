@@ -201,7 +201,6 @@
       }
     },
     assistant: {
-      title: 'Last Frontier',
       stylesheet: CDN + '/css/LFH_styles.css',
       extensions: extensions
     },
@@ -225,7 +224,10 @@
       type: 'text',
       payload: { message: 'I can help you plan your adventure!' }
     });
-  }, 5000);
+  }, 3000);
+  setTimeout(function() {
+    window.voiceflow.chat.open();
+  }, 4000);
 
   // ============================================
   // 6. POST-LOAD: Shadow DOM style injection
