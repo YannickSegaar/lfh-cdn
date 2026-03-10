@@ -178,8 +178,8 @@
   padding-right: 10px !important;
   margin-left: 0px !important;
   margin-right: 0px !important;
-  flex-direction: column !important;
-  align-content: stretch !important;
+  flex-direction: row !important;
+  gap: 8px !important;
   display: flex !important;
   flex-wrap: wrap !important;
 }

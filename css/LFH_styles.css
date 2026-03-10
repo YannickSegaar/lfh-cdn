@@ -195,19 +195,7 @@
    Buttons
    ========================================================================== */
 
-.vfrc-button {
-  background-color: #cc3333 !important;
-  color: #FFFFFF !important;
-  font-weight: 500 !important;
-  font-size: 14px !important;
-  border: none !important;
-  border-radius: 16px !important;
-  padding: 10px 16px !important;
-}
-
-.vfrc-button:hover {
-  background-color: #b32d2d !important;
-}
+/* Buttons: No overrides — VoiceFlow project-level outline/ghost style applies */
 
 .vfrc-system-response--action {
   color: #cc3333 !important;
@@ -227,64 +215,9 @@
   border-top: none !important;
 }
 
-.vfrc-chat-input,
-.vfrc-chat-input__container-inner,
-.vfrc-input-container {
-  background-color: #FFFFFF !important;
-  border: 1px solid #E0E0E0 !important;
-  border-radius: 20px !important;
-  padding: 0 !important;
-}
-
-.vfrc-chat-input input,
-.vfrc-chat-input textarea {
-  font-size: 14px !important;
-  font-weight: normal !important;
-  color: #333333 !important;
-  padding: 10px 14px !important;
-  line-height: 1.4 !important;
-}
-
-.vfrc-chat-input input::placeholder,
-.vfrc-chat-input textarea::placeholder {
-  color: #999999 !important;
-  font-size: 14px !important;
-  font-weight: normal !important;
-}
-
-.vfrc-chat-input__send {
-  background-color: #cc3333 !important;
-  color: #FFFFFF !important;
-  border-radius: 50% !important;
-  width: 32px !important;
-  height: 32px !important;
-  margin: 4px !important;
-}
-
-.vfrc-chat-input__send:hover {
-  background-color: #b32d2d !important;
-}
-
-/* Fix send button area - ensure clean background */
-.vfrc-footer button,
-.vfrc-footer [class*="button"],
-[class*="vfrc-footer"] button,
-[class*="vfrc-footer"] [class*="button"] {
-  background-image: none !important;
-}
-
-.vfrc-footer__start-button {
-  background-color: #cc3333 !important;
-  color: #FFFFFF !important;
-  font-weight: 500 !important;
-  border-radius: 16px !important;
-}
-
-.vfrc-footer__content-scroll-to-bottom-button {
-  background-color: #FFFFFF !important;
-  border: 1px solid #E0E0E0 !important;
-  border-radius: 50% !important;
-}
+/* Footer & Input: No overrides — VoiceFlow project-level styling applies.
+   Only footer transparency is needed (for map background to show through),
+   and that lives in the shadow inject script. */
 
 /* ==========================================================================
    Avatar
@@ -302,14 +235,20 @@
 .vfrc-launcher {
   background-color: #cc3333 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 50px !important;
 }
 
 .vfrc-launcher:hover {
   background-color: #b32d2d !important;
 }
 
+.vfrc-launcher--open {
+  border-radius: 50% !important;
+}
+
 .vfrc-launcher__container {
   background-color: #cc3333 !important;
+  border-radius: 50px !important;
 }
 
 .vfrc-launcher,
@@ -405,8 +344,8 @@
   padding-right: 10px !important;
   margin-left: 0px !important;
   margin-right: 0px !important;
-  flex-direction: column !important;
-  align-content: stretch !important;
+  flex-direction: row !important;
+  gap: 8px !important;
   display: flex !important;
   flex-wrap: wrap !important;
 }

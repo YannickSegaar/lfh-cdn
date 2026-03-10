@@ -124,12 +124,17 @@
   document.head.appendChild(fontStyle);
 
   // ============================================
-  // 2. LOAD VOICEFLOW WIDGET BUNDLE
+  // 2. LOAD VOICEFLOW WIDGET BUNDLE + SNOWIFY
   // ============================================
   var script = document.createElement('script');
   script.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
   script.type = 'text/javascript';
   document.head.appendChild(script);
+
+  // Load Snowify library (snowfall animation dependency)
+  var snowifyScript = document.createElement('script');
+  snowifyScript.src = 'https://gauravkrp.com/snowify.min.js';
+  document.head.appendChild(snowifyScript);
 
   await new Promise(function(resolve) { script.onload = resolve; });
 
