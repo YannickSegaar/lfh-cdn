@@ -1,0 +1,1358 @@
+/**
+ * Last Frontier Hub - Tours Tab
+ *
+ * Extracted from lfh-tour-explorer-modal-booking-unified.js.
+ * Renders tour grid, detail, compare, and booking views inside the hub.
+ * No modal shell — the hub handles that.
+ *
+ * Cross-nav callbacks replaced with config.onSwitchTab().
+ * State save/restore enables tab memory.
+ *
+ * @version 1.0.0
+ * @author Last Frontier Heliskiing / RomAIx
+ */
+
+import {
+  LFH_TOURS, LFH_COLORS, LFH_VIDEOS, INCLUDED_ITEMS_REGULAR, INCLUDED_ITEMS_PRIVATE,
+  silentVariableUpdate, interactWithAgent, lodgeName, lodgeBadgeColor,
+  trackHubTourViewed, trackHubFilterUsed, trackHubHighIntent, getVideoEmbedUrl,
+} from './lfh-hub-shared.js';
+import { renderBookingForm } from './lfh-tour-booking-form.js';
+
+// ============================================================================
+// MODULE STATE (scoped per render call)
+// ============================================================================
+
+let _state = null;
+
+export function getToursTabState() {
+  if (!_state) return null;
+  return {
+    currentView: _state.currentView,
+    currentTourId: _state.currentTourId,
+    activeFilters: { ..._state.activeFilters },
+    compareTours: [..._state.compareTours],
+  };
+}
+
+// ============================================================================
+// RENDER: Tours Tab Entry Point
+// ============================================================================
+
+/**
+ * @param {HTMLElement} container - The tab panel element
+ * @param {Object} config - Hub config (onSwitchTab, webhookUrl, etc.)
+ * @param {Object|null} savedState - Restored state from tab snapshot
+ */
+export function renderToursTab(container, config, savedState) {
+  const {
+    onSwitchTab, onActionTaken, onCloseHub, requestCloseWithAction,
+    webhookUrl = '', conversationId = null, userId = null,
+    visitorContext = {}, conversationHistory = null, intentSignals = {},
+    isMobile = false, tourId = null,
+  } = config;
+
+  // Initialize or restore state
+  _state = {
+    filteredTours: [...LFH_TOURS],
+    activeFilters: savedState?.activeFilters || { lodge: 'all', duration: 'all', season: [] },
+    compareTours: savedState?.compareTours || [],
+    currentView: savedState?.currentView || 'grid',
+    currentTourId: savedState?.currentTourId || null,
+    actionTaken: false,
+  };
+
+  // Build DOM structure
+  container.innerHTML = '';
+
+  // Filter Bar
+  const filterBar = document.createElement('div');
+  filterBar.className = 'lfhte-filter-bar';
+  filterBar.id = 'lfhte-filter-bar';
+  filterBar.innerHTML = `
+    <div class="lfhte-filters-row">
+      <div class="lfhte-filter-group">
+        <label>Lodge</label>
+        <select id="lfhte-filter-lodge">
+          <option value="all">All Lodges</option>
+          <option value="bell2">Bell 2 Lodge</option>
+          <option value="ripley">Ripley Creek</option>
+          <option value="both">Safari (Both)</option>
+        </select>
+      </div>
+      <div class="lfhte-filter-group">
+        <label>Duration</label>
+        <select id="lfhte-filter-duration">
+          <option value="all">All Durations</option>
+          <option value="4">4-Day</option>
+          <option value="5">5-Day</option>
+          <option value="7">7-Day</option>
+          <option value="safari7">7-Day Safari</option>
+          <option value="safari9">9-Day Safari</option>
+          <option value="safari10">10-Day Safari</option>
+          <option value="private">Private</option>
+        </select>
+      </div>
+      <div class="lfhte-filter-group lfhte-season-multi">
+        <label>Time of Season</label>
+        <div class="lfhte-multi-select" id="lfhte-filter-season">
+          <div class="lfhte-multi-select-btn" id="lfhte-season-btn">All Months</div>
+          <div class="lfhte-multi-select-dropdown" id="lfhte-season-dropdown" style="display:none;">
+            <label class="lfhte-multi-select-item"><input type="checkbox" value="jan"> January</label>
+            <label class="lfhte-multi-select-item"><input type="checkbox" value="feb"> February</label>
+            <label class="lfhte-multi-select-item"><input type="checkbox" value="mar"> March</label>
+            <label class="lfhte-multi-select-item"><input type="checkbox" value="apr"> April</label>
+          </div>
+        </div>
+      </div>
+      <span class="lfhte-results-count" id="lfhte-results-count">${LFH_TOURS.length} tours</span>
+    </div>
+  `;
+  container.appendChild(filterBar);
+
+  // Content Area
+  const content = document.createElement('div');
+  content.className = 'lfhte-content';
+  content.id = 'lfhte-content';
+  container.appendChild(content);
+
+  // Compare Tray
+  const compareTray = document.createElement('div');
+  compareTray.className = 'lfhte-compare-tray';
+  compareTray.id = 'lfhte-compare-tray';
+  compareTray.style.display = 'none';
+  container.appendChild(compareTray);
+
+  // Slide Panel (for 'slide' booking variant)
+  const slidePanel = document.createElement('div');
+  slidePanel.className = 'lfhte-sp-overlay';
+  slidePanel.id = 'lfhte-sp-overlay';
+  slidePanel.style.display = 'none';
+  slidePanel.innerHTML = `
+    <div class="lfhte-sp-backdrop"></div>
+    <div class="lfhte-sp-panel" id="lfhte-sp-panel">
+      <div class="lfhte-sp-header">
+        <button class="lfhte-sp-back" id="lfhte-sp-back">&larr; Back to Tour</button>
+        <span class="lfhte-sp-title">Booking Request</span>
+      </div>
+      <div class="lfhte-sp-content" id="lfhte-sp-content"></div>
+    </div>
+  `;
+  container.appendChild(slidePanel);
+
+  // Apply initial filters if restored
+  if (_state.activeFilters.lodge !== 'all') {
+    filterBar.querySelector('#lfhte-filter-lodge').value = _state.activeFilters.lodge;
+  }
+  if (_state.activeFilters.duration !== 'all') {
+    filterBar.querySelector('#lfhte-filter-duration').value = _state.activeFilters.duration;
+  }
+  if (_state.activeFilters.season && _state.activeFilters.season.length > 0) {
+    const labels = { jan: 'Jan', feb: 'Feb', mar: 'Mar', apr: 'Apr' };
+    _state.activeFilters.season.forEach(m => {
+      const cb = filterBar.querySelector(`#lfhte-season-dropdown input[value="${m}"]`);
+      if (cb) cb.checked = true;
+    });
+    filterBar.querySelector('#lfhte-season-btn').textContent = _state.activeFilters.season.map(s => labels[s]).join(', ');
+  }
+  applyFilters();
+
+  // Restore view or render grid
+  if (savedState?.currentView === 'detail' && savedState.currentTourId) {
+    const tour = LFH_TOURS.find(t => t.id === savedState.currentTourId);
+    if (tour) {
+      renderTourDetail(tour);
+    } else {
+      renderTourGrid();
+    }
+  } else if (savedState?.currentView === 'compare' && savedState.compareTours?.length >= 2) {
+    renderCompareView();
+  } else {
+    renderTourGrid();
+  }
+
+  // If initial tourId provided, go to detail
+  if (tourId && !savedState) {
+    const tour = LFH_TOURS.find(t => t.id === tourId);
+    if (tour) {
+      setTimeout(() => renderTourDetail(tour), 300);
+    }
+  }
+
+  silentVariableUpdate('ext_last_action', 'tour_explorer_opened');
+
+  // ========================================================================
+  // RENDER: Tour Grid
+  // ========================================================================
+
+  function renderTourGrid() {
+    _state.currentView = 'grid';
+    filterBar.style.display = '';
+
+    const grid = document.createElement('div');
+    grid.className = 'lfhte-tour-grid';
+
+    if (_state.filteredTours.length === 0) {
+      grid.innerHTML = `
+        <div class="lfhte-no-results">
+          <div class="lfhte-no-results-icon">&#9968;</div>
+          <p>No tours match your filters</p>
+          <button class="lfhte-btn-outline" id="lfhte-clear-filters">Clear Filters</button>
+        </div>
+      `;
+      content.innerHTML = '';
+      content.appendChild(grid);
+      content.querySelector('#lfhte-clear-filters')?.addEventListener('click', () => {
+        _state.activeFilters = { lodge: 'all', duration: 'all', season: [] };
+        filterBar.querySelector('#lfhte-filter-lodge').value = 'all';
+        filterBar.querySelector('#lfhte-filter-duration').value = 'all';
+        filterBar.querySelectorAll('#lfhte-season-dropdown input').forEach(cb => { cb.checked = false; });
+        filterBar.querySelector('#lfhte-season-btn').textContent = 'All Months';
+        applyFilters();
+      });
+      return;
+    }
+
+    _state.filteredTours.forEach(tour => {
+      const card = document.createElement('div');
+      card.className = 'lfhte-tour-card';
+      const isComparing = _state.compareTours.includes(tour.id);
+      const lodgeBadges = tour.lodges.includes('both')
+        ? `<span class="lfhte-lodge-badge" style="background:${lodgeBadgeColor(tour.lodges)}">Both Lodges</span>`
+        : tour.lodges.length > 1
+          ? `<span class="lfhte-lodge-badge" style="background:${lodgeBadgeColor(tour.lodges)}">${tour.lodges.map(lodgeName).join(' or ')}</span>`
+          : `<span class="lfhte-lodge-badge" style="background:${lodgeBadgeColor(tour.lodges)}">${lodgeName(tour.lodges[0])}</span>`;
+      const priceDisplay = `From $${tour.priceFrom.toLocaleString()} CAD`;
+
+      card.innerHTML = `
+        <div class="lfhte-card-image" style="background-image: url('${tour.heroImage}')">
+          <div class="lfhte-card-badges">${lodgeBadges}</div>
+        </div>
+        <div class="lfhte-card-body">
+          <h3 class="lfhte-card-title">${tour.name}</h3>
+          <div class="lfhte-card-stats">
+            <span>${tour.duration}</span>
+            <span class="lfhte-stat-divider">|</span>
+            <span>${tour.verticalGuarantee}</span>
+            <span class="lfhte-stat-divider">|</span>
+            <span>4 guests/guide</span>
+          </div>
+          <p class="lfhte-card-price">${priceDisplay}</p>
+          <p class="lfhte-card-desc">${tour.description.substring(0, 100)}...</p>
+          <div class="lfhte-card-actions">
+            <button class="lfhte-btn-outline lfhte-compare-toggle ${isComparing ? 'active' : ''}" data-tour-id="${tour.id}">
+              ${isComparing ? '&#10003; Comparing' : 'Compare'}
+            </button>
+            <button class="lfhte-btn-primary lfhte-view-detail" data-tour-id="${tour.id}">View Details</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    content.innerHTML = '';
+    content.appendChild(grid);
+
+    content.querySelectorAll('.lfhte-view-detail').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tour = LFH_TOURS.find(t => t.id === btn.dataset.tourId);
+        if (tour) renderTourDetail(tour);
+      });
+    });
+
+    content.querySelectorAll('.lfhte-compare-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleCompare(btn.dataset.tourId));
+    });
+  }
+
+  // ========================================================================
+  // RENDER: Tour Detail
+  // ========================================================================
+
+  function renderTourDetail(tour) {
+    _state.currentView = 'detail';
+    _state.currentTourId = tour.id;
+    trackHubTourViewed(tour.name);
+    filterBar.style.display = '';
+    silentVariableUpdate('ext_current_tour', tour.id);
+
+    const detail = document.createElement('div');
+    detail.className = 'lfhte-detail';
+
+    const videoEntry = tour.videoId ? Object.values(LFH_VIDEOS).find(v => v.id === tour.videoId) : null;
+    const videoTitle = videoEntry ? videoEntry.title : '';
+
+    // For tours without a dedicated video, pick a random one for the gallery
+    const videoIds = Object.values(LFH_VIDEOS).map(v => v.id);
+    const randomVideoId = !tour.videoId ? videoIds[Math.floor(Math.random() * videoIds.length)] : null;
+    const randomVideoEntry = randomVideoId ? Object.values(LFH_VIDEOS).find(v => v.id === randomVideoId) : null;
+
+    // Pricing: per-week tables when pricingWeeks exists, else fallback to Early/Peak
+    let pricingHTML = '';
+    const verticalNoteHTML = tour.verticalNote
+      ? `<p class="lfhte-pricing-note" style="margin-top:6px;font-style:italic;">${tour.verticalNote}</p>`
+      : '';
+
+    if (tour.pricingWeeks) {
+      const isSafari = tour.pricingWeeks[0] && tour.pricingWeeks[0].price;
+      let rows = '';
+      if (isSafari) {
+        tour.pricingWeeks.forEach((week) => {
+          rows += `<tr><td>${week.tourNo}</td><td>${week.dates}</td><td><strong>${week.price}</strong></td></tr>`;
+        });
+        pricingHTML = `
+          <table class="lfhte-pricing-table">
+            <thead><tr><th>Tour No.</th><th>Dates</th><th>Price</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        ` + verticalNoteHTML;
+      } else {
+        tour.pricingWeeks.forEach((week) => {
+          rows += `<tr><td>${week.tourNo}</td><td>${week.dates}</td><td>${week.bell2 || '—'}</td><td>${week.ripley || '—'}</td></tr>`;
+        });
+        pricingHTML = `
+          <table class="lfhte-pricing-table">
+            <thead><tr><th>Tour No.</th><th>Dates</th><th>Bell 2 Lodge</th><th>Ripley Creek</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        ` + verticalNoteHTML;
+      }
+    } else {
+      // Fallback: Early/Peak table (private tours)
+      let pricingRows = '';
+      if (tour.pricing.safari) {
+        pricingRows = `<tr><td>Safari Rate</td><td>${tour.pricing.safari.peak || '—'}</td></tr>`;
+      } else {
+        Object.keys(tour.pricing).forEach(key => {
+          const p = tour.pricing[key];
+          const lodgeLabel = `<button class="lfhte-lodge-name-link" data-lodge-id="${key}">${lodgeName(key)}</button>`;
+          pricingRows += `
+            <tr>
+              <td>${lodgeLabel}</td>
+              <td>${p.early || '—'}</td>
+              <td>${p.peak || '—'}</td>
+            </tr>
+          `;
+        });
+      }
+      const pricingHeader = tour.pricing.safari
+        ? '<tr><th>Rate Type</th><th>Peak Season</th></tr>'
+        : '<tr><th>Lodge</th><th>Dec &amp; Jan</th><th>Feb - Apr</th></tr>';
+      pricingHTML = `
+        <table class="lfhte-pricing-table">
+          <thead>${pricingHeader}</thead>
+          <tbody>${pricingRows}</tbody>
+        </table>
+      `;
+    }
+
+    let galleryHTML = tour.galleryImages
+      .map((img, i) => `<div class="lfhte-gallery-thumb" style="background-image: url('${img}')" data-index="${i}"></div>`)
+      .join('');
+
+    // Add video thumbnail at end of gallery (dedicated video or random)
+    const galleryVideoId = tour.videoId || randomVideoId;
+    const galleryVideoTitle = tour.videoId ? videoTitle : (randomVideoEntry?.title || 'Video');
+    if (galleryVideoId) {
+      galleryHTML += `<div class="lfhte-gallery-thumb lfhte-video-thumb" data-video-id="${galleryVideoId}" data-video-title="${galleryVideoTitle}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))"><polygon points="8,5 19,12 8,19"/></svg>
+      </div>`;
+    }
+
+    const includedList = tour.id === 'private' ? INCLUDED_ITEMS_PRIVATE : INCLUDED_ITEMS_REGULAR;
+    const includedHTML = includedList.map(
+      item => `<div class="lfhte-included-item"><span class="lfhte-check-icon">&#10003;</span> ${item}</div>`
+    ).join('');
+
+    const bestForHTML = tour.bestFor
+      .map(bf => `<span class="lfhte-best-for-badge">${bf}</span>`)
+      .join('');
+
+    const galleryCount = tour.galleryImages.length;
+
+    detail.innerHTML = `
+      <div class="lfhte-detail-header">
+        <button class="lfhte-back-btn" id="lfhte-back-to-grid">&larr; All Tours</button>
+        <h2 class="lfhte-detail-title">${tour.name}</h2>
+        <span class="lfhte-detail-subtitle">${tour.subtitle}</span>
+      </div>
+
+      <div class="lfhte-detail-scroll">
+        <div class="lfhte-hero-media" id="lfhte-hero-media">
+          <img class="lfhte-hero-img" src="${tour.heroImage}" alt="${tour.name}">
+        </div>
+
+        ${isMobile ? `
+          <button class="lfhte-collapse-toggle lfhte-gallery-toggle" id="lfhte-gallery-toggle">
+            Gallery (${galleryCount} photos)
+            <span class="lfhte-toggle-hint">Tap to expand</span>
+            <span class="lfhte-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="lfhte-gallery-strip lfhte-gallery-collapsed">${galleryHTML}</div>
+        ` : `
+          <div class="lfhte-gallery-strip">${galleryHTML}</div>
+        `}
+
+        <div class="lfhte-detail-section">
+          <p class="lfhte-full-desc">${tour.description}</p>
+
+          <div class="lfhte-best-for">${bestForHTML}</div>
+        </div>
+
+        <div class="lfhte-stats-bar">
+          <div class="lfhte-stat-box">
+            <div class="lfhte-stat-value">${tour.duration}</div>
+            <div class="lfhte-stat-label">Duration</div>
+          </div>
+          <div class="lfhte-stat-box">
+            <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' ? '*' : ''}</div>
+            <div class="lfhte-stat-label">Vertical Guarantee</div>
+          </div>
+          <div class="lfhte-stat-box">
+            <div class="lfhte-stat-value">${tour.skillLevel.replace(' / Expert', '')}</div>
+            <div class="lfhte-stat-label">Skill Level</div>
+          </div>
+          <div class="lfhte-stat-box">
+            <div class="lfhte-stat-value">${tour.id === 'private' ? '1-2 groups' : '4:1'}</div>
+            <div class="lfhte-stat-label">${tour.id === 'private' ? 'of 4 (up to 8 pax)' : 'Guest:Guide'}</div>
+          </div>
+        </div>
+        ${tour.id !== 'private' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
+
+        <div class="lfhte-detail-section">
+          <h3 class="lfhte-section-title">Pricing (CAD per person)</h3>
+          ${pricingHTML}
+          <p class="lfhte-pricing-note">${tour.id === 'private'
+            ? '5% GST applies. 20% deposit to confirm. Unlimited vertical included — no extra charges.'
+            : '5% GST applies. 20% deposit to confirm. Extra vertical: $218/1,000m.'
+          }</p>
+        </div>
+
+        <div class="lfhte-detail-section">
+          ${isMobile ? `
+            <h3 class="lfhte-section-title lfhte-included-toggle" id="lfhte-included-toggle">
+              What's Included
+              <span class="lfhte-toggle-hint">Tap to expand</span>
+              <span class="lfhte-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></span>
+            </h3>
+            <div class="lfhte-included-grid lfhte-included-collapsed">${includedHTML}</div>
+          ` : `
+            <h3 class="lfhte-section-title">What's Included</h3>
+            <div class="lfhte-included-grid">${includedHTML}</div>
+          `}
+        </div>
+
+        <div class="lfhte-detail-actions lfhte-detail-actions-bottom">
+          <div class="lfhte-actions-row">
+            <button class="lfhte-btn-primary lfhte-action-book" data-tour-id="${tour.id}">Check Availability</button>
+            <button class="lfhte-btn-outline lfhte-action-ask" data-tour-id="${tour.id}">Ask About This Tour</button>
+          </div>
+          <div class="lfhte-actions-row">
+            <button class="lfhte-btn-outline lfhte-back-link" id="lfhte-back-link">&larr; Back to All Tours</button>
+            <button class="lfhte-btn-outline lfhte-compare-lodges-detail" id="lfhte-compare-lodges-detail">Compare Lodges</button>
+          </div>
+        </div>
+      </div>
+
+      ${isMobile ? `
+        <div class="lfhte-sticky-cta">
+          <button class="lfhte-btn-primary lfhte-sticky-book" data-tour-id="${tour.id}">Book</button>
+          <button class="lfhte-btn-outline lfhte-sticky-ask" data-tour-id="${tour.id}">Ask</button>
+        </div>
+      ` : ''}
+    `;
+
+    content.innerHTML = '';
+    content.appendChild(detail);
+
+    // Event Listeners
+    detail.querySelector('#lfhte-back-to-grid')?.addEventListener('click', renderTourGrid);
+    detail.querySelector('#lfhte-back-link')?.addEventListener('click', renderTourGrid);
+
+    // Gallery thumbnails — photo thumbs swap hero image, video thumb plays video
+    detail.querySelectorAll('.lfhte-gallery-thumb').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const heroMedia = detail.querySelector('#lfhte-hero-media');
+        const vidId = thumb.dataset.videoId;
+
+        if (vidId) {
+          heroMedia.innerHTML = `
+            <div class="lfhte-video-embed">
+              <iframe src="${getVideoEmbedUrl(vidId)}"
+                allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
+          `;
+        } else {
+          const idx = parseInt(thumb.dataset.index);
+          heroMedia.innerHTML = `
+            <img class="lfhte-hero-img" src="${tour.galleryImages[idx]}" alt="${tour.name}">
+          `;
+        }
+        detail.querySelectorAll('.lfhte-gallery-thumb').forEach(t => (t.style.borderColor = 'transparent'));
+        thumb.style.borderColor = LFH_COLORS.primaryRed;
+      });
+    });
+
+    // Booking button
+    detail.querySelector('.lfhte-action-book')?.addEventListener('click', () => {
+      openReplaceBooking(tour);
+    });
+
+    // Ask about tour — gate behind confirmation
+    detail.querySelector('.lfhte-action-ask')?.addEventListener('click', () => {
+      trackHubHighIntent('ask:' + tour.name);
+      requestCloseWithAction({
+        action: 'tour_inquiry',
+        source: 'tour_explorer',
+        tourId: tour.id,
+        tourName: tour.name,
+        lodge: tour.lodges.join(', '),
+        duration: tour.duration,
+      });
+    });
+
+    // Mobile: gallery toggle
+    if (isMobile) {
+      detail.querySelector('#lfhte-gallery-toggle')?.addEventListener('click', () => {
+        const strip = detail.querySelector('.lfhte-gallery-strip');
+        const arrow = detail.querySelector('#lfhte-gallery-toggle .lfhte-toggle-arrow');
+        const hint = detail.querySelector('#lfhte-gallery-toggle .lfhte-toggle-hint');
+        strip.classList.toggle('lfhte-gallery-collapsed');
+        strip.classList.toggle('lfhte-gallery-expanded');
+        const collapsed = strip.classList.contains('lfhte-gallery-collapsed');
+        arrow.innerHTML = collapsed
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
+        if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
+      });
+
+      // Mobile: included toggle
+      detail.querySelector('#lfhte-included-toggle')?.addEventListener('click', () => {
+        const grid = detail.querySelector('.lfhte-included-grid');
+        const arrow = detail.querySelector('#lfhte-included-toggle .lfhte-toggle-arrow');
+        const hint = detail.querySelector('#lfhte-included-toggle .lfhte-toggle-hint');
+        grid.classList.toggle('lfhte-included-collapsed');
+        grid.classList.toggle('lfhte-included-expanded');
+        const collapsed = grid.classList.contains('lfhte-included-collapsed');
+        arrow.innerHTML = collapsed
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+        if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
+      });
+
+      // Mobile: sticky CTA buttons
+      detail.querySelector('.lfhte-sticky-book')?.addEventListener('click', () => {
+        openReplaceBooking(tour);
+      });
+
+      detail.querySelector('.lfhte-sticky-ask')?.addEventListener('click', () => {
+        trackHubHighIntent('ask:' + tour.name);
+        requestCloseWithAction({
+          action: 'tour_inquiry',
+          source: 'tour_explorer',
+          tourId: tour.id,
+          tourName: tour.name,
+          lodge: tour.lodges.join(', '),
+          duration: tour.duration,
+        });
+      });
+    }
+
+    // Lodge name links in pricing table → switch to lodges tab (stays in modal)
+    detail.querySelectorAll('.lfhte-lodge-name-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.stopPropagation();
+        trackHubHighIntent('compare_lodges');
+        onSwitchTab('lodges', { focusLodge: link.dataset.lodgeId });
+      });
+    });
+
+    // Compare Lodges detail button → switch to lodges tab (stays in modal)
+    detail.querySelector('#lfhte-compare-lodges-detail')?.addEventListener('click', () => {
+      trackHubHighIntent('compare_lodges');
+      onSwitchTab('lodges');
+    });
+  }
+
+  // ========================================================================
+  // BOOKING: Replace Content
+  // ========================================================================
+
+  function openReplaceBooking(tour) {
+    _state.currentView = 'booking';
+    filterBar.style.display = 'none';
+    trackHubHighIntent('book:' + tour.name);
+    silentVariableUpdate('ext_last_action', 'booking_form_opened');
+
+    const bookingContainer = document.createElement('div');
+    bookingContainer.style.cssText = 'height:100%;overflow-y:auto;';
+
+    const backHeader = document.createElement('div');
+    backHeader.style.cssText = `
+      padding: 12px 20px; border-bottom: 1px solid ${LFH_COLORS.border};
+      display: flex; align-items: center; gap: 12px;
+    `;
+    backHeader.innerHTML = `
+      <button class="lfhte-back-btn" id="lfhte-booking-back">&larr; Back to ${tour.name}</button>
+      <span style="font-family:'Nexa Rust Sans Black 2',sans-serif;font-size:14px;font-weight:900;color:${LFH_COLORS.textPrimary};text-transform:uppercase;letter-spacing:1px;">Booking Request</span>
+    `;
+
+    const formContainer = document.createElement('div');
+    formContainer.style.cssText = 'flex:1;overflow-y:auto;';
+
+    bookingContainer.appendChild(backHeader);
+    bookingContainer.appendChild(formContainer);
+
+    content.innerHTML = '';
+    content.appendChild(bookingContainer);
+
+    renderBookingForm(formContainer, {
+      tour,
+      webhookUrl,
+      variant: 'replace',
+      conversationId,
+      userId,
+      visitorContext,
+      conversationHistory,
+      intentSignals,
+      onSubmitSuccess: (payload) => handleBookingSuccess(tour, payload),
+      onBack: () => renderTourDetail(tour),
+    });
+
+    backHeader.querySelector('#lfhte-booking-back')?.addEventListener('click', () => {
+      renderTourDetail(tour);
+    });
+  }
+
+  // ========================================================================
+  // BOOKING: Post-Submit
+  // ========================================================================
+
+  function handleBookingSuccess(tour, payload) {
+    interactWithAgent('ext_user_action', {
+      action: 'booking_request_submitted',
+      source: 'tour_explorer',
+      tourId: tour.id,
+      tourName: tour.name,
+      requestType: payload.bookingRequest.requestType,
+    });
+
+    _state.actionTaken = true;
+    onActionTaken();
+
+    setTimeout(() => {
+      onCloseHub();
+    }, 2500);
+  }
+
+  // ========================================================================
+  // RENDER: Compare View
+  // ========================================================================
+
+  function renderCompareView() {
+    _state.currentView = 'compare';
+    const tours = _state.compareTours.map(id => LFH_TOURS.find(t => t.id === id)).filter(Boolean);
+    silentVariableUpdate('ext_tours_compared', _state.compareTours.join(','));
+
+    const compare = document.createElement('div');
+    compare.className = 'lfhte-compare';
+
+    const headerCells = tours.map(t =>
+      `<th class="lfhte-compare-th"><div class="lfhte-compare-tour-name">${t.name}</div><div class="lfhte-compare-tour-sub">${t.subtitle}</div></th>`
+    ).join('');
+
+    const rows = [
+      { label: 'Duration', fn: t => t.duration },
+      { label: 'Vertical Guarantee', fn: t => t.verticalGuarantee },
+      { label: 'Lodges', fn: t => t.lodges.includes('both') ? 'Both Lodges' : t.lodges.map(lodgeName).join(' or ') },
+      { label: 'Time of Season', fn: t => (t.months || []).map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') },
+      { label: 'Starting Price', fn: t => `$${t.priceFrom.toLocaleString()} CAD` },
+      { label: 'Best For', fn: t => t.bestFor.join(', ') },
+    ];
+
+    const rowsHTML = rows
+      .map(row =>
+        `<tr><td class="lfhte-compare-label">${row.label}</td>${tours.map(t => `<td>${row.fn(t)}</td>`).join('')}</tr>`
+      ).join('');
+
+    let compareBody;
+    if (isMobile) {
+      const cardsHTML = rows.map(row => {
+        const valuesHTML = tours.map(t =>
+          `<p class="lfhte-compare-card-row"><span class="lfhte-compare-card-tour">${t.name}:</span> ${row.fn(t)}</p>`
+        ).join('');
+        return `<div class="lfhte-compare-card"><div class="lfhte-compare-card-label">${row.label}</div>${valuesHTML}</div>`;
+      }).join('');
+      compareBody = `<div class="lfhte-compare-cards">${cardsHTML}</div>`;
+    } else {
+      compareBody = `
+        <div class="lfhte-compare-scroll">
+          <table class="lfhte-compare-table">
+            <thead><tr><th></th>${headerCells}</tr></thead>
+            <tbody>${rowsHTML}</tbody>
+          </table>
+        </div>`;
+    }
+
+    compare.innerHTML = `
+      <div class="lfhte-compare-header">
+        <button class="lfhte-back-btn" id="lfhte-compare-back">&larr; Back to Tours</button>
+        <h2 class="lfhte-compare-title">Comparing ${tours.length} Tours</h2>
+      </div>
+      ${compareBody}
+      <div class="lfhte-compare-actions">
+        <button class="lfhte-btn-outline" id="lfhte-compare-clear">Clear Comparison</button>
+      </div>
+    `;
+
+    content.innerHTML = '';
+    content.appendChild(compare);
+
+    compare.querySelector('#lfhte-compare-back')?.addEventListener('click', renderTourGrid);
+    compare.querySelector('#lfhte-compare-clear')?.addEventListener('click', () => {
+      _state.compareTours = [];
+      updateCompareTray();
+      renderTourGrid();
+    });
+  }
+
+  // ========================================================================
+  // COMPARE: Toggle & Tray
+  // ========================================================================
+
+  function toggleCompare(tourId) {
+    const idx = _state.compareTours.indexOf(tourId);
+    if (idx >= 0) {
+      _state.compareTours.splice(idx, 1);
+    } else {
+      _state.compareTours.push(tourId);
+    }
+    updateCompareTray();
+    if (_state.currentView === 'grid') renderTourGrid();
+  }
+
+  function updateCompareTray() {
+    if (_state.compareTours.length < 2) {
+      compareTray.style.display = 'none';
+      return;
+    }
+
+    compareTray.style.display = 'flex';
+    const thumbs = _state.compareTours.map(id => {
+      const t = LFH_TOURS.find(tour => tour.id === id);
+      return t
+        ? `<div class="lfhte-tray-thumb">
+             <div class="lfhte-tray-img" style="background-image:url('${t.thumbnailImage}')"></div>
+             <span>${t.name}</span>
+             <button class="lfhte-tray-remove" data-tour-id="${id}">&times;</button>
+           </div>`
+        : '';
+    }).join('');
+
+    compareTray.innerHTML = `
+      <div class="lfhte-tray-tours">${thumbs}</div>
+      <button class="lfhte-btn-primary lfhte-tray-compare-btn">Compare ${_state.compareTours.length} Tours</button>
+    `;
+
+    compareTray.querySelectorAll('.lfhte-tray-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCompare(btn.dataset.tourId);
+      });
+    });
+
+    compareTray.querySelector('.lfhte-tray-compare-btn')?.addEventListener('click', renderCompareView);
+  }
+
+  // ========================================================================
+  // FILTERS
+  // ========================================================================
+
+  function applyFilters() {
+    _state.filteredTours = LFH_TOURS.filter(tour => {
+      if (_state.activeFilters.lodge !== 'all') {
+        if (_state.activeFilters.lodge === 'both') {
+          if (!tour.lodges.includes('both')) return false;
+        } else {
+          if (!tour.lodges.includes(_state.activeFilters.lodge) && !tour.lodges.includes('both')) return false;
+        }
+      }
+      if (_state.activeFilters.duration !== 'all') {
+        const d = _state.activeFilters.duration;
+        if (d === 'private') {
+          if (tour.id !== 'private') return false;
+        } else if (d.startsWith('safari')) {
+          if (tour.id !== d) return false;
+        } else {
+          if (tour.durationDays !== parseInt(d) || tour.id.startsWith('safari')) return false;
+        }
+      }
+      if (_state.activeFilters.season && _state.activeFilters.season.length > 0) {
+        if (!tour.months || !tour.months.some(m => _state.activeFilters.season.includes(m))) return false;
+      }
+      return true;
+    });
+
+    silentVariableUpdate('ext_filters_applied', JSON.stringify(_state.activeFilters));
+    const countEl = container.querySelector('#lfhte-results-count');
+    if (countEl) {
+      countEl.textContent = `${_state.filteredTours.length} tour${_state.filteredTours.length !== 1 ? 's' : ''}`;
+    }
+    renderTourGrid();
+  }
+
+  filterBar.querySelector('#lfhte-filter-lodge')?.addEventListener('change', (e) => {
+    _state.activeFilters.lodge = e.target.value;
+    if (e.target.value !== 'all') trackHubFilterUsed('lodge:' + e.target.value);
+    silentVariableUpdate('ext_current_lodge', e.target.value);
+    applyFilters();
+  });
+
+  filterBar.querySelector('#lfhte-filter-duration')?.addEventListener('change', (e) => {
+    _state.activeFilters.duration = e.target.value;
+    if (e.target.value !== 'all') trackHubFilterUsed('duration:' + e.target.value);
+    applyFilters();
+  });
+
+  // Season multi-select dropdown
+  const seasonBtn = filterBar.querySelector('#lfhte-season-btn');
+  const seasonDropdown = filterBar.querySelector('#lfhte-season-dropdown');
+  seasonBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = seasonDropdown.style.display !== 'none';
+    seasonDropdown.style.display = isOpen ? 'none' : 'block';
+  });
+  seasonDropdown.addEventListener('click', (e) => { e.stopPropagation(); });
+  seasonDropdown.addEventListener('touchend', (e) => { e.stopPropagation(); });
+  filterBar.querySelectorAll('#lfhte-season-dropdown input').forEach((cb) => {
+    cb.addEventListener('change', () => {
+      const selected = [];
+      filterBar.querySelectorAll('#lfhte-season-dropdown input:checked').forEach(c => {
+        selected.push(c.value);
+      });
+      _state.activeFilters.season = selected;
+      const labels = { jan: 'Jan', feb: 'Feb', mar: 'Mar', apr: 'Apr' };
+      seasonBtn.textContent = selected.length === 0
+        ? 'All Months'
+        : selected.map(s => labels[s]).join(', ');
+      applyFilters();
+    });
+  });
+  // Close dropdown when clicking/tapping outside
+  let seasonDropdownTouched = false;
+  seasonDropdown.addEventListener('touchstart', () => { seasonDropdownTouched = true; }, { passive: true });
+  seasonDropdown.addEventListener('touchend', () => {
+    setTimeout(() => { seasonDropdownTouched = false; }, 300);
+  });
+  document.addEventListener('click', (e) => {
+    if (seasonDropdownTouched) return; // Ignore — user is interacting with dropdown
+    if (!filterBar.querySelector('#lfhte-filter-season')?.contains(e.target)) {
+      seasonDropdown.style.display = 'none';
+    }
+  });
+}
+
+// ============================================================================
+// STYLES (unchanged from original modal — all .lfhte-* prefixed)
+// ============================================================================
+
+export function buildToursStyles() {
+  return `
+@keyframes lfhte-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lfhte-fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes lfhte-slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lfhte-filter-bar {
+  padding: 12px 20px; background: ${LFH_COLORS.infoBox};
+  border-bottom: 1px solid ${LFH_COLORS.border}; flex-shrink: 0;
+}
+.lfhte-filters-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.lfhte-filter-group { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 130px; }
+.lfhte-filter-group label {
+  font-family: 'Inter', sans-serif; font-size: 10px;
+  font-weight: 700; color: ${LFH_COLORS.textSecondary};
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.lfhte-filter-group select {
+  padding: 8px 10px; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; font-family: 'Inter', sans-serif;
+  font-size: 12px; color: ${LFH_COLORS.textPrimary};
+  background: #fff; cursor: pointer; outline: none;
+}
+.lfhte-filter-group select:focus { border-color: ${LFH_COLORS.primaryRed}; }
+.lfhte-multi-select { position: relative; }
+.lfhte-multi-select-btn {
+  padding: 8px 10px; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; font-family: 'Inter', sans-serif;
+  font-size: 12px; color: ${LFH_COLORS.textPrimary};
+  background: #fff; cursor: pointer; min-width: 100px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lfhte-multi-select-btn:hover { border-color: ${LFH_COLORS.primaryRed}; }
+.lfhte-multi-select-dropdown {
+  position: absolute; top: 100%; left: 0; z-index: 100;
+  background: #fff; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 4px; min-width: 150px; padding: 6px 0;
+}
+.lfhte-multi-select-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; font-family: 'Inter', sans-serif;
+  font-size: 12px; color: ${LFH_COLORS.textPrimary}; cursor: pointer;
+}
+.lfhte-multi-select-item:hover { background: ${LFH_COLORS.infoBox}; }
+.lfhte-multi-select-item input { accent-color: ${LFH_COLORS.primaryRed}; }
+.lfhte-results-count {
+  font-family: 'Inter', sans-serif; font-size: 12px;
+  font-weight: 600; color: ${LFH_COLORS.textSecondary};
+  white-space: nowrap; margin-left: auto;
+}
+.lfhte-lodge-name-link {
+  background: none; border: none; padding: 0;
+  font-weight: 700; font-size: inherit; font-family: inherit;
+  color: ${LFH_COLORS.primaryRed}; cursor: pointer;
+  text-decoration: underline; text-decoration-style: dotted;
+  text-underline-offset: 2px; transition: color 0.2s;
+}
+.lfhte-lodge-name-link:hover { color: #c4221a; }
+
+.lfhte-content {
+  flex: 1; overflow-y: auto; padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+.lfhte-content::-webkit-scrollbar { width: 6px; }
+.lfhte-content::-webkit-scrollbar-track { background: ${LFH_COLORS.infoBox}; }
+.lfhte-content::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 3px; }
+
+.lfhte-tour-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 700px) {
+  .lfhte-tour-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .lfhte-card-image { height: 100px; }
+  .lfhte-card-body { padding: 10px; }
+  .lfhte-card-title { font-size: 13px; margin-bottom: 4px; }
+  .lfhte-card-stats { font-size: 10px; margin-bottom: 4px; }
+  .lfhte-card-price { font-size: 12px; margin-bottom: 4px; }
+  .lfhte-card-desc { display: none; }
+  .lfhte-card-actions { flex-direction: column; gap: 4px; }
+  .lfhte-card-actions .lfhte-btn-primary,
+  .lfhte-card-actions .lfhte-btn-outline { padding: 7px 8px; font-size: 10px; }
+}
+
+.lfhte-tour-card {
+  border: 1.5px solid ${LFH_COLORS.border}; border-radius: 10px;
+  overflow: hidden; transition: all 0.2s ease; background: #fff;
+}
+.lfhte-tour-card:hover {
+  border-color: ${LFH_COLORS.primaryRed};
+  box-shadow: 0 4px 16px rgba(230, 43, 30, 0.1);
+}
+.lfhte-card-image {
+  height: 160px; background-size: cover;
+  background-position: center; position: relative;
+}
+.lfhte-card-badges {
+  position: absolute; top: 10px; right: 10px;
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.lfhte-lodge-badge {
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 600; color: #fff;
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+.lfhte-card-body { padding: 14px; }
+.lfhte-card-title {
+  font-size: 16px; font-weight: 700;
+  color: ${LFH_COLORS.primaryRed}; margin: 0 0 8px;
+}
+.lfhte-card-stats {
+  font-size: 11px; color: ${LFH_COLORS.textSecondary}; margin-bottom: 6px;
+}
+.lfhte-stat-divider { margin: 0 6px; opacity: 0.4; }
+.lfhte-card-price {
+  font-size: 14px; font-weight: 700;
+  color: ${LFH_COLORS.textPrimary}; margin: 0 0 8px;
+}
+.lfhte-card-desc {
+  font-size: 12px; color: ${LFH_COLORS.textSecondary};
+  line-height: 1.5; margin: 0 0 12px;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.lfhte-card-actions { display: flex; gap: 8px; }
+
+.lfhte-btn-primary {
+  flex: 1; padding: 10px 16px;
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
+  border: none; border-radius: 6px; font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; text-align: center;
+}
+.lfhte-btn-primary:hover { background: #c4221a; transform: translateY(-1px); }
+.lfhte-btn-outline {
+  flex: 1; padding: 10px 16px;
+  background: #fff; color: ${LFH_COLORS.textPrimary};
+  border: 1.5px solid ${LFH_COLORS.border}; border-radius: 6px;
+  font-family: 'Inter', sans-serif; font-size: 12px;
+  font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.lfhte-btn-outline:hover { border-color: ${LFH_COLORS.primaryRed}; color: ${LFH_COLORS.primaryRed}; }
+.lfhte-btn-outline.active {
+  background: ${LFH_COLORS.selectedTint};
+  border-color: ${LFH_COLORS.primaryRed}; color: ${LFH_COLORS.primaryRed};
+}
+
+.lfhte-no-results { grid-column: 1 / -1; text-align: center; padding: 60px 20px; }
+.lfhte-no-results-icon { font-size: 48px; margin-bottom: 12px; }
+.lfhte-no-results p { font-size: 16px; color: ${LFH_COLORS.textSecondary}; margin-bottom: 16px; }
+
+.lfhte-detail { display: flex; flex-direction: column; height: 100%; }
+.lfhte-detail-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.lfhte-back-btn {
+  background: ${LFH_COLORS.infoBox}; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; padding: 8px 14px;
+  font-family: 'Inter', sans-serif; font-size: 11px;
+  font-weight: 700; color: ${LFH_COLORS.textSecondary};
+  cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+}
+.lfhte-back-btn:hover {
+  background: #eee; border-color: ${LFH_COLORS.primaryRed};
+  color: ${LFH_COLORS.textPrimary};
+}
+.lfhte-detail-title {
+  font-size: 22px; font-weight: 900; color: ${LFH_COLORS.textPrimary};
+  margin: 0; font-family: 'Nexa Rust Sans Black 2', sans-serif;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.lfhte-detail-subtitle { font-size: 13px; color: ${LFH_COLORS.textSecondary}; font-style: italic; }
+.lfhte-detail-scroll { flex: 1; overflow-y: auto; }
+
+.lfhte-hero-media { margin-bottom: 12px; }
+.lfhte-hero-img {
+  width: 100%; max-height: 400px; object-fit: cover;
+  object-position: center; border-radius: 10px;
+  display: block;
+}
+.lfhte-hero-image {
+  width: 100%; height: 280px; background-size: cover;
+  background-position: center; border-radius: 10px;
+  position: relative; display: flex;
+  align-items: center; justify-content: center; cursor: pointer;
+}
+.lfhte-hero-image::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(transparent 50%, rgba(0,0,0,0.6));
+  border-radius: 10px; pointer-events: none;
+}
+.lfhte-play-btn {
+  position: relative; z-index: 2;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(255,255,255,0.9); border: none;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; transition: all 0.2s;
+}
+.lfhte-play-btn:hover { background: ${LFH_COLORS.primaryRed}; transform: scale(1.1); }
+.lfhte-play-btn:hover .lfhte-play-triangle { border-left-color: #fff; }
+.lfhte-play-triangle {
+  width: 0; height: 0;
+  border-left: 18px solid ${LFH_COLORS.textPrimary};
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  margin-left: 4px; transition: border-color 0.2s;
+}
+.lfhte-hero-label {
+  position: absolute; bottom: 14px; left: 14px; z-index: 2;
+  color: #fff; font-size: 12px; font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.lfhte-video-embed {
+  width: 100%; aspect-ratio: 16/9; border-radius: 10px;
+  overflow: hidden; background: #000;
+}
+.lfhte-video-embed iframe { width: 100%; height: 100%; border: none; }
+
+.lfhte-gallery-strip {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding-bottom: 8px; margin-bottom: 16px;
+}
+.lfhte-gallery-strip::-webkit-scrollbar { height: 4px; }
+.lfhte-gallery-strip::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 2px; }
+.lfhte-gallery-thumb {
+  flex: 0 0 120px; height: 80px; border-radius: 8px;
+  background-size: cover; background-position: center;
+  border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+}
+.lfhte-gallery-thumb:hover { border-color: ${LFH_COLORS.primaryRed}; }
+.lfhte-video-thumb {
+  position: relative; background: #1a1a1a;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.lfhte-detail-section { margin-bottom: 20px; }
+.lfhte-section-title {
+  font-size: 14px; font-weight: 700; color: ${LFH_COLORS.textPrimary};
+  margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.lfhte-full-desc {
+  font-size: 13px; line-height: 1.7; color: ${LFH_COLORS.textPrimary}; margin: 0 0 12px;
+}
+.lfhte-best-for { display: flex; gap: 6px; flex-wrap: wrap; }
+.lfhte-best-for-badge {
+  padding: 4px 12px; background: ${LFH_COLORS.infoBox};
+  border: 1px solid ${LFH_COLORS.border}; border-radius: 20px;
+  font-size: 11px; font-weight: 600; color: ${LFH_COLORS.textSecondary};
+}
+
+.lfhte-stats-bar {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+}
+.lfhte-stat-box {
+  text-align: center; padding: 12px 8px;
+  background: ${LFH_COLORS.infoBox}; border-radius: 8px;
+}
+.lfhte-stat-value {
+  font-size: 14px; font-weight: 700; color: ${LFH_COLORS.primaryRed}; margin-bottom: 2px;
+}
+.lfhte-stat-label {
+  font-size: 10px; color: ${LFH_COLORS.textSecondary};
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+
+.lfhte-pricing-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.lfhte-pricing-table th {
+  padding: 10px 8px; background: ${LFH_COLORS.textPrimary};
+  color: #fff; text-align: left; font-weight: 600;
+  font-size: 11px; text-transform: uppercase;
+}
+.lfhte-pricing-table td {
+  padding: 10px 8px; border-bottom: 1px solid ${LFH_COLORS.border};
+  color: ${LFH_COLORS.textPrimary};
+}
+.lfhte-pricing-table tbody tr:hover { background: ${LFH_COLORS.selectedTint}; }
+.lfhte-pricing-note {
+  font-size: 11px; color: ${LFH_COLORS.textSecondary};
+  margin-top: 8px; font-style: italic;
+}
+.lfhte-vertical-note {
+  font-size: 11px; color: ${LFH_COLORS.textSecondary};
+  font-style: italic; margin: 4px 0 0 0; text-align: center;
+}
+
+.lfhte-included-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.lfhte-included-item {
+  font-size: 12px; color: ${LFH_COLORS.textPrimary};
+  display: flex; align-items: center; gap: 6px;
+}
+.lfhte-check-icon { color: #2E7D32; font-weight: 700; }
+
+.lfhte-detail-actions {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 0; border-top: 1px solid ${LFH_COLORS.border};
+  margin-top: 8px;
+}
+.lfhte-actions-row { display: flex; gap: 10px; }
+
+.lfhte-compare-tray {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px; background: ${LFH_COLORS.textPrimary};
+  border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+}
+.lfhte-tray-tours { display: flex; gap: 10px; flex: 1; overflow-x: auto; }
+.lfhte-tray-thumb {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; background: rgba(255,255,255,0.1);
+  border-radius: 6px; flex-shrink: 0;
+}
+.lfhte-tray-img {
+  width: 32px; height: 32px; border-radius: 4px;
+  background-size: cover; background-position: center;
+}
+.lfhte-tray-thumb span { color: #fff; font-size: 11px; font-weight: 600; }
+.lfhte-tray-remove {
+  background: transparent; border: none; color: rgba(255,255,255,0.6);
+  cursor: pointer; font-size: 16px; padding: 0; margin-left: 4px;
+}
+.lfhte-tray-remove:hover { color: #fff; }
+.lfhte-tray-compare-btn {
+  padding: 10px 20px; background: ${LFH_COLORS.primaryRed};
+  color: #fff; border: none; border-radius: 6px;
+  font-family: 'Inter', sans-serif; font-size: 12px;
+  font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background 0.2s;
+}
+.lfhte-tray-compare-btn:hover { background: #c4221a; }
+
+@media (max-width: 700px) {
+  .lfhte-compare-tray { flex-direction: column; gap: 8px; padding: 10px 16px; }
+  .lfhte-tray-tours { flex-wrap: wrap; gap: 6px; }
+  .lfhte-tray-thumb { flex-shrink: 1; min-width: 0; }
+  .lfhte-tray-thumb span { font-size: 10px; }
+  .lfhte-tray-img { width: 24px; height: 24px; }
+  .lfhte-tray-compare-btn { width: 100%; }
+}
+
+.lfhte-compare { display: flex; flex-direction: column; height: 100%; }
+.lfhte-compare-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.lfhte-compare-title {
+  font-size: 18px; font-weight: 700; color: ${LFH_COLORS.textPrimary}; margin: 0;
+}
+.lfhte-compare-scroll { flex: 1; overflow: auto; }
+.lfhte-compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.lfhte-compare-table th, .lfhte-compare-table td {
+  padding: 12px; border: 1px solid ${LFH_COLORS.border};
+  text-align: left; vertical-align: top; color: ${LFH_COLORS.textPrimary};
+}
+.lfhte-compare-th { background: ${LFH_COLORS.infoBox}; min-width: 160px; }
+.lfhte-compare-tour-name { font-size: 14px; font-weight: 700; color: ${LFH_COLORS.primaryRed}; }
+.lfhte-compare-tour-sub { font-size: 11px; color: ${LFH_COLORS.textSecondary}; margin-top: 2px; }
+.lfhte-compare-label { font-weight: 600; background: ${LFH_COLORS.infoBox}; white-space: nowrap; }
+.lfhte-compare-actions {
+  display: flex; gap: 10px; padding: 16px 0;
+  border-top: 1px solid ${LFH_COLORS.border}; margin-top: 8px;
+}
+
+/* Mobile compare cards */
+.lfhte-compare-cards {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 0 2px; flex: 1; overflow-y: auto;
+}
+.lfhte-compare-card {
+  border: 1px solid ${LFH_COLORS.border}; border-radius: 8px; overflow: hidden;
+  flex-shrink: 0;
+}
+.lfhte-compare-card-label {
+  padding: 10px 14px; background: ${LFH_COLORS.textPrimary}; color: #fff;
+  font-size: 13px; font-weight: 700;
+}
+.lfhte-compare-card-row {
+  margin: 0; padding: 8px 14px;
+  border-bottom: 1px solid ${LFH_COLORS.border};
+  font-size: 13px; line-height: 1.4;
+  color: ${LFH_COLORS.textPrimary};
+}
+.lfhte-compare-card-row:last-child { border-bottom: none; }
+.lfhte-compare-card-tour {
+  color: ${LFH_COLORS.primaryRed}; font-weight: 600; font-size: 12px;
+}
+
+/* Slide Panel */
+.lfhte-sp-overlay {
+  position: absolute; inset: 0; z-index: 100;
+  display: flex; pointer-events: none;
+}
+.lfhte-sp-overlay.open { pointer-events: auto; }
+.lfhte-sp-backdrop {
+  flex: 1; background: rgba(0,0,0,0);
+  transition: background 0.3s ease;
+}
+.lfhte-sp-overlay.open .lfhte-sp-backdrop { background: rgba(0,0,0,0.3); }
+.lfhte-sp-panel {
+  width: 70%; max-width: 480px; height: 100%;
+  background: ${LFH_COLORS.background};
+  box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+.lfhte-sp-overlay.open .lfhte-sp-panel { transform: translateX(0); }
+.lfhte-sp-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; background: ${LFH_COLORS.textPrimary}; flex-shrink: 0;
+}
+.lfhte-sp-back {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px; padding: 6px 12px;
+  font-family: 'Inter', sans-serif; font-size: 11px;
+  font-weight: 700; color: #fff; cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase;
+}
+.lfhte-sp-back:hover { background: rgba(255,255,255,0.2); }
+.lfhte-sp-title {
+  font-family: 'Nexa Rust Sans Black 2', sans-serif;
+  font-size: 13px; font-weight: 900; color: #fff;
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.lfhte-sp-content { flex: 1; overflow-y: auto; }
+.lfhte-sp-content::-webkit-scrollbar { width: 5px; }
+.lfhte-sp-content::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 3px; }
+
+@media (max-width: 600px) {
+  .lfhte-sp-panel { width: 100%; max-width: 100%; }
+}
+
+/* Mobile Progressive Disclosure */
+.lfhte-collapse-toggle {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; padding: 8px 12px; margin-bottom: 8px;
+  background: ${LFH_COLORS.infoBox}; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 600; color: ${LFH_COLORS.textSecondary};
+  cursor: pointer; transition: all 0.2s;
+}
+.lfhte-collapse-toggle:hover { border-color: ${LFH_COLORS.primaryRed}; color: ${LFH_COLORS.textPrimary}; }
+.lfhte-toggle-hint {
+  margin-left: auto; font-size: 10px; font-weight: 400;
+  color: ${LFH_COLORS.primaryRed}; opacity: 0.8;
+  font-style: italic; letter-spacing: 0.2px;
+}
+.lfhte-toggle-arrow {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: ${LFH_COLORS.border}; color: ${LFH_COLORS.textPrimary};
+  flex-shrink: 0; transition: all 0.2s;
+}
+.lfhte-collapse-toggle:hover .lfhte-toggle-arrow,
+.lfhte-included-toggle:hover .lfhte-toggle-arrow {
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
+}
+
+.lfhte-gallery-collapsed { display: none !important; }
+.lfhte-gallery-expanded { display: flex !important; }
+
+.lfhte-included-toggle {
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+  padding: 10px 12px; margin: 0 -12px 10px;
+  background: ${LFH_COLORS.infoBox}; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; transition: all 0.2s;
+}
+.lfhte-included-toggle:hover {
+  color: ${LFH_COLORS.primaryRed}; border-color: ${LFH_COLORS.primaryRed};
+}
+.lfhte-included-collapsed { display: none !important; }
+.lfhte-included-expanded { display: grid !important; }
+
+.lfhte-sticky-cta {
+  display: flex; gap: 8px; padding: 10px 16px;
+  background: #fff; border-top: 1px solid ${LFH_COLORS.border};
+  flex-shrink: 0; box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+}
+.lfhte-sticky-cta .lfhte-btn-primary,
+.lfhte-sticky-cta .lfhte-btn-outline {
+  flex: 1; padding: 12px 16px; font-size: 13px; font-weight: 700;
+  min-height: 44px;
+}
+
+@media (max-width: 500px) {
+  .lfhte-stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .lfhte-stat-box { padding: 8px 6px; }
+  .lfhte-stat-value { font-size: 12px; }
+  .lfhte-stat-label { font-size: 9px; }
+  .lfhte-pricing-table { display: block; overflow-x: auto; }
+  .lfhte-hero-image { height: 200px; }
+  .lfhte-hero-img { max-height: 250px; }
+  .lfhte-filter-bar { padding: 10px 12px; }
+  .lfhte-filter-group { min-width: 0; flex: 1 1 30%; }
+  .lfhte-filter-group select { padding: 6px 8px; }
+  .lfhte-results-count { display: none; }
+  .lfhte-included-grid { grid-template-columns: 1fr; }
+  .lfhte-detail-actions-bottom .lfhte-actions-row:first-child { display: none; }
+}
+`;
+}
