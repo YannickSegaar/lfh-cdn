@@ -14,7 +14,7 @@
 
 @font-face {
   font-family: 'Nexa Rust Sans Black';
-  src: url('fonts/NexaRustSansBlack.woff2') format('woff2');
+  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: 'Nexa Rust Sans Black 2';
-  src: url('fonts/NexaRustSansBlack2.woff2') format('woff2');
+  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
