@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Welcome Grid
+ * Production ID: lfh-welcome
+ * Trace types: ext_welcomeGrid_v2
+ * Origin: welcome-grid-v2-unified.js
+ * Dependencies: none
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Welcome Grid Extension V2 (Unified Event Architecture)
  *
  * Same UI as V1, but fires a single `ext_navigate` event with structured

@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Self-Service Widget
+ * Production ID: lfh-selfservice-widget
+ * Trace types: ext_browserSelfService_v4, ext_browserSelfService_unified
+ * Origin: browser-self-service-v4-widget-unified.js
+ * Dependencies: lfh-selfservice-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Browser Self-Service Widget v4.0
  * Unified Event Architecture
  *
@@ -13,7 +22,7 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_COLORS, LFH_ASSETS, openBrowserSelfServiceModal } from './browser-self-service-v4-modal-unified.js';
+import { LFH_COLORS, LFH_ASSETS, openBrowserSelfServiceModal } from './lfh-selfservice-modal.js';
 
 // ============================================================================
 // INLINE SVG ICONS FOR RESOURCES

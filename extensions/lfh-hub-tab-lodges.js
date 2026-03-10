@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Hub Lodges Tab
+ * Production ID: lfh-hub-tab-lodges
+ * Trace types: N/A (tab component)
+ * Origin: lfh-hub-tab-lodges.js (unchanged)
+ * Dependencies: lfh-hub-shared
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Hub - Lodges Tab
  *
  * Extracted from lfh-lodge-compare-modal-v2-unified.js.

@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Lodges Widget
+ * Production ID: lfh-lodges-widget
+ * Trace types: ext_lodgeCompare_v2, ext_lodgeCompare_unified
+ * Origin: lfh-lodge-compare-widget-v2-unified.js
+ * Dependencies: lfh-lodges-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Lodge Compare - In-Chat Widget v2
  *
  * VoiceFlow extension displaying side-by-side lodge preview cards
@@ -16,7 +25,7 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_LODGES, LFH_COLORS, LFH_ASSETS, openLodgeCompareModal } from './lfh-lodge-compare-modal-v2-unified.js';
+import { LFH_LODGES, LFH_COLORS, LFH_ASSETS, openLodgeCompareModal } from './lfh-lodges-modal.js';
 
 export const LFHLodgeCompareWidgetV2Unified = {
   name: 'LFHLodgeCompareWidgetV2Unified',

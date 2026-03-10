@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Feedback Widget
+ * Production ID: lfh-feedback
+ * Trace types: ext_feedback10
+ * Origin: lfh-feedback-v10.js
+ * Dependencies: none
+ * Last modified: 2026-03-10
+ */
+
+/**
  * LFH Feedback Extension v10
  *
  * Key architectural change from v9:

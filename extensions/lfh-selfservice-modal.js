@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Self-Service Modal
+ * Production ID: lfh-selfservice-modal
+ * Trace types: N/A (opened by other extensions)
+ * Origin: browser-self-service-v4-modal-unified.js
+ * Dependencies: lfh-tours-data, lfh-tours-modal, lfh-lodges-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Browser Self-Service - Shared Modal Module
  * Unified Event Architecture
  *
@@ -14,9 +23,9 @@
  */
 
 // Import shared constants from tour explorer
-import { LFH_COLORS, LFH_ASSETS } from './lfh-tour-explorer-modal.js';
-import { openTourExplorerModalWithBookingUnified } from './lfh-tour-explorer-modal-booking-unified.js';
-import { openLodgeCompareModal } from './lfh-lodge-compare-modal-v2-unified.js';
+import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
+import { openTourExplorerModalWithBookingUnified } from './lfh-tours-modal.js';
+import { openLodgeCompareModal } from './lfh-lodges-modal.js';
 
 // Re-export for widget use
 export { LFH_COLORS, LFH_ASSETS };

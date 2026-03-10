@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Weather Widget
+ * Production ID: lfh-weather-widget
+ * Trace types: ext_weather_conditions_v2, ext_weather_conditions_unified
+ * Origin: lfh-weather-conditions-widget-v2-unified.js
+ * Dependencies: lfh-tours-data, lfh-weather-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Weather Conditions Widget v2 — Hero Image Card
  * Unified Event Architecture
  *
@@ -12,8 +21,8 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_COLORS, LFH_ASSETS } from './lfh-tour-explorer-modal.js';
-import { openWeatherConditionsModal } from './lfh-weather-conditions-modal-unified.js';
+import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
+import { openWeatherConditionsModal } from './lfh-weather-modal.js';
 
 // ============================================================================
 // CONSTANTS

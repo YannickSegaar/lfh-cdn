@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Tour Booking Form
+ * Production ID: lfh-tours-booking
+ * Trace types: N/A (utility)
+ * Origin: lfh-tour-booking-form-v2.js
+ * Dependencies: lfh-tours-data
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Tour Booking Form - Reusable Component
  *
  * Standalone booking request form that renders into any container.
@@ -9,7 +18,7 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_TOURS, LFH_COLORS, LFH_ASSETS } from './lfh-tour-explorer-modal.js';
+import { LFH_TOURS, LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
 
 // ============================================================================
 // TOUR DATES (2027 Season)

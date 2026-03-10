@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Lead Capture Form
+ * Production ID: lfh-lead-form
+ * Trace types: ext_lastFrontierLeadForm_v4, ext_lastFrontierLeadForm_unified
+ * Origin: lead-capture-form-v5-unified.js
+ * Dependencies: none
+ * Last modified: 2026-03-10
+ */
+
+/**
 * Last Frontier Lead Capture Form Extension v5.0 — Unified Event Architecture
 *
 * Updates:

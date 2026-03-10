@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Hub Weather Tab
+ * Production ID: lfh-hub-tab-weather
+ * Trace types: N/A (tab component)
+ * Origin: lfh-hub-tab-weather.js (unchanged)
+ * Dependencies: lfh-hub-shared
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Hub - Weather Tab
  *
  * Extracted from lfh-weather-conditions-modal-unified.js.
