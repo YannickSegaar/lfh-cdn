@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Tours Data Constants
+ * Production ID: lfh-tours-data
+ * Trace types: N/A (utility)
+ * Origin: lfh-tour-explorer-modal.js
+ * Dependencies: none
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Tour Explorer - Shared Modal Module
  *
  * Full-screen overlay modal with filter bar, tour card grid,

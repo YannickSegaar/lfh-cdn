@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Hub Modal
+ * Production ID: lfh-hub
+ * Trace types: ext_hubModal
+ * Origin: lfh-hub-modal.js
+ * Dependencies: lfh-hub-shared, lfh-hub-tab-tours, lfh-hub-tab-lodges, lfh-hub-tab-weather
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Hub Modal - Unified Tabbed Experience
  *
  * Single modal combining Tours, Lodges, and Weather into a tabbed interface.

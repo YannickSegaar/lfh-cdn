@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Hub Shared Utilities
+ * Production ID: lfh-hub-shared
+ * Trace types: N/A (utility)
+ * Origin: lfh-hub-shared.js (unchanged)
+ * Dependencies: lfh-tours-data, lfh-lodges-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Hub - Shared Utilities & Constants
  *
  * Re-exports data constants and provides shared helper functions
@@ -9,8 +18,8 @@
  */
 
 // Re-export data constants from existing modules
-export { LFH_TOURS, LFH_COLORS, LFH_ASSETS, LFH_VIDEOS, getVideoEmbedUrl } from './lfh-tour-explorer-modal.js';
-export { LFH_LODGES, LFH_LODGE_VIDEOS } from './lfh-lodge-compare-modal-v2-unified.js';
+export { LFH_TOURS, LFH_COLORS, LFH_ASSETS, LFH_VIDEOS, getVideoEmbedUrl } from './lfh-tours-data.js';
+export { LFH_LODGES, LFH_LODGE_VIDEOS } from './lfh-lodges-modal.js';
 
 // ============================================================================
 // SHARED HELPERS

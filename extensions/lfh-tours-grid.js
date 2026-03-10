@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Tours Grid
+ * Production ID: lfh-tours-grid
+ * Trace types: ext_tourExplorer, ext_tourExplorer_booking_unified
+ * Origin: lfh-tour-explorer-grid-booking-unified.js
+ * Dependencies: lfh-tours-data, lfh-tours-modal, lfh-lodges-modal, lfh-weather-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Tour Explorer - Grid with Booking (Unified Event Architecture)
  *
  * In-chat widget displaying a 2x3 card grid of tour packages.
@@ -13,10 +22,10 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_TOURS, LFH_COLORS, LFH_ASSETS } from './lfh-tour-explorer-modal.js';
-import { openTourExplorerModalWithBookingUnified } from './lfh-tour-explorer-modal-booking-unified.js';
-import { openLodgeCompareModal } from './lfh-lodge-compare-modal-v2-unified.js';
-import { openWeatherConditionsModal } from './lfh-weather-conditions-modal-unified.js';
+import { LFH_TOURS, LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
+import { openTourExplorerModalWithBookingUnified } from './lfh-tours-modal.js';
+import { openLodgeCompareModal } from './lfh-lodges-modal.js';
+import { openWeatherConditionsModal } from './lfh-weather-modal.js';
 
 export const LFHTourExplorerGridBookingUnified = {
   name: 'LFHTourExplorerGridBookingUnified',

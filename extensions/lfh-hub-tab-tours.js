@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Hub Tours Tab
+ * Production ID: lfh-hub-tab-tours
+ * Trace types: N/A (tab component)
+ * Origin: lfh-hub-tab-tours.js (unchanged)
+ * Dependencies: lfh-hub-shared, lfh-tours-booking-hub
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Hub - Tours Tab
  *
  * Extracted from lfh-tour-explorer-modal-booking-unified.js.
@@ -17,7 +26,7 @@ import {
   silentVariableUpdate, interactWithAgent, lodgeName, lodgeBadgeColor,
   trackHubTourViewed, trackHubFilterUsed, trackHubHighIntent, getVideoEmbedUrl,
 } from './lfh-hub-shared.js';
-import { renderBookingForm } from './lfh-tour-booking-form.js';
+import { renderBookingForm } from './lfh-tours-booking-hub.js';
 
 // ============================================================================
 // MODULE STATE (scoped per render call)

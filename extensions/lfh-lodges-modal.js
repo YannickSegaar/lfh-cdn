@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Lodges Modal
+ * Production ID: lfh-lodges-modal
+ * Trace types: N/A (opened by other extensions)
+ * Origin: lfh-lodge-compare-modal-v2-unified.js
+ * Dependencies: lfh-tours-data, lfh-tours-modal, lfh-weather-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Lodge Compare - Shared Modal Module
  *
  * Full-screen overlay modal with 3-tab navigation:
@@ -15,11 +24,11 @@
  */
 
 // Import shared constants from tour explorer
-import { LFH_COLORS, LFH_ASSETS } from './lfh-tour-explorer-modal.js';
+import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
 // Import tour explorer for lodge→tour handoff
-import { openTourExplorerModalWithBookingUnified } from './lfh-tour-explorer-modal-booking-unified.js';
+import { openTourExplorerModalWithBookingUnified } from './lfh-tours-modal.js';
 // Import weather modal for cross-navigation
-import { openWeatherConditionsModal } from './lfh-weather-conditions-modal-unified.js';
+import { openWeatherConditionsModal } from './lfh-weather-modal.js';
 
 // Re-export for widget use
 export { LFH_COLORS, LFH_ASSETS };

@@ -1,6 +1,6 @@
 // loader.js — Last Frontier Heliskiing AI Agent Loader
-// Version: 1.0.0
-// Usage: <script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.0.0"></script>
+// Version: 1.1.0
+// Usage: <script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"></script>
 (async function() {
   'use strict';
 
@@ -124,8 +124,8 @@
     if (useFallback) {
       // FALLBACK MODE: Only load lead capture + feedback (text-chat with forms)
       var [leadMod, feedbackMod] = await Promise.all([
-        import(CDN + '/extensions/lead-capture-form-v5-unified.js'),
-        import(CDN + '/extensions/lfh-feedback-v10.js'),
+        import(CDN + '/extensions/lfh-lead-form.js'),
+        import(CDN + '/extensions/lfh-feedback.js'),
       ]);
       extensions = [
         leadMod.LastFrontierLeadForm_v4_Unified,
@@ -140,19 +140,19 @@
         weatherWidgetMod, weatherModalMod,
         welcomeGridMod, snowfallMod, hubModalMod
       ] = await Promise.all([
-        import(CDN + '/extensions/lead-capture-form-v5-unified.js'),
-        import(CDN + '/extensions/lfh-feedback-v10.js'),
-        import(CDN + '/extensions/browser-self-service-v4-widget-unified.js'),
-        import(CDN + '/extensions/browser-self-service-v4-modal-unified.js'),
-        import(CDN + '/extensions/lfh-lodge-compare-widget-v2-unified.js'),
-        import(CDN + '/extensions/lfh-lodge-compare-modal-v2-unified.js'),
-        import(CDN + '/extensions/lfh-tour-explorer-grid-booking-unified.js'),
-        import(CDN + '/extensions/lfh-tour-explorer-modal-booking-unified-v2.js'),
-        import(CDN + '/extensions/lfh-weather-conditions-widget-v2-unified.js'),
-        import(CDN + '/extensions/lfh-weather-conditions-modal-unified.js'),
-        import(CDN + '/extensions/welcome-grid-v2-unified.js'),
-        import(CDN + '/extensions/snowfall.js'),
-        import(CDN + '/extensions/lfh-hub-modal.js'),
+        import(CDN + '/extensions/lfh-lead-form.js'),
+        import(CDN + '/extensions/lfh-feedback.js'),
+        import(CDN + '/extensions/lfh-selfservice-widget.js'),
+        import(CDN + '/extensions/lfh-selfservice-modal.js'),
+        import(CDN + '/extensions/lfh-lodges-widget.js'),
+        import(CDN + '/extensions/lfh-lodges-modal.js'),
+        import(CDN + '/extensions/lfh-tours-grid.js'),
+        import(CDN + '/extensions/lfh-tours-modal.js'),
+        import(CDN + '/extensions/lfh-weather-widget.js'),
+        import(CDN + '/extensions/lfh-weather-modal.js'),
+        import(CDN + '/extensions/lfh-welcome.js'),
+        import(CDN + '/extensions/lfh-snowfall.js'),
+        import(CDN + '/extensions/lfh-hub.js'),
       ]);
       extensions = [
         leadMod.LastFrontierLeadForm_v4_Unified,

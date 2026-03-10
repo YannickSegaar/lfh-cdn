@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Weather Modal
+ * Production ID: lfh-weather-modal
+ * Trace types: N/A (opened by other extensions)
+ * Origin: lfh-weather-conditions-modal-unified.js
+ * Dependencies: lfh-tours-data, lfh-lodges-modal, lfh-tours-modal
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Weather Conditions - iFrame Modal Extension
  * Unified Event Architecture
  *
@@ -13,9 +22,9 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_COLORS, LFH_ASSETS } from './lfh-tour-explorer-modal.js';
-import { openLodgeCompareModal } from './lfh-lodge-compare-modal-v2-unified.js';
-import { openTourExplorerModalWithBookingUnified } from './lfh-tour-explorer-modal-booking-unified.js';
+import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
+import { openLodgeCompareModal } from './lfh-lodges-modal.js';
+import { openTourExplorerModalWithBookingUnified } from './lfh-tours-modal.js';
 
 // ============================================================================
 // CONSTANTS

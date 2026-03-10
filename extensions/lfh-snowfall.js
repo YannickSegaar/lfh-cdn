@@ -1,3 +1,12 @@
+/**
+ * LFH Extension: Snowfall Animation
+ * Production ID: lfh-snowfall
+ * Trace types: ext_snowfall1
+ * Origin: snowfall.js
+ * Dependencies: none
+ * Last modified: 2026-03-10
+ */
+
 // YRS: SNOWFALL EXTENSION VERSION 1 (27 OCT 2025)
 
 // This extension is now designed to work with the Snowify library.

@@ -1,4 +1,13 @@
 /**
+ * LFH Extension: Tours Modal
+ * Production ID: lfh-tours-modal
+ * Trace types: N/A (opened by other extensions)
+ * Origin: lfh-tour-explorer-modal-booking-unified-v2.js
+ * Dependencies: lfh-tours-data, lfh-tours-booking
+ * Last modified: 2026-03-10
+ */
+
+/**
  * Last Frontier Tour Explorer - Enhanced Modal with Booking (Unified Event Architecture)
  *
  * Extends the Tour Explorer modal with in-modal booking form.
@@ -15,8 +24,8 @@
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-import { LFH_TOURS, LFH_COLORS, LFH_ASSETS, LFH_VIDEOS } from './lfh-tour-explorer-modal.js';
-import { renderBookingForm } from './lfh-tour-booking-form-v2.js';
+import { LFH_TOURS, LFH_COLORS, LFH_ASSETS, LFH_VIDEOS } from './lfh-tours-data.js';
+import { renderBookingForm } from './lfh-tours-booking.js';
 
 // ============================================================================
 // HELPERS (mirrored from modal module to avoid deep coupling)
