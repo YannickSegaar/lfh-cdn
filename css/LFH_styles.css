@@ -58,26 +58,7 @@
   overflow-wrap: break-word !important;
 }
 
-.vfrc-header--button {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #FFFFFF !important;
-  border-radius: 4px !important;
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  padding: 4px !important;
-  flex-shrink: 0 !important;
-}
-
-.vfrc-header--actions,
-[class*="header"] [class*="actions"] {
-  gap: 4px !important;
-  flex-shrink: 0 !important;
-}
-
-.vfrc-header--button:hover {
-  background-color: rgba(255, 255, 255, 0.3) !important;
-}
+/* Header buttons: No overrides — VoiceFlow default transparent icon style applies */
 
 .vfrc-header--icon {
   fill: #FFFFFF !important;
