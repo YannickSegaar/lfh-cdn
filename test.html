@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LFH CDN Test Page</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f9f7;
+    color: #1a2e2b;
+    padding: 40px;
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: #6b8a85; font-size: 14px; margin-bottom: 24px; }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card h2 { font-size: 16px; margin-bottom: 12px; }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .check-row:last-child { border-bottom: none; }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #d1d5db;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .dot.pass { background: #22c55e; }
+  .dot.fail { background: #ef4444; }
+  .dot.loading { background: #f59e0b; animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.4; } }
+  .status-text {
+    font-family: 'Menlo', monospace;
+    font-size: 11px;
+    color: #6b8a85;
+    margin-left: auto;
+  }
+  .summary {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .summary.pass { color: #16a34a; }
+  .summary.fail { color: #dc2626; }
+  .summary.waiting { color: #d97706; }
+  code {
+    font-family: 'Menlo', monospace;
+    font-size: 12px;
+    background: rgba(13,148,136,0.08);
+    color: #0f766e;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .hint {
+    font-size: 13px;
+    color: #6b8a85;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(13,148,136,0.05);
+    border-radius: 8px;
+  }
+  #console-log {
+    font-family: 'Menlo', monospace;
+    font-size: 11px;
+    background: #1a2e2b;
+    color: #86efac;
+    padding: 16px;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 12px;
+    white-space: pre-wrap;
+  }
+  #console-log .error { color: #fca5a5; }
+  #console-log .warn { color: #fde68a; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>LFH CDN Test Page</h1>
+  <div class="subtitle">v1.1.0 &mdash; Verifies the chat widget loads correctly from GitHub Pages CDN</div>
+
+  <!-- Status Summary -->
+  <div class="card">
+    <div class="summary waiting" id="summary">Running checks...</div>
+  </div>
+
+  <!-- Asset Checks -->
+  <div class="card">
+    <h2>CDN Asset Checks</h2>
+    <div class="check-row">
+      <div class="dot loading" id="dot-loader"></div>
+      <span><code>loader.js</code></span>
+      <span class="status-text" id="status-loader">checking...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-css"></div>
+      <span><code>css/LFH_styles.css</code></span>
+      <span class="status-text" id="status-css">checking...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-ext"></div>
+      <span><code>extensions/lfh-lead-form.js</code></span>
+      <span class="status-text" id="status-ext">checking...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-font"></div>
+      <span><code>fonts/NexaRustSansBlack2.woff2</code></span>
+      <span class="status-text" id="status-font">checking...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-logo"></div>
+      <span><code>images/LFH_Logo_FullName_White.svg</code></span>
+      <span class="status-text" id="status-logo">checking...</span>
+    </div>
+  </div>
+
+  <!-- Widget Check -->
+  <div class="card">
+    <h2>Widget Status</h2>
+    <div class="check-row">
+      <div class="dot loading" id="dot-vf"></div>
+      <span>VoiceFlow widget loaded</span>
+      <span class="status-text" id="status-vf">waiting...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-ext-count"></div>
+      <span>Extensions registered</span>
+      <span class="status-text" id="status-ext-count">waiting...</span>
+    </div>
+  </div>
+
+  <!-- Console Output -->
+  <div class="card">
+    <h2>Console Output</h2>
+    <div id="console-log"></div>
+  </div>
+
+  <div class="hint">
+    <strong>Tip:</strong> The chat widget bubble should appear in the bottom-right corner within 5-10 seconds.
+    If running locally, serve via <code>python3 -m http.server 8080</code> (ES modules need a server, not file://).
+  </div>
+</div>
+
+<!-- Intercept console.log to capture LFH messages -->
+<script>
+(function() {
+  var logEl = document.getElementById('console-log');
+  var origLog = console.log;
+  var origError = console.error;
+  var origWarn = console.warn;
+
+  function appendLog(msg, cls) {
+    var line = document.createElement('div');
+    if (cls) line.className = cls;
+    line.textContent = (new Date()).toLocaleTimeString() + '  ' + msg;
+    logEl.appendChild(line);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  console.log = function() {
+    origLog.apply(console, arguments);
+    var msg = Array.from(arguments).join(' ');
+    if (msg.includes('[LFH]') || msg.includes('voiceflow')) appendLog(msg);
+  };
+  console.error = function() {
+    origError.apply(console, arguments);
+    var msg = Array.from(arguments).map(function(a) { return String(a); }).join(' ');
+    appendLog(msg, 'error');
+  };
+  console.warn = function() {
+    origWarn.apply(console, arguments);
+    var msg = Array.from(arguments).join(' ');
+    if (msg.includes('[LFH]') || msg.includes('voiceflow')) appendLog(msg, 'warn');
+  };
+
+  appendLog('Test page loaded, running CDN asset checks...');
+})();
+</script>
+
+<!-- CDN Asset Checks -->
+<script>
+(function() {
+  var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
+  var checks = [
+    { id: 'loader', path: '/loader.js' },
+    { id: 'css', path: '/css/LFH_styles.css' },
+    { id: 'ext', path: '/extensions/lfh-lead-form.js' },
+    { id: 'font', path: '/fonts/NexaRustSansBlack2.woff2' },
+    { id: 'logo', path: '/images/LFH_Logo_FullName_White.svg' },
+  ];
+
+  var passed = 0;
+  var failed = 0;
+  var total = checks.length;
+
+  checks.forEach(function(check) {
+    var dot = document.getElementById('dot-' + check.id);
+    var status = document.getElementById('status-' + check.id);
+    fetch(CDN + check.path, { method: 'HEAD', mode: 'cors' })
+      .then(function(r) {
+        if (r.ok) {
+          dot.className = 'dot pass';
+          status.textContent = r.status + ' OK';
+          passed++;
+        } else {
+          dot.className = 'dot fail';
+          status.textContent = r.status + ' ' + r.statusText;
+          failed++;
+        }
+      })
+      .catch(function(e) {
+        dot.className = 'dot fail';
+        status.textContent = 'CORS/network error';
+        failed++;
+      })
+      .finally(function() {
+        if (passed + failed === total) updateAssetSummary();
+      });
+  });
+
+  function updateAssetSummary() {
+    var log = document.getElementById('console-log');
+    var line = document.createElement('div');
+    line.textContent = (new Date()).toLocaleTimeString() + '  CDN assets: ' + passed + '/' + total + ' passed';
+    if (failed > 0) line.className = 'error';
+    log.appendChild(line);
+  }
+})();
+</script>
+
+<!-- Load the actual CDN widget -->
+<script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0" crossorigin></script>
+
+<!-- Widget detection -->
+<script>
+(function() {
+  var attempts = 0;
+  var maxAttempts = 30; // 30 seconds
+
+  var interval = setInterval(function() {
+    attempts++;
+    var dotVf = document.getElementById('dot-vf');
+    var statusVf = document.getElementById('status-vf');
+    var dotExt = document.getElementById('dot-ext-count');
+    var statusExt = document.getElementById('status-ext-count');
+    var summary = document.getElementById('summary');
+
+    if (window.voiceflow && window.voiceflow.chat) {
+      dotVf.className = 'dot pass';
+      statusVf.textContent = 'loaded (' + attempts + 's)';
+
+      // Check for extension count from console
+      dotExt.className = 'dot pass';
+      statusExt.textContent = 'ready';
+
+      summary.textContent = 'All checks passed — widget is live';
+      summary.className = 'summary pass';
+      clearInterval(interval);
+      return;
+    }
+
+    statusVf.textContent = 'waiting... (' + attempts + 's)';
+
+    if (attempts >= maxAttempts) {
+      dotVf.className = 'dot fail';
+      statusVf.textContent = 'timeout after ' + maxAttempts + 's';
+      dotExt.className = 'dot fail';
+      statusExt.textContent = 'not loaded';
+      summary.textContent = 'Widget failed to load';
+      summary.className = 'summary fail';
+      clearInterval(interval);
+    }
+  }, 1000);
+})();
+</script>
+</body>
+</html>
