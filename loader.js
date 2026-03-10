@@ -107,6 +107,21 @@
   window.lfhPageContext = sessionData;
 
   // ============================================
+  // 1b. PRELOAD BRAND FONT
+  // ============================================
+  var fontLink = document.createElement('link');
+  fontLink.rel = 'preload';
+  fontLink.as = 'font';
+  fontLink.type = 'font/woff2';
+  fontLink.href = CDN + '/fonts/NexaRustSansBlack2.woff2';
+  fontLink.crossOrigin = 'anonymous';
+  document.head.appendChild(fontLink);
+
+  var fontStyle = document.createElement('style');
+  fontStyle.textContent = "@font-face { font-family: 'Nexa Rust Sans Black 2'; src: url('" + CDN + "/fonts/NexaRustSansBlack2.woff2') format('woff2'); font-weight: normal; font-style: normal; font-display: swap; }";
+  document.head.appendChild(fontStyle);
+
+  // ============================================
   // 2. LOAD VOICEFLOW WIDGET BUNDLE
   // ============================================
   var script = document.createElement('script');

@@ -29,6 +29,15 @@
    Shadow DOM Injection Version
    =========================================== */
 
+/* Font must be defined INSIDE Shadow DOM — external CSS can't penetrate */
+@font-face {
+  font-family: 'Nexa Rust Sans Black 2';
+  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Header title - 15px font size, no truncation */
 .vfrc-header--title,
 [class*="vfrc-header"] [class*="title"] {
