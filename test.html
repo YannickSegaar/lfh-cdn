@@ -245,8 +245,19 @@
 })();
 </script>
 
-<!-- Load the actual CDN widget -->
-<script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0" crossorigin></script>
+<!-- Load the widget: local when served via localhost, CDN otherwise -->
+<script>
+(function() {
+  var s = document.createElement('script');
+  s.type = 'module';
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    s.src = '/loader.js?v=local&t=' + Date.now();
+  } else {
+    s.src = 'https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0';
+  }
+  document.body.appendChild(s);
+})();
+</script>
 
 <!-- Widget detection -->
 <script>

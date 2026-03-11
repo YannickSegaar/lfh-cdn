@@ -7,8 +7,10 @@
   // ============================================
   // CONFIGURATION
   // ============================================
-  var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
-  var VF_PROJECT_ID = '699ffcecd1c4a9bd2986b463';
+  var CDN = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? location.origin
+    : 'https://yannicksegaar.github.io/lfh-cdn';
+  var VF_PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
   var VF_VERSION = 'production';
 
   // Fallback mode: add ?fallback=true to script URL for minimal mode
@@ -122,12 +124,17 @@
   document.head.appendChild(fontStyle);
 
   // ============================================
-  // 2. LOAD VOICEFLOW WIDGET BUNDLE
+  // 2. LOAD VOICEFLOW WIDGET BUNDLE + SNOWIFY
   // ============================================
   var script = document.createElement('script');
   script.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
   script.type = 'text/javascript';
   document.head.appendChild(script);
+
+  // Load Snowify library (snowfall animation dependency)
+  var snowifyScript = document.createElement('script');
+  snowifyScript.src = 'https://gauravkrp.com/snowify.min.js';
+  document.head.appendChild(snowifyScript);
 
   await new Promise(function(resolve) { script.onload = resolve; });
 
@@ -218,11 +225,11 @@
       type: 'text',
       payload: { message: 'Curious about heliskiing in Northern BC?' }
     });
-  }, 3000);
+  }, 1000);
   setTimeout(function() {
     window.voiceflow.chat.proactive.push({
       type: 'text',
-      payload: { message: 'I can help you plan your adventure!' }
+      payload: { message: 'I can show you around!' }
     });
   }, 3000);
   setTimeout(function() {
