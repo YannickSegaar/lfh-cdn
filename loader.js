@@ -20,6 +20,28 @@
   var VF_VERSION = 'production';
 
   // ============================================
+  // DOMAIN ALLOWLIST
+  // Only load on approved domains. Prevents unauthorized usage.
+  // ============================================
+  var ALLOWED_DOMAINS = [
+    'lastfrontierheli.com',       // Production website
+    'www.lastfrontierheli.com',   // Production website (www)
+    'yannicksegaar.github.io',    // CDN test page
+    'localhost',                   // Local development
+    '127.0.0.1',                  // Local development
+  ];
+
+  var currentHost = location.hostname;
+  var isAllowed = ALLOWED_DOMAINS.some(function(domain) {
+    return currentHost === domain || currentHost.endsWith('.' + domain);
+  });
+
+  if (!isAllowed) {
+    console.warn('[LFH] Widget blocked: ' + currentHost + ' is not an authorized domain.');
+    return;
+  }
+
+  // ============================================
   // 1. PAGE CONTEXT CAPTURE
   // ============================================
 
