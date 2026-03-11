@@ -7,19 +7,17 @@
   // ============================================
   // CONFIGURATION
   // ============================================
-  var CDN = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-    ? location.origin
-    : 'https://yannicksegaar.github.io/lfh-cdn';
-  var VF_PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
-  var VF_VERSION = 'production';
-
-  // Fallback mode: add ?fallback=true to script URL for minimal mode
+  // Derive CDN base from this script's own URL (works on any host page)
   var scriptEl = document.currentScript;
+  var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
   var useFallback = false;
   try {
     var scriptUrl = new URL(scriptEl.src);
+    CDN = scriptUrl.origin + scriptUrl.pathname.replace(/\/loader\.js$/, '');
     useFallback = scriptUrl.searchParams.get('fallback') === 'true';
   } catch (e) {}
+  var VF_PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
+  var VF_VERSION = 'production';
 
   // ============================================
   // 1. PAGE CONTEXT CAPTURE
