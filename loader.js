@@ -10,7 +10,7 @@
   var CDN = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
     ? location.origin
     : 'https://yannicksegaar.github.io/lfh-cdn';
-  var VF_PROJECT_ID = '699ffcecd1c4a9bd2986b463';
+  var VF_PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
   var VF_VERSION = 'production';
 
   // Fallback mode: add ?fallback=true to script URL for minimal mode

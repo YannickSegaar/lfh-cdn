@@ -564,7 +564,7 @@ The VoiceFlow canvas fires "old" trace types. The extensions accept both old and
 | CDN root | https://yannicksegaar.github.io/lfh-cdn/ |
 | Loader script | https://yannicksegaar.github.io/lfh-cdn/loader.js |
 | GitHub repo | https://github.com/YannickSegaar/lfh-cdn |
-| VoiceFlow project | Dashboard → Project ID: 699ffcecd1c4a9bd2986b463 |
+| VoiceFlow project | Dashboard → Project ID: 69b13dffb59c7feeb0e8e2dd |
 | GitHub Pages settings | https://github.com/YannickSegaar/lfh-cdn/settings/pages |
 
 ### Fallback mode comparison
