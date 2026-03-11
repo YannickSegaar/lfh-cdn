@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Last Frontier Heliskiing — WordPress Integration Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #1a1a1a;
+    background: #f8f8f8;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+    padding: 48px 56px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 3px solid #cc3333;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
+  }
+
+  .header .subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .badge {
+    background: #cc3333;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #cc3333;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .section p {
+    font-size: 15px;
+    color: #444;
+    margin-bottom: 10px;
+  }
+
+  /* Important callout */
+  .callout {
+    background: #fff8f0;
+    border-left: 4px solid #e6941e;
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 24px 0;
+  }
+
+  .callout-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #b37014;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 14px;
+    color: #6b4a1a;
+    margin-bottom: 0;
+  }
+
+  /* Code block */
+  .code-block {
+    background: #1e1e2e;
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+
+  .code-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .code-block code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 14px;
+    color: #e0e0e0;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .code-block .highlight { color: #89dceb; }
+  .code-block .string { color: #a6e3a1; }
+  .code-block .comment { color: #6c7086; font-style: italic; }
+
+  /* Steps */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: #333;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    background: #cc3333;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  .steps li strong {
+    font-weight: 600;
+  }
+
+  /* Links table */
+  .links-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+
+  .links-table td {
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+
+  .links-table td:first-child {
+    font-weight: 600;
+    color: #555;
+    width: 160px;
+    padding-right: 16px;
+  }
+
+  .links-table td:last-child {
+    color: #333;
+  }
+
+  .links-table code {
+    font-family: 'SF Mono', monospace;
+    font-size: 13px;
+    background: #f5f5f5;
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: #cc3333;
+  }
+
+  a { color: #cc3333; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Footer */
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <h1>WordPress Integration Brief</h1>
+      <div class="subtitle">Last Frontier Heliskiing &mdash; AI Chat Widget</div>
+    </div>
+    <div class="badge">For Gwyn</div>
+  </div>
+
+  <!-- What We Built -->
+  <div class="section">
+    <div class="section-title">What We&rsquo;ve Built</div>
+    <p>
+      We&rsquo;ve developed a custom AI-powered chat widget for Last Frontier Heliskiing.
+      It answers guest questions about tours, lodges, pricing, safety, and more &mdash;
+      using the official LFH knowledge base.
+    </p>
+    <p>
+      Everything is hosted on a <strong>dedicated CDN</strong> (GitHub Pages). This means
+      the widget&rsquo;s code, styling, fonts, and images are all served from one central location.
+      If we need to make any changes &mdash; update content, fix a bug, tweak styling &mdash; we
+      update the CDN. <strong>No WordPress changes needed.</strong>
+    </p>
+  </div>
+
+  <!-- The Embed Code -->
+  <div class="section">
+    <div class="section-title">The Embed Code</div>
+    <p>
+      A single script tag is all that&rsquo;s needed. It loads the widget, all extensions,
+      and styling automatically.
+    </p>
+
+    <div class="code-label">Add to every page &mdash; before &lt;/body&gt;</div>
+    <div class="code-block">
+      <code><span class="comment">&lt;!-- Last Frontier AI Chat Widget --&gt;</span>
+<span class="highlight">&lt;script</span> <span class="string">type</span>=<span class="string">"module"</span>
+  <span class="string">src</span>=<span class="string">"https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"</span>
+<span class="highlight">&gt;&lt;/script&gt;</span></code>
+    </div>
+
+    <p style="font-size: 13px; color: #888;">
+      <strong>WordPress tip:</strong> The easiest approach is to add this in the theme&rsquo;s
+      footer template (<code>footer.php</code>) or via a plugin like
+      <em>Insert Headers and Footers</em> / <em>WPCode</em>. This ensures it loads on every page site-wide.
+    </p>
+  </div>
+
+  <!-- Important Notice -->
+  <div class="callout">
+    <div class="callout-title">&#9888; Important &mdash; Do Not Deploy Yet</div>
+    <p>
+      We are still finalising integration and incorporating Steve&rsquo;s feedback.
+      I need the <strong>definite green light from Steve</strong> before the widget goes live on the website.
+      I&rsquo;m expecting to meet with Steve shortly to confirm. Until then, please
+      <strong>do not add the script to the production site</strong>. I will let you know the moment we&rsquo;re clear to go.
+    </p>
+  </div>
+
+  <!-- Integration Steps -->
+  <div class="section">
+    <div class="section-title">Integration Steps (When Ready)</div>
+    <ol class="steps">
+      <li><strong>Add the script</strong> to the WordPress site footer (loads on all pages).</li>
+      <li><strong>Verify</strong> the chat widget appears in the bottom-right corner after a few seconds.</li>
+      <li><strong>Test</strong> by clicking the widget and sending a message &mdash; you should get a response from the AI agent.</li>
+      <li><strong>Done.</strong> All future updates happen via the CDN &mdash; no code changes needed on WordPress.</li>
+    </ol>
+  </div>
+
+  <!-- Live Preview -->
+  <div class="section">
+    <div class="section-title">Live Preview &amp; Test Page</div>
+    <p>
+      We&rsquo;ve built a test page that loads the widget from the CDN &mdash; exactly as it would
+      appear on the LFH website. It verifies all assets load correctly and shows the
+      full widget experience.
+    </p>
+    <table class="links-table">
+      <tr>
+        <td>Test page</td>
+        <td><a href="https://yannicksegaar.github.io/lfh-cdn/test.html" target="_blank">yannicksegaar.github.io/lfh-cdn/test.html</a></td>
+      </tr>
+      <tr>
+        <td>CDN root</td>
+        <td><a href="https://yannicksegaar.github.io/lfh-cdn/" target="_blank">yannicksegaar.github.io/lfh-cdn/</a></td>
+      </tr>
+      <tr>
+        <td>Loader script</td>
+        <td><code>loader.js</code> &mdash; orchestrates widget, extensions, styling</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- How It Works -->
+  <div class="section">
+    <div class="section-title">How the CDN Architecture Works</div>
+    <p>
+      The WordPress site only has the one script tag. That script pulls everything from the CDN:
+    </p>
+    <table class="links-table">
+      <tr>
+        <td>Widget engine</td>
+        <td>VoiceFlow chat widget (loaded from VoiceFlow&rsquo;s CDN)</td>
+      </tr>
+      <tr>
+        <td>Styling</td>
+        <td>Custom CSS + Shadow DOM injection for brand colours, fonts, layout</td>
+      </tr>
+      <tr>
+        <td>Extensions</td>
+        <td>9 custom modules &mdash; tour explorer, lodge comparison, lead capture, feedback, etc.</td>
+      </tr>
+      <tr>
+        <td>Brand assets</td>
+        <td>LFH logo, fonts (Nexa Rust Sans), background images</td>
+      </tr>
+    </table>
+    <p style="margin-top: 12px;">
+      Any change we make to the CDN is immediately reflected on the website &mdash; no WordPress deployment needed.
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>Prepared by Yannick Segaar &mdash; RomAIx</span>
+    <span>March 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
