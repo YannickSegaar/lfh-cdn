@@ -1948,25 +1948,6 @@ export const LastFrontierLeadForm_v4_Unified = {
     }
 
     // ========================================================================
-    // INITIAL PAYLOAD (PARTIAL SUBMISSION)
-    // ========================================================================
-    function submitInitialPayload() {
-      const getVal = (id) => container.querySelector(id)?.value?.trim() || '';
-      const getRadio = (name) => container.querySelector(`input[name="${name}"]:checked`)?.value || '';
-      const intent = getRadio('intent');
-      const intentScores = { learning: 1, comparing: 2, planning: 3, ready_to_book: 4 };
-      const leadPriority = computeLeadPriority(intent, getRadio('skiDaysPerYear'));
-      const payload = {
-        lead: { firstName: getVal('#lfh-v3-firstName'), lastName: getVal('#lfh-v3-lastName'), email: getVal('#lfh-v3-email'), phone: getVal('#lfh-v3-phone'), country: getVal('#lfh-v3-country'), city: getVal('#lfh-v3-city'), hearAboutUs: getVal('#lfh-v3-hearAboutUs'), intent },
-        qualification: { intentScore: intentScores[intent] || 1, leadPriority },
-        conversationData: { conversationId, userId, timestamp: new Date().toISOString() },
-        contactMode: mode || (isForceHandoff ? 'force_handoff' : ''),
-        source: 'lead_capture', submissionType: 'initial', formSessionId, formVersion: '5.4.0',
-      };
-      fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
-    }
-
-    // ========================================================================
     // WEBHOOK SUBMISSION
     // ========================================================================
     async function submitToWebhook() {
@@ -2038,7 +2019,7 @@ export const LastFrontierLeadForm_v4_Unified = {
         sourceDetail: isForceHandoff ? 'force_handoff' : mode || '',
         submissionType: 'complete',
         formSessionId,
-        formVersion: '5.4.0',
+        formVersion: '5.4.1',
       };
 
       console.log('Submitting lead form v4.5.0 payload:', JSON.stringify(payload, null, 2));
@@ -2101,7 +2082,6 @@ export const LastFrontierLeadForm_v4_Unified = {
           showError('Please fill out all required fields correctly.', 1);
           return;
         }
-        submitInitialPayload();
         showStep(2);
       } else if (currentStep === 2) {
         clearError(2);
