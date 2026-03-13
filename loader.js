@@ -70,6 +70,10 @@
     localStorage.setItem('lfh_visit_count', String(visitCount));
   } catch (e) {}
 
+  // AI disclaimer tracking
+  var disclaimerAccepted = false;
+  try { disclaimerAccepted = localStorage.getItem('lfh_ai_disclaimer_accepted') === 'true'; } catch (e) {}
+
   // Visitor ID (persistent)
   var visitorId = '';
   try {
@@ -122,7 +126,8 @@
     page_url: window.location.href,
     page_path: window.location.pathname,
     referrer: document.referrer || '',
-    utm: utmParams
+    utm: utmParams,
+    disclaimer_accepted: disclaimerAccepted
   };
 
   // Store for cross-page awareness
@@ -165,23 +170,28 @@
   try {
     if (useFallback) {
       // FALLBACK MODE: Only load lead capture + feedback (text-chat with forms)
-      var [leadMod, feedbackMod] = await Promise.all([
+      var [disclaimerMod, leadMod, feedbackMod] = await Promise.all([
+        import(CDN + '/extensions/lfh-disclaimer.js'),
         import(CDN + '/extensions/lfh-lead-form.js'),
         import(CDN + '/extensions/lfh-feedback.js'),
       ]);
       extensions = [
+        disclaimerMod.LFHDisclaimerModal,
         leadMod.LastFrontierLeadForm_v4_Unified,
         feedbackMod.FeedbackExtension10,
       ].filter(Boolean);
     } else {
       // FULL MODE: Load all production extensions
       var [
+        disclaimerMod,
         leadMod, feedbackMod, ssWidgetMod, ssModalMod,
         lodgeWidgetMod, lodgeModalMod,
         tourGridMod, tourModalMod,
         weatherWidgetMod, weatherModalMod,
-        welcomeGridMod, snowfallMod, hubModalMod
+        welcomeGridMod, snowfallMod, hubModalMod,
+        menuMod
       ] = await Promise.all([
+        import(CDN + '/extensions/lfh-disclaimer.js'),
         import(CDN + '/extensions/lfh-lead-form.js'),
         import(CDN + '/extensions/lfh-feedback.js'),
         import(CDN + '/extensions/lfh-selfservice-widget.js'),
@@ -195,8 +205,10 @@
         import(CDN + '/extensions/lfh-welcome.js'),
         import(CDN + '/extensions/lfh-snowfall.js'),
         import(CDN + '/extensions/lfh-hub.js'),
+        import(CDN + '/extensions/lfh-menu-button.js'),
       ]);
       extensions = [
+        disclaimerMod.LFHDisclaimerModal,
         leadMod.LastFrontierLeadForm_v4_Unified,
         feedbackMod.FeedbackExtension10,
         ssWidgetMod.LastFrontierBrowserSelfService_v4_Unified,
@@ -206,6 +218,7 @@
         welcomeGridMod.LastFrontierWelcomeGridV2,
         snowfallMod.SnowfallExtension1,
         hubModalMod.LastFrontierHub,
+        menuMod.LFHMenuConfirmation,
       ].filter(Boolean);
     }
     console.log('[LFH] Extensions loaded:', extensions.length);
@@ -229,6 +242,7 @@
     },
     assistant: {
       stylesheet: CDN + '/css/LFH_styles.css',
+      description: "Smart assistant — always good to double-check details",
       extensions: extensions
     },
     session: {
