@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LFH Dev Test — Development Environment</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #faf5f0;
+    color: #1a2e2b;
+    padding: 40px;
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: #8b7355; font-size: 14px; margin-bottom: 24px; }
+  .env-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .env-badge.dev { background: #fef3c7; color: #92400e; }
+  .env-badge.prod { background: #dcfce7; color: #166534; }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card h2 { font-size: 16px; margin-bottom: 12px; }
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .toggle-row label { font-size: 14px; font-weight: 600; min-width: 140px; }
+  select, .toggle-row input[type="number"] {
+    font-size: 14px;
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+  }
+  .toggle-row input[type="number"] { width: 70px; }
+  .config-table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+  }
+  .config-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .config-table td:first-child {
+    font-weight: 600;
+    width: 160px;
+    color: #6b8a85;
+  }
+  code {
+    font-family: 'Menlo', monospace;
+    font-size: 12px;
+    background: rgba(139,115,85,0.1);
+    color: #78350f;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .check-row:last-child { border-bottom: none; }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #d1d5db;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .dot.pass { background: #22c55e; }
+  .dot.fail { background: #ef4444; }
+  .dot.loading { background: #f59e0b; animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.4; } }
+  .status-text {
+    font-family: 'Menlo', monospace;
+    font-size: 11px;
+    color: #8b7355;
+    margin-left: auto;
+  }
+  #console-log {
+    font-family: 'Menlo', monospace;
+    font-size: 11px;
+    background: #1a2e2b;
+    color: #86efac;
+    padding: 16px;
+    border-radius: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    margin-top: 12px;
+    white-space: pre-wrap;
+  }
+  #console-log .error { color: #fca5a5; }
+  #console-log .warn { color: #fde68a; }
+  #console-log .info { color: #93c5fd; }
+  .hint {
+    font-size: 13px;
+    color: #8b7355;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(139,115,85,0.06);
+    border-radius: 8px;
+    line-height: 1.5;
+  }
+  .hint strong { color: #78350f; }
+  button.action-btn {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+  }
+  button.action-btn:hover { background: #f3f4f6; }
+  button.action-btn.primary {
+    background: #78350f;
+    color: #fff;
+    border-color: #78350f;
+  }
+  button.action-btn.primary:hover { background: #92400e; }
+  button.action-btn.danger {
+    background: #fff;
+    color: #dc2626;
+    border-color: #fca5a5;
+  }
+  button.action-btn.danger:hover { background: #fef2f2; }
+  .scenario-desc {
+    font-size: 12px;
+    color: #8b7355;
+    margin-top: 4px;
+    padding-left: 152px;
+  }
+  #network-log { margin-top: 8px; }
+  #network-log .webhook-entry {
+    font-size: 12px;
+    padding: 6px 10px;
+    margin: 4px 0;
+    border-radius: 4px;
+    font-family: 'Menlo', monospace;
+  }
+  #network-log .webhook-entry.initial { background: #fef3c7; color: #92400e; }
+  #network-log .webhook-entry.complete { background: #dcfce7; color: #166534; }
+  .payload-preview {
+    font-family: 'Menlo', monospace;
+    font-size: 11px;
+    background: #f5f0eb;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 12px;
+    white-space: pre-wrap;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>LFH Dev Test <span class="env-badge dev" id="env-badge">Development</span></h1>
+  <div class="subtitle">Test agent changes safely — does not affect the live production widget</div>
+
+  <!-- Visitor Simulation -->
+  <div class="card">
+    <h2>Visitor Simulation</h2>
+    <div class="toggle-row">
+      <label>Visitor type:</label>
+      <select id="visitor-type">
+        <option value="new">New visitor (first time)</option>
+        <option value="returning">Returning visitor</option>
+        <option value="returning-accepted">Returning + disclaimer accepted</option>
+      </select>
+    </div>
+    <div class="scenario-desc" id="scenario-desc">First-time visitor: visit_count=1, is_returning=false, disclaimer_accepted=false</div>
+
+    <div class="toggle-row">
+      <label>Simulated page:</label>
+      <select id="sim-page">
+        <option value="/">Home page</option>
+        <option value="/tours">Tours page</option>
+        <option value="/lodges/bell-2">Bell 2 Lodge</option>
+        <option value="/lodges/ripley-creek">Ripley Creek</option>
+        <option value="/booking">Booking page</option>
+        <option value="/safety">Safety page</option>
+        <option value="/faq">FAQ page</option>
+        <option value="/contact">Contact page</option>
+      </select>
+    </div>
+
+    <div class="toggle-row">
+      <label>VoiceFlow version:</label>
+      <select id="vf-env">
+        <option value="development" selected>Development (safe testing)</option>
+        <option value="production">Production (live agent)</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="action-btn primary" id="launch-btn">Launch Agent</button>
+      <button class="action-btn danger" id="reset-btn">Reset Session</button>
+    </div>
+
+    <div class="payload-preview" id="payload-preview">Launch payload will appear here...</div>
+  </div>
+
+  <!-- Environment Config -->
+  <div class="card">
+    <h2>Active Configuration</h2>
+    <table class="config-table">
+      <tr><td>CDN Source</td><td id="cdn-source"><code>loading...</code></td></tr>
+      <tr><td>VF Project ID</td><td><code>69b13dffb59c7feeb0e8e2dd</code></td></tr>
+      <tr><td>VF Version</td><td><code id="vf-version-display">development</code></td></tr>
+      <tr><td>Extensions</td><td id="ext-source"><code>loading...</code></td></tr>
+    </table>
+  </div>
+
+  <!-- Widget Status -->
+  <div class="card">
+    <h2>Widget Status</h2>
+    <div class="check-row">
+      <div class="dot loading" id="dot-vf"></div>
+      <span>VoiceFlow widget</span>
+      <span class="status-text" id="status-vf">waiting for launch...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-ext"></div>
+      <span>Extensions loaded</span>
+      <span class="status-text" id="status-ext">waiting...</span>
+    </div>
+    <div class="check-row">
+      <div class="dot loading" id="dot-lead"></div>
+      <span>Lead form extension</span>
+      <span class="status-text" id="status-lead">waiting...</span>
+    </div>
+  </div>
+
+  <!-- Webhook Monitor -->
+  <div class="card">
+    <h2>Webhook Monitor</h2>
+    <p style="font-size: 13px; color: #6b8a85; margin-bottom: 8px;">
+      Intercepts outgoing webhook calls. For lead form fix test:
+      <strong>0 calls on Step 1</strong>, <strong>1 call on Step 2</strong>.
+    </p>
+    <div class="check-row">
+      <div class="dot" id="dot-webhook"></div>
+      <span>Webhook calls intercepted</span>
+      <span class="status-text" id="status-webhook">0 calls</span>
+    </div>
+    <div id="network-log"></div>
+  </div>
+
+  <!-- Console Output -->
+  <div class="card">
+    <h2>Console</h2>
+    <div id="console-log"></div>
+  </div>
+
+  <div class="hint">
+    <strong>How to use:</strong><br>
+    1. Serve: <code>cd lfh-cdn && python3 -m http.server 8090</code><br>
+    2. Open <code>http://localhost:8090/test-dev.html</code><br>
+    3. Pick a visitor scenario above, then click <strong>Launch Agent</strong><br>
+    4. To switch scenarios, click <strong>Reset Session</strong> then change settings and re-launch<br>
+    5. The disclaimer flow should differ between new vs returning visitors
+  </div>
+</div>
+
+<!-- Console interceptor -->
+<script>
+(function() {
+  var logEl = document.getElementById('console-log');
+  var origLog = console.log;
+  var origError = console.error;
+  var origWarn = console.warn;
+
+  function appendLog(msg, cls) {
+    var line = document.createElement('div');
+    if (cls) line.className = cls;
+    line.textContent = new Date().toLocaleTimeString() + '  ' + msg;
+    logEl.appendChild(line);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  window.__appendLog = appendLog;
+
+  console.log = function() {
+    origLog.apply(console, arguments);
+    var msg = Array.from(arguments).join(' ');
+    if (msg.includes('[LFH]') || msg.includes('voiceflow') || msg.includes('lead') || msg.includes('Lead') || msg.includes('webhook') || msg.includes('Webhook') || msg.includes('disclaimer') || msg.includes('Disclaimer'))
+      appendLog(msg);
+  };
+  console.error = function() {
+    origError.apply(console, arguments);
+    appendLog(Array.from(arguments).map(String).join(' '), 'error');
+  };
+  console.warn = function() {
+    origWarn.apply(console, arguments);
+    var msg = Array.from(arguments).join(' ');
+    if (msg.includes('[LFH]')) appendLog(msg, 'warn');
+  };
+
+  appendLog('Dev test page loaded — choose a visitor scenario and click Launch Agent', 'info');
+})();
+</script>
+
+<!-- Webhook interceptor -->
+<script>
+(function() {
+  var origFetch = window.fetch;
+  var webhookCount = 0;
+  var networkLog = document.getElementById('network-log');
+  var dotWebhook = document.getElementById('dot-webhook');
+  var statusWebhook = document.getElementById('status-webhook');
+
+  window.fetch = function(url, options) {
+    var urlStr = typeof url === 'string' ? url : (url && url.url) || '';
+
+    if (urlStr.includes('webhook') && options && options.method === 'POST') {
+      webhookCount++;
+      statusWebhook.textContent = webhookCount + ' call' + (webhookCount !== 1 ? 's' : '');
+      dotWebhook.className = 'dot pass';
+
+      try {
+        var body = JSON.parse(options.body);
+        var type = body.submissionType || 'unknown';
+        var entry = document.createElement('div');
+        entry.className = 'webhook-entry ' + type;
+        entry.textContent = new Date().toLocaleTimeString() + ' — POST webhook (' + type + ')' +
+          (body.lead ? ' — ' + (body.lead.firstName || '') + ' ' + (body.lead.lastName || '') : '') +
+          ' — v' + (body.formVersion || '?');
+        networkLog.appendChild(entry);
+        window.__appendLog('[WEBHOOK] ' + type + ' submission (formVersion: ' + (body.formVersion || '?') + ')', 'info');
+      } catch (e) {}
+    }
+
+    return origFetch.apply(this, arguments);
+  };
+})();
+</script>
+
+<!-- Visitor simulation + widget loader -->
+<script>
+(function() {
+  var isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  var CDN = isLocal ? location.origin : 'https://yannicksegaar.github.io/lfh-cdn';
+  var PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
+
+  document.getElementById('cdn-source').innerHTML = '<code>' + CDN + '</code>';
+  document.getElementById('ext-source').innerHTML = '<code>' + CDN + '/extensions/</code>';
+
+  // Restore env from URL param
+  var params = new URLSearchParams(location.search);
+  var envSelect = document.getElementById('vf-env');
+  var visitorSelect = document.getElementById('visitor-type');
+  var pageSelect = document.getElementById('sim-page');
+  var scenarioDesc = document.getElementById('scenario-desc');
+  var payloadPreview = document.getElementById('payload-preview');
+  var versionDisplay = document.getElementById('vf-version-display');
+  var badge = document.getElementById('env-badge');
+
+  if (params.get('env')) envSelect.value = params.get('env');
+  if (params.get('visitor')) visitorSelect.value = params.get('visitor');
+  if (params.get('page')) pageSelect.value = params.get('page');
+
+  // Page type detection (mirrors loader.js)
+  function detectPageType(path) {
+    var p = (path || '/').replace(/\/$/, '').toLowerCase() || '/';
+    if (p === '/' || p === '/home') return 'home';
+    if (p.includes('/tour') || p.includes('/heli-ski')) return 'tours';
+    if (p.includes('/lodge') || p.includes('/bell-2') || p.includes('/ripley')) return 'lodge';
+    if (p.includes('/book') || p.includes('/reserv')) return 'booking';
+    if (p.includes('/safe')) return 'safety';
+    if (p.includes('/faq') || p.includes('/question')) return 'faq';
+    if (p.includes('/contact')) return 'contact';
+    return 'other';
+  }
+
+  // Build session data based on scenario
+  function buildSessionData() {
+    var visitor = visitorSelect.value;
+    var pagePath = pageSelect.value;
+    var isReturning = visitor !== 'new';
+    var visitCount = visitor === 'new' ? 1 : (visitor === 'returning' ? 3 : 5);
+    var disclaimerAccepted = visitor === 'returning-accepted';
+
+    // Generate a visitor ID (or reuse)
+    var visitorId = 'test_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+
+    return {
+      device_type: window.innerWidth < 768 ? 'mobile' : 'desktop',
+      user_language: 'EN',
+      visitor_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      local_hour: new Date().getHours(),
+      day_of_week: new Date().toLocaleDateString('en-US', { weekday: 'long' }),
+      is_returning: isReturning,
+      visit_count: visitCount,
+      visitor_id: visitorId,
+      page_type: detectPageType(pagePath),
+      page_topic: '',
+      page_url: 'https://lastfrontierheli.com' + pagePath,
+      page_path: pagePath,
+      referrer: '',
+      utm: {},
+      disclaimer_accepted: disclaimerAccepted
+    };
+  }
+
+  // Update scenario description
+  function updateScenarioDesc() {
+    var visitor = visitorSelect.value;
+    var descs = {
+      'new': 'First-time visitor: visit_count=1, is_returning=false, disclaimer_accepted=false',
+      'returning': 'Returning visitor: visit_count=3, is_returning=true, disclaimer_accepted=false (should see disclaimer again)',
+      'returning-accepted': 'Returning + accepted: visit_count=5, is_returning=true, disclaimer_accepted=true (should skip disclaimer)'
+    };
+    scenarioDesc.textContent = descs[visitor] || '';
+    payloadPreview.textContent = JSON.stringify(buildSessionData(), null, 2);
+  }
+
+  function updateEnvDisplay() {
+    var env = envSelect.value;
+    versionDisplay.textContent = env;
+    badge.textContent = env === 'production' ? 'Production' : 'Development';
+    badge.className = env === 'production' ? 'env-badge prod' : 'env-badge dev';
+  }
+
+  visitorSelect.addEventListener('change', updateScenarioDesc);
+  pageSelect.addEventListener('change', updateScenarioDesc);
+  envSelect.addEventListener('change', updateEnvDisplay);
+  updateScenarioDesc();
+  updateEnvDisplay();
+
+  // Track loaded extensions
+  var loadedExtensions = null;
+
+  // Load VF bundle + extensions (once)
+  function loadDependencies() {
+    return new Promise(function(resolve) {
+      // Check if already loaded
+      if (window.voiceflow && window.voiceflow.chat && loadedExtensions) {
+        resolve(loadedExtensions);
+        return;
+      }
+
+      var vfScript = document.createElement('script');
+      vfScript.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
+      vfScript.type = 'text/javascript';
+      document.head.appendChild(vfScript);
+
+      vfScript.onload = function() {
+        Promise.all([
+          import(CDN + '/extensions/lfh-disclaimer.js'),
+          import(CDN + '/extensions/lfh-lead-form.js'),
+          import(CDN + '/extensions/lfh-feedback.js'),
+          import(CDN + '/extensions/lfh-selfservice-widget.js'),
+          import(CDN + '/extensions/lfh-selfservice-modal.js'),
+          import(CDN + '/extensions/lfh-lodges-widget.js'),
+          import(CDN + '/extensions/lfh-lodges-modal.js'),
+          import(CDN + '/extensions/lfh-tours-grid.js'),
+          import(CDN + '/extensions/lfh-tours-modal.js'),
+          import(CDN + '/extensions/lfh-weather-widget.js'),
+          import(CDN + '/extensions/lfh-weather-modal.js'),
+          import(CDN + '/extensions/lfh-welcome.js'),
+          import(CDN + '/extensions/lfh-snowfall.js'),
+          import(CDN + '/extensions/lfh-hub.js'),
+          import(CDN + '/extensions/lfh-menu-button.js'),
+        ]).then(function(mods) {
+          loadedExtensions = [
+            mods[0].LFHDisclaimerModal,        // lfh-disclaimer.js
+            mods[1].LastFrontierLeadForm_v4_Unified, // lfh-lead-form.js
+            mods[2].FeedbackExtension10,       // lfh-feedback.js
+            mods[3].LastFrontierBrowserSelfService_v4_Unified, // lfh-selfservice-widget.js
+            mods[5].LFHLodgeCompareWidgetV2Unified,  // lfh-lodges-widget.js
+            mods[7].LFHTourExplorerGridBookingUnified, // lfh-tours-grid.js
+            mods[9].LFHWeatherConditionsWidgetV2Unified, // lfh-weather-widget.js
+            mods[11].LastFrontierWelcomeGridV2, // lfh-welcome.js
+            mods[12].SnowfallExtension1,       // lfh-snowfall.js
+            mods[13].LastFrontierHub,          // lfh-hub.js
+            // lfh-menu-button.js — no extension registration needed (DOM injection only)
+          ].filter(Boolean);
+
+          document.getElementById('dot-ext').className = 'dot pass';
+          document.getElementById('status-ext').textContent = loadedExtensions.length + ' loaded';
+          document.getElementById('dot-lead').className = 'dot pass';
+          document.getElementById('status-lead').textContent = 'v5.4.1';
+          console.log('[LFH] Extensions loaded: ' + loadedExtensions.length);
+
+          resolve(loadedExtensions);
+        }).catch(function(err) {
+          document.getElementById('dot-ext').className = 'dot fail';
+          document.getElementById('status-ext').textContent = 'error';
+          console.error('[LFH] Extension load error: ' + err);
+          resolve([]);
+        });
+      };
+    });
+  }
+
+  // Launch Agent button
+  document.getElementById('launch-btn').addEventListener('click', function() {
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+
+    var env = envSelect.value;
+    var sessionData = buildSessionData();
+
+    // Update payload preview
+    payloadPreview.textContent = JSON.stringify(sessionData, null, 2);
+
+    window.__appendLog('Launching agent (' + env + ') as ' + visitorSelect.value + ' visitor on ' + pageSelect.value, 'info');
+    window.__appendLog('disclaimer_accepted=' + sessionData.disclaimer_accepted + ', is_returning=' + sessionData.is_returning + ', visit_count=' + sessionData.visit_count, 'info');
+
+    // Clear any stale session
+    Object.keys(localStorage).filter(function(k) { return k.includes('voiceflow'); }).forEach(function(k) { localStorage.removeItem(k); });
+
+    loadDependencies().then(function(extensions) {
+      return window.voiceflow.chat.load({
+        verify: { projectID: PROJECT_ID },
+        url: 'https://general-runtime.voiceflow.com',
+        versionID: env,
+        launch: {
+          event: {
+            type: 'launch',
+            payload: sessionData
+          }
+        },
+        assistant: {
+          stylesheet: CDN + '/css/LFH_styles.css',
+          extensions: extensions
+        }
+      });
+    }).then(function() {
+      document.getElementById('dot-vf').className = 'dot pass';
+      document.getElementById('status-vf').textContent = 'loaded (' + env + ')';
+      console.log('[LFH] Widget loaded with versionID: ' + env);
+      btn.textContent = 'Launch Agent';
+      btn.disabled = false;
+
+      // Auto-open the widget
+      setTimeout(function() { window.voiceflow.chat.open(); }, 500);
+    }).catch(function(err) {
+      document.getElementById('dot-vf').className = 'dot fail';
+      document.getElementById('status-vf').textContent = 'error';
+      console.error('[LFH] Widget load error: ' + err);
+      btn.textContent = 'Launch Agent';
+      btn.disabled = false;
+    });
+  });
+
+  // Reset Session button
+  document.getElementById('reset-btn').addEventListener('click', function() {
+    // Clear VoiceFlow sessions
+    Object.keys(localStorage).filter(function(k) {
+      return k.includes('voiceflow') || k.includes('lfh');
+    }).forEach(function(k) { localStorage.removeItem(k); });
+
+    // Remove widget from DOM
+    var widgetEls = document.querySelectorAll('#voiceflow-chat, [id^="voiceflow"]');
+    widgetEls.forEach(function(el) { el.remove(); });
+
+    // Reset status dots
+    ['dot-vf'].forEach(function(id) {
+      document.getElementById(id).className = 'dot loading';
+    });
+    document.getElementById('status-vf').textContent = 'waiting for launch...';
+    document.getElementById('dot-webhook').className = 'dot';
+    document.getElementById('status-webhook').textContent = '0 calls';
+    document.getElementById('network-log').innerHTML = '';
+
+    window.__appendLog('Session reset — choose a new scenario and click Launch Agent', 'info');
+
+    // Force a clean reload to fully clear widget state
+    var url = new URL(location.href);
+    url.searchParams.set('env', envSelect.value);
+    url.searchParams.set('visitor', visitorSelect.value);
+    url.searchParams.set('page', pageSelect.value);
+    url.searchParams.set('t', Date.now()); // cache bust
+    location.href = url.toString();
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -29,6 +29,7 @@ Modals are opened programmatically by other extensions (not registered with Voic
 
 | File | Trace Type | Purpose |
 |------|-----------|---------|
+| `lfh-disclaimer.js` | `AI_Disclaimer_Modal` | AI disclosure modal (first-time visitors, blocking) |
 | `lfh-welcome.js` | `ext_welcomeGrid_v2` | Welcome screen with quick-start options |
 | `lfh-snowfall.js` | `ext_snowfall1` | Decorative snowfall animation |
 
@@ -41,6 +42,12 @@ Modals are opened programmatically by other extensions (not registered with Voic
 | `lfh-lodges-modal.js` | lodges-widget, hub, weather-modal, selfservice-modal | Lodge detail view modal |
 | `lfh-weather-modal.js` | weather-widget, hub, lodges-modal | Weather detail modal |
 | `lfh-selfservice-modal.js` | selfservice-widget | FAQ/video full-view modal |
+
+### UI Chrome (persistent interface elements)
+
+| File | Trace Types | Purpose |
+|------|------------|---------|
+| `lfh-menu-button.js` | `ext_menuConfirmation` (Part 2) | Persistent menu button + confirmation bubble. Button injected as module side effect; confirmation is a registered extension. |
 
 ### Data / Utility (imported by other files, not registered as extensions)
 
