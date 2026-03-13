@@ -1,26 +1,17 @@
 /**
  * LFH Extension: Main Menu Button
  * Production ID: lfh-menu-button
- * Trace types: ext_menuConfirmation (Part 2)
  * Origin: lfh-menu-button.js
  * Dependencies: none
  * Last modified: 2026-03-13
  *
- * Two responsibilities:
- * Part 1 — Persistent menu button injected into Shadow DOM footer (module side effect)
- * Part 2 — Confirmation bubble extension matching ext_menuConfirmation traces
+ * Persistent menu button injected into Shadow DOM footer.
+ * Confirmation is handled entirely client-side — VoiceFlow only receives
+ * an interact() call when the user explicitly confirms an action.
+ * This prevents interrupting the AI Agent's internal loop on cancel.
  *
  * Easy removal: delete this file + remove import/registration from loader.js
  */
-
-// ============================================================================
-// MODULE STATE (shared between Part 1 and Part 2)
-// ============================================================================
-
-var _selectedOption = null;
-var _selectedLabel = '';
-var _targetExtension = '';
-var _targetTab = '';
 
 // ============================================================================
 // MENU OPTIONS
@@ -260,29 +251,24 @@ var MENU_STYLES = `
   }
 }
 
-/* ── Confirmation Bubble ── */
-.lf-menu-confirm {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+/* ── Confirmation State (inside panel) ── */
+.lf-menu-confirm-inline {
   padding: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  max-width: 320px;
 }
 
-.lf-menu-confirm-text {
+.lf-menu-confirm-prompt {
   font-size: 14px;
   color: #42494e;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.lf-menu-confirm-text strong {
+.lf-menu-confirm-prompt strong {
   color: #333;
 }
 
-.lf-menu-confirm-actions {
+.lf-menu-confirm-buttons {
   display: flex;
   gap: 8px;
 }
@@ -298,7 +284,7 @@ var MENU_STYLES = `
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
-  font-family: inherit;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -321,7 +307,7 @@ var MENU_STYLES = `
   font-weight: 500;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
-  font-family: inherit;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -335,12 +321,14 @@ var MENU_STYLES = `
 var CHEVRON_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 
 // ============================================================================
-// PART 1 — PERSISTENT BUTTON (module side effect)
+// PERSISTENT BUTTON (module side effect)
 // ============================================================================
 
 function initMenuButton() {
   var isOpen = false;
   var debounceTimer = null;
+  var panelRef = null;       // reference to panel element for state swaps
+  var optionsHTML = '';       // cached options list HTML for restoring after cancel
 
   function tryInject() {
     var shadowHost = document.getElementById('voiceflow-chat');
@@ -382,6 +370,59 @@ function initMenuButton() {
     var panel = document.createElement('div');
     panel.className = 'lf-menu-panel';
     panel.setAttribute('role', 'menu');
+    panelRef = panel;
+
+    buildOptionsList(panel, trigger);
+
+    // Cache the options HTML for restoring after cancel
+    optionsHTML = panel.innerHTML;
+
+    bar.appendChild(panel);
+    bar.appendChild(trigger);
+
+    // Insert as sibling before footer (inside the flex column)
+    footer.parentNode.insertBefore(bar, footer);
+
+    // Toggle menu
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (debounceTimer) return;
+      debounceTimer = setTimeout(function() { debounceTimer = null; }, 250);
+      toggleMenu(trigger, panel);
+    });
+
+    // Close on click outside (within shadow DOM)
+    shadowRoot.addEventListener('click', function(e) {
+      if (isOpen && !bar.contains(e.target)) {
+        resetToOptions(panel, trigger);
+        closeMenu(trigger, panel);
+      }
+    });
+
+    // Close on ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && isOpen) {
+        resetToOptions(panel, trigger);
+        closeMenu(trigger, panel);
+      }
+    });
+
+    // Close on input focus (mobile keyboard appearing)
+    var textarea = shadowRoot.querySelector('.vfrc-chat-input');
+    if (textarea) {
+      textarea.addEventListener('focus', function() {
+        if (isOpen) {
+          resetToOptions(panel, trigger);
+          closeMenu(trigger, panel);
+        }
+      });
+    }
+
+    console.log('[LFH] Menu button injected');
+  }
+
+  function buildOptionsList(panel, trigger) {
+    panel.innerHTML = '';
 
     var header = document.createElement('div');
     header.className = 'lf-menu-header';
@@ -402,49 +443,67 @@ function initMenuButton() {
 
       optBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        handleOptionClick(opt, trigger, panel);
+        showConfirmation(opt, panel, trigger);
       });
 
       panel.appendChild(optBtn);
     });
+  }
 
-    bar.appendChild(panel);
-    bar.appendChild(trigger);
+  function showConfirmation(opt, panel, trigger) {
+    // Replace panel contents with confirmation UI
+    panel.innerHTML =
+      '<div class="lf-menu-confirm-inline">' +
+        '<div class="lf-menu-confirm-prompt">Open <strong>' + opt.label + '</strong>?</div>' +
+        '<div class="lf-menu-confirm-buttons">' +
+          '<button class="lf-menu-confirm-yes" type="button">Yes, show me</button>' +
+          '<button class="lf-menu-confirm-cancel" type="button">Cancel</button>' +
+        '</div>' +
+      '</div>';
 
-    // Insert as sibling before footer (inside the flex column)
-    footer.parentNode.insertBefore(bar, footer);
-
-    // Toggle menu
-    trigger.addEventListener('click', function(e) {
+    // Yes — fire interact() and close menu
+    panel.querySelector('.lf-menu-confirm-yes').addEventListener('click', function(e) {
       e.stopPropagation();
-      if (debounceTimer) return;
-      debounceTimer = setTimeout(function() { debounceTimer = null; }, 250);
-      toggleMenu(trigger, panel);
+      closeMenu(trigger, panel);
+
+      // Small delay so the menu visually closes before VoiceFlow processes
+      setTimeout(function() {
+        resetToOptions(panel, trigger);
+        fireMenuAction(opt);
+      }, 150);
     });
 
-    // Close on click outside (within shadow DOM)
-    shadowRoot.addEventListener('click', function(e) {
-      if (isOpen && !bar.contains(e.target)) {
-        closeMenu(trigger, panel);
-      }
+    // Cancel — return to options list, no VoiceFlow interaction
+    panel.querySelector('.lf-menu-confirm-cancel').addEventListener('click', function(e) {
+      e.stopPropagation();
+      resetToOptions(panel, trigger);
     });
+  }
 
-    // Close on ESC
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && isOpen) {
-        closeMenu(trigger, panel);
-      }
-    });
+  function resetToOptions(panel, trigger) {
+    buildOptionsList(panel, trigger);
+  }
 
-    // Close on input focus (mobile keyboard appearing)
-    var textarea = shadowRoot.querySelector('.vfrc-chat-input');
-    if (textarea) {
-      textarea.addEventListener('focus', function() {
-        if (isOpen) closeMenu(trigger, panel);
+  function fireMenuAction(opt) {
+    try {
+      window.voiceflow.chat.interact({
+        type: 'event',
+        payload: {
+          event: { name: 'ext_menu_action' },
+          data: {
+            action: 'menu_select',
+            source: 'main_menu',
+            option: opt.id,
+            option_label: opt.label,
+            target_extension: opt.target,
+            target_tab: opt.tab
+          }
+        }
       });
+      console.log('[LFH] Menu action fired:', opt.id);
+    } catch (e) {
+      console.error('[LFH] Menu event failed:', e);
     }
-
-    console.log('[LFH] Menu button injected');
   }
 
   function toggleMenu(trigger, panel) {
@@ -467,43 +526,13 @@ function initMenuButton() {
     panel.classList.remove('lf-menu-visible');
   }
 
-  function handleOptionClick(opt, trigger, panel) {
-    // Set module state for Part 2 (confirmation bubble)
-    _selectedOption = opt.id;
-    _selectedLabel = opt.label;
-    _targetExtension = opt.target;
-    _targetTab = opt.tab;
-
-    // Close menu
-    closeMenu(trigger, panel);
-
-    // Fire event to VoiceFlow
-    try {
-      window.voiceflow.chat.interact({
-        type: 'event',
-        payload: {
-          event: { name: 'ext_menu_action' },
-          data: {
-            action: 'menu_select',
-            source: 'main_menu',
-            option: opt.id,
-            option_label: opt.label,
-            target_extension: opt.target,
-            target_tab: opt.tab
-          }
-        }
-      });
-    } catch (e) {
-      console.error('[LFH] Menu event failed:', e);
-    }
-  }
-
   // Watch for DOM rebuilds (VoiceFlow new session destroys + recreates DOM)
   var observer = new MutationObserver(function() {
     var shadowHost = document.getElementById('voiceflow-chat');
     if (shadowHost && shadowHost.shadowRoot) {
       if (!shadowHost.shadowRoot.querySelector('.lf-menu-bar')) {
         isOpen = false;
+        panelRef = null;
         tryInject();
       }
     }
@@ -519,70 +548,7 @@ function initMenuButton() {
 initMenuButton();
 
 // ============================================================================
-// PART 2 — CONFIRMATION BUBBLE EXTENSION
+// EXPORT (no extension registration needed — this is purely a DOM injection)
 // ============================================================================
 
-export var LFHMenuConfirmation = {
-  name: 'LFHMenuConfirmation',
-  type: 'response',
-
-  match: function(ctx) {
-    var trace = ctx.trace;
-    return trace.type === 'ext_menuConfirmation' ||
-      (trace.payload && trace.payload.name === 'ext_menuConfirmation');
-  },
-
-  render: function(ctx) {
-    var trace = ctx.trace;
-    var element = ctx.element;
-
-    // Use module state or trace payload for label
-    var payload = (trace.payload && typeof trace.payload === 'object') ? trace.payload : {};
-    var optionLabel = payload.option_label || _selectedLabel || 'this section';
-    var optionId = payload.option_id || _selectedOption || '';
-    var target = _targetExtension || payload.target_extension || '';
-    var tab = _targetTab || payload.target_tab || '';
-
-    var wrapper = document.createElement('div');
-    wrapper.className = 'lf-menu-confirm';
-
-    wrapper.innerHTML =
-      '<div class="lf-menu-confirm-text">Open <strong>' + optionLabel + '</strong>?</div>' +
-      '<div class="lf-menu-confirm-actions">' +
-        '<button class="lf-menu-confirm-yes" type="button">Yes, show me</button>' +
-        '<button class="lf-menu-confirm-cancel" type="button">Cancel</button>' +
-      '</div>';
-
-    element.appendChild(wrapper);
-
-    // Yes button
-    wrapper.querySelector('.lf-menu-confirm-yes').addEventListener('click', function() {
-      wrapper.style.opacity = '0.5';
-      wrapper.style.pointerEvents = 'none';
-      window.voiceflow.chat.interact({
-        type: 'complete',
-        payload: {
-          confirmed: true,
-          option: optionId,
-          target_extension: target,
-          target_tab: tab
-        }
-      });
-    });
-
-    // Cancel button
-    wrapper.querySelector('.lf-menu-confirm-cancel').addEventListener('click', function() {
-      wrapper.style.opacity = '0.5';
-      wrapper.style.pointerEvents = 'none';
-      window.voiceflow.chat.interact({
-        type: 'complete',
-        payload: {
-          confirmed: false,
-          option: optionId
-        }
-      });
-    });
-  }
-};
-
-export default LFHMenuConfirmation;
+export default {};

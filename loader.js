@@ -218,7 +218,6 @@
         welcomeGridMod.LastFrontierWelcomeGridV2,
         snowfallMod.SnowfallExtension1,
         hubModalMod.LastFrontierHub,
-        menuMod.LFHMenuConfirmation,
       ].filter(Boolean);
     }
     console.log('[LFH] Extensions loaded:', extensions.length);
