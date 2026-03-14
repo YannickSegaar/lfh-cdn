@@ -472,13 +472,13 @@ function buildHubStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhub-close-btn {
-  background: transparent; border: none; color: #fff;
+  background: rgba(255,255,255,0.1); border: none; color: #fff;
   font-size: 28px; cursor: pointer; padding: 0;
   width: 44px; height: 44px; display: flex;
   align-items: center; justify-content: center;
   border-radius: 50%; transition: background 0.2s;
 }
-.lfhub-close-btn:hover { background: rgba(255,255,255,0.15); }
+.lfhub-close-btn:hover { background: rgba(255,255,255,0.2); }
 
 /* Tab Bar */
 .lfhub-tab-bar {

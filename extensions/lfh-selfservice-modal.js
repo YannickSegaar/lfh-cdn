@@ -283,17 +283,18 @@ function buildModalStyles() {
   letter-spacing: 0.5px;
 }
 .lfhbss-close-btn {
-  background: none;
+  background: rgba(255,255,255,0.1);
   border: none;
   color: #FFFFFF;
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
-  padding: 4px 8px;
-  line-height: 1;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  padding: 0;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
 }
-.lfhbss-close-btn:hover { opacity: 1; }
+.lfhbss-close-btn:hover { background: rgba(255,255,255,0.2); }
 
 /* Tab Bar */
 .lfhbss-tab-bar {
@@ -754,7 +755,6 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
   headerBar.className = 'lfhbss-header-bar';
   headerBar.innerHTML = `
     <div class="lfhbss-header-left">
-      <img src="${LFH_ASSETS.logo}" alt="LFH" class="lfhbss-header-logo" />
       <span class="lfhbss-header-title">Discover Heliskiing</span>
     </div>
     <button class="lfhbss-close-btn" aria-label="Close">&times;</button>

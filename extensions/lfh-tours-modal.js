@@ -934,13 +934,13 @@ function buildModalStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhte-close-btn {
-  background: transparent; border: none; color: #fff;
+  background: rgba(255,255,255,0.1); border: none; color: #fff;
   font-size: 28px; cursor: pointer; padding: 0;
-  width: 36px; height: 36px; display: flex;
+  width: 44px; height: 44px; display: flex;
   align-items: center; justify-content: center;
   border-radius: 50%; transition: background 0.2s;
 }
-.lfhte-close-btn:hover { background: rgba(255,255,255,0.15); }
+.lfhte-close-btn:hover { background: rgba(255,255,255,0.2); }
 
 .lfhte-filter-bar {
   padding: 12px 20px; background: ${LFH_COLORS.infoBox};
