@@ -281,7 +281,7 @@
   // 6. POST-LOAD: Shadow DOM style injection
   // ============================================
   var shadowScript = document.createElement('script');
-  shadowScript.src = CDN + '/styles/lastfrontier-shadow-inject.js?v=1.2.4';
+  shadowScript.src = CDN + '/styles/lastfrontier-shadow-inject.js?v=1.2.5';
   document.head.appendChild(shadowScript);
 
   // ============================================
