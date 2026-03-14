@@ -268,17 +268,19 @@
   overflow-wrap: break-word !important;
 }
 
-/* Remove red circular border from assistant info avatar */
+/* Assistant info avatar — circular, no red border, subtle shadow */
 .vfrc-widget .vfrc-assistant-info--avatar-container {
   border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
   outline: none !important;
 }
 .vfrc-widget img.vfrc-avatar,
 .vfrc-widget .vfrc-assistant-info--avatar-container img {
   border: none !important;
-  border-radius: 0 !important;
+  border-radius: 50% !important;
+  width: 72px !important;
+  height: 72px !important;
+  background-color: #fff !important;
+  box-shadow: 0 0 0 1px #161a1e0f, 0 1px 1px #161a1e03, 0 4px 8px -18px #161a1e0a, 0 8px 12px -18px #161a1e0a, 0 10px 16px -18px #161a1e14, 0 12px 20px -18px #161a1e14, 0 16px 28px -18px #161a1e1f, 0 20px 44px -18px #161a1e1f !important;
 }
 
 /* Apply Nexa Rust Sans Black 2 to launcher widget text */
