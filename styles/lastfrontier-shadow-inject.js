@@ -275,6 +275,11 @@
   box-shadow: none !important;
   outline: none !important;
 }
+.vfrc-widget img.vfrc-avatar,
+.vfrc-widget .vfrc-assistant-info--avatar-container img {
+  border: none !important;
+  border-radius: 0 !important;
+}
 
 /* Apply Nexa Rust Sans Black 2 to launcher widget text */
 .vfrc-launcher,
