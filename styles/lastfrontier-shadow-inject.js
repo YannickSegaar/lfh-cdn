@@ -80,6 +80,153 @@
   font-weight: 500 !important;
 }
 
+/* ===== SELF-SERVICE EXTENSION OVERRIDES ===== */
+
+/* Header title — "DISCOVER HELISKIING" */
+.vfrc-widget .lfh-ss-v4-header-label {
+  font-family: 'Nexa Rust Sans Black 2', 'Inter', sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  text-transform: uppercase !important;
+  letter-spacing: 3px !important;
+  margin: 0 0 8px 0 !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Header description — "Explore our videos, FAQs, and resources" */
+.vfrc-widget .lfh-ss-v4-header-description {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #FFFFFF !important;
+  line-height: 1.5 !important;
+  opacity: 0.95 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  max-width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Tab names — "VIDEOS", "FAQ", "RESOURCES" */
+.vfrc-widget .lfh-ss-v4-tab {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding: 12px 8px !important;
+  border-bottom: 3px solid transparent !important;
+  cursor: pointer !important;
+}
+.vfrc-widget .lfh-ss-v4-tab.active {
+  color: #e62b1e !important;
+  border-bottom-color: #e62b1e !important;
+  background: #FFFFFF !important;
+}
+
+/* Dig deeper title — "DIG DEEPER WITH OUR BACKGROUNDER VIDEOS" */
+.vfrc-widget .lfh-ss-v4-dig-deeper-title {
+  font-family: 'Nexa Rust Sans Black 2', 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #42494e !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  margin: 0 0 6px 0 !important;
+}
+
+/* Dig deeper subtitle — "Discover more about who we are..." */
+.vfrc-widget .lfh-ss-v4-dig-deeper-subtitle {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #666666 !important;
+  line-height: 1.5 !important;
+  max-width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Video episode label — "EPISODE 1" */
+.vfrc-widget .lfh-ss-v4-video-episode {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  color: #fff !important;
+  opacity: 0.85 !important;
+  margin: 0 0 2px 0 !important;
+}
+
+/* Video title — "LOCATION", "LODGING", etc. */
+.vfrc-widget .lfh-ss-v4-video-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  color: #fff !important;
+  margin: 0 !important;
+}
+
+/* FAQ question text — "How good do I have to be?" */
+.vfrc-widget .lfh-ss-v4-faq-question {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #42494e !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+/* FAQ arrow icon */
+.vfrc-widget .lfh-ss-v4-faq-icon {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #e62b1e !important;
+  flex-shrink: 0 !important;
+  margin-left: 10px !important;
+}
+
+/* Resource title — "FAQ for First-Timers", "Is Heliskiing For Me?" */
+.vfrc-widget .lfh-ss-v4-resource-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #42494e !important;
+  margin: 0 0 2px 0 !important;
+}
+
+/* Resource description — "Comprehensive answers to common questions" */
+.vfrc-widget .lfh-ss-v4-resource-desc {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #666666 !important;
+  margin: 0 !important;
+}
+
+/* Resource arrow */
+.vfrc-widget .lfh-ss-v4-resource-arrow {
+  color: #e62b1e !important;
+  font-size: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Footer text — "Still have questions? Just ask!" */
+.vfrc-widget .lfh-ss-v4-footer-text {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  color: #666666 !important;
+  margin: 0 !important;
+}
+.vfrc-widget .lfh-ss-v4-footer-text strong {
+  font-weight: 700 !important;
+  color: #42494e !important;
+}
+
 /* Header title - 15px font size, no truncation */
 .vfrc-header--title,
 [class*="vfrc-header"] [class*="title"] {
