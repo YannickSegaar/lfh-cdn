@@ -146,8 +146,8 @@
   background-repeat: no-repeat !important;
 }
 
-/* Reset background for all inner elements */
-.vfrc-chat * {
+/* Reset background for all inner elements (except LFH extension elements that use bg images) */
+.vfrc-chat *:not([class^="lfh-"]):not([class*=" lfh-"]) {
   background-image: none;
 }
 
