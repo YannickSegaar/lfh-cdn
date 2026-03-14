@@ -262,15 +262,21 @@ export function renderToursTab(container, config, savedState) {
     content.innerHTML = '';
     content.appendChild(grid);
 
-    content.querySelectorAll('.lfhte-view-detail').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tour = LFH_TOURS.find(t => t.id === btn.dataset.tourId);
-        if (tour) renderTourDetail(tour);
-      });
+    content.querySelectorAll('.lfhte-tour-card').forEach(card => {
+      const tourId = card.querySelector('.lfhte-view-detail')?.dataset.tourId;
+      if (tourId) {
+        card.addEventListener('click', () => {
+          const tour = LFH_TOURS.find(t => t.id === tourId);
+          if (tour) renderTourDetail(tour);
+        });
+      }
     });
 
     content.querySelectorAll('.lfhte-compare-toggle').forEach(btn => {
-      btn.addEventListener('click', () => toggleCompare(btn.dataset.tourId));
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCompare(btn.dataset.tourId);
+      });
     });
   }
 
@@ -942,7 +948,7 @@ export function buildToursStyles() {
 
 .lfhte-tour-card {
   border: 1.5px solid ${LFH_COLORS.border}; border-radius: 10px;
-  overflow: hidden; transition: all 0.2s ease; background: #fff;
+  overflow: hidden; transition: all 0.2s ease; background: #fff; cursor: pointer;
 }
 .lfhte-tour-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
