@@ -891,7 +891,7 @@ export function buildLodgesStyles() {
 
 /* Content Area */
 .lfhlc-content {
-  flex: 1; overflow-y: auto; padding: 20px;
+  flex: 1; overflow-x: hidden; overflow-y: auto; padding: 20px;
   font-family: 'Inter', sans-serif;
 }
 .lfhlc-content::-webkit-scrollbar { width: 6px; }
@@ -1056,7 +1056,7 @@ export function buildLodgesStyles() {
 
 /* Detail View */
 .lfhlc-detail { display: flex; flex-direction: column; height: 100%; }
-.lfhlc-detail-scroll { flex: 1; overflow-y: auto; }
+.lfhlc-detail-scroll { flex: 1; overflow-x: hidden; overflow-y: auto; }
 .lfhlc-hero-media { margin-bottom: 12px; }
 .lfhlc-hero-image {
   width: 100%; height: 280px; background-size: cover;

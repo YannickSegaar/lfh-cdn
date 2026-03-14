@@ -443,7 +443,11 @@ function initMenuButton() {
 
       optBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        showConfirmation(opt, panel, trigger);
+        closeMenu(trigger, panel);
+        setTimeout(function() {
+          resetToOptions(panel, trigger);
+          fireMenuAction(opt);
+        }, 150);
       });
 
       panel.appendChild(optBtn);

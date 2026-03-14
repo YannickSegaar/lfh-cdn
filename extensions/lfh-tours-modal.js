@@ -144,7 +144,7 @@ export function openTourExplorerModalWithBookingUnified(focusTourId = null, conf
   headerBar.className = 'lfhte-header-bar';
   headerBar.innerHTML = `
     <span class="lfhte-header-title">Tour Explorer</span>
-    <button class="lfhte-close-btn" aria-label="Close">&times;</button>
+    <button class="lfhte-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
   `;
   modal.appendChild(headerBar);
 
@@ -934,13 +934,13 @@ function buildModalStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhte-close-btn {
-  background: transparent; border: none; color: #fff;
-  font-size: 28px; cursor: pointer; padding: 0;
-  width: 36px; height: 36px; display: flex;
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  cursor: pointer; padding: 0;
+  width: 40px; height: 40px; display: flex;
   align-items: center; justify-content: center;
-  border-radius: 50%; transition: background 0.2s;
+  border-radius: 50%; transition: background 0.2s; flex-shrink: 0;
 }
-.lfhte-close-btn:hover { background: rgba(255,255,255,0.15); }
+.lfhte-close-btn:hover { background: rgba(255,255,255,0.25); }
 
 .lfhte-filter-bar {
   padding: 12px 20px; background: ${LFH_COLORS.infoBox};

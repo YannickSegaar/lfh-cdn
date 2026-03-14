@@ -102,7 +102,7 @@ export function openWeatherConditionsModal() {
     <div class="lfhwc-header-left">
       <span class="lfhwc-header-title">Weather Conditions</span>
     </div>
-    <button class="lfhwc-close-btn" aria-label="Close">&times;</button>
+    <button class="lfhwc-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
   `;
   modal.appendChild(headerBar);
 
@@ -295,13 +295,13 @@ function buildModalStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhwc-close-btn {
-  background: transparent; border: none; color: #fff;
-  font-size: 28px; cursor: pointer; padding: 0;
-  width: 44px; height: 44px; display: flex;
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  cursor: pointer; padding: 0;
+  width: 40px; height: 40px; display: flex;
   align-items: center; justify-content: center;
-  border-radius: 50%; transition: background 0.2s;
+  border-radius: 50%; transition: background 0.2s; flex-shrink: 0;
 }
-.lfhwc-close-btn:hover { background: rgba(255,255,255,0.15); }
+.lfhwc-close-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* Loading State */
 .lfhwc-loading {
@@ -394,7 +394,7 @@ function buildModalStyles() {
   }
   .lfhwc-header-title { font-size: 14px; letter-spacing: 1px; }
   .lfhwc-header-bar { padding: 12px 16px; }
-  .lfhwc-close-btn { width: 44px; height: 44px; }
+  .lfhwc-close-btn { width: 40px; height: 40px; }
   .lfhwc-footer-bar { flex-wrap: wrap; padding: 10px 16px; }
   .lfhwc-footer-label { width: 100%; margin-bottom: 4px; }
   .lfhwc-footer-btn { font-size: 12px; padding: 8px 12px; }

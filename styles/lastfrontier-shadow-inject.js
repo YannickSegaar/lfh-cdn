@@ -20,6 +20,15 @@
     const existing = shadowRoot.getElementById('lf-custom-styles');
     if (existing) existing.remove();
 
+    // Inject Inter font into Shadow DOM (Google Fonts @font-face must be inside shadow root)
+    if (!shadowRoot.getElementById('lf-inter-font')) {
+      const interLink = document.createElement('link');
+      interLink.id = 'lf-inter-font';
+      interLink.rel = 'stylesheet';
+      interLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap';
+      shadowRoot.prepend(interLink);
+    }
+
     // Create and inject the style
     const style = document.createElement('style');
     style.id = 'lf-custom-styles';
@@ -29,13 +38,196 @@
    Shadow DOM Injection Version
    =========================================== */
 
-/* Font must be defined INSIDE Shadow DOM — external CSS can't penetrate */
+/* Fonts must be defined INSIDE Shadow DOM — external CSS can't penetrate */
 @font-face {
   font-family: 'Nexa Rust Sans Black 2';
   src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+/* Override VoiceFlow's .vfrc-widget * !important — needs higher specificity */
+.vfrc-widget [class^="lfh-"],
+.vfrc-widget [class*=" lfh-"] {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Restore extension font-weights that VoiceFlow's wildcard resets to 400 */
+.vfrc-widget .lfh-grid-card-title {
+  font-weight: 700 !important;
+}
+.vfrc-widget .lfh-grid-card-subtitle {
+  font-weight: 400 !important;
+}
+.vfrc-widget .lfh-grid-card-cta {
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  height: 32px !important;
+  background: #E62B1E !important;
+  background-image: none !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  letter-spacing: 0.2px !important;
+  transition: background 0.2s !important;
+  cursor: pointer !important;
+}
+.vfrc-widget .lfh-grid-footer {
+  font-weight: 500 !important;
+}
+
+/* ===== SELF-SERVICE EXTENSION OVERRIDES ===== */
+
+/* Header title — "DISCOVER HELISKIING" */
+.vfrc-widget .lfh-ss-v4-header-label {
+  font-family: 'Nexa Rust Sans Black 2', 'Inter', sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  text-transform: uppercase !important;
+  letter-spacing: 3px !important;
+  margin: 0 0 8px 0 !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Header description — "Explore our videos, FAQs, and resources" */
+.vfrc-widget .lfh-ss-v4-header-description {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #FFFFFF !important;
+  line-height: 1.5 !important;
+  opacity: 0.95 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  max-width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Tab names — "VIDEOS", "FAQ", "RESOURCES" */
+.vfrc-widget .lfh-ss-v4-tab {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding: 12px 8px !important;
+  border-bottom: 3px solid transparent !important;
+  cursor: pointer !important;
+}
+.vfrc-widget .lfh-ss-v4-tab.active {
+  color: #e62b1e !important;
+  border-bottom-color: #e62b1e !important;
+  background: #FFFFFF !important;
+}
+
+/* Dig deeper title — "DIG DEEPER WITH OUR BACKGROUNDER VIDEOS" */
+.vfrc-widget .lfh-ss-v4-dig-deeper-title {
+  font-family: 'Nexa Rust Sans Black 2', 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #42494e !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  margin: 0 0 6px 0 !important;
+}
+
+/* Dig deeper subtitle — "Discover more about who we are..." */
+.vfrc-widget .lfh-ss-v4-dig-deeper-subtitle {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #666666 !important;
+  line-height: 1.5 !important;
+  max-width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Video episode label — "EPISODE 1" */
+.vfrc-widget .lfh-ss-v4-video-episode {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  color: #fff !important;
+  opacity: 0.85 !important;
+  margin: 0 0 2px 0 !important;
+}
+
+/* Video title — "LOCATION", "LODGING", etc. */
+.vfrc-widget .lfh-ss-v4-video-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  color: #fff !important;
+  margin: 0 !important;
+}
+
+/* FAQ question text — "How good do I have to be?" */
+.vfrc-widget button.lfh-ss-v4-faq-question,
+.vfrc-widget button.lfh-ss-v4-faq-question span,
+.vfrc-widget .lfh-ss-v4-faq-question,
+.vfrc-widget .lfh-ss-v4-faq-question span {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #42494e !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+/* FAQ arrow icon */
+.vfrc-widget .lfh-ss-v4-faq-icon {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #e62b1e !important;
+  flex-shrink: 0 !important;
+  margin-left: 10px !important;
+}
+
+/* Resource title — "FAQ for First-Timers", "Is Heliskiing For Me?" */
+.vfrc-widget .lfh-ss-v4-resource-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #42494e !important;
+  margin: 0 0 2px 0 !important;
+}
+
+/* Resource description — "Comprehensive answers to common questions" */
+.vfrc-widget .lfh-ss-v4-resource-desc {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #666666 !important;
+  margin: 0 !important;
+}
+
+/* Resource arrow */
+.vfrc-widget .lfh-ss-v4-resource-arrow {
+  color: #e62b1e !important;
+  font-size: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Footer text — "Still have questions? Just ask!" */
+.vfrc-widget .lfh-ss-v4-footer-text {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  color: #666666 !important;
+  margin: 0 !important;
+}
+.vfrc-widget .lfh-ss-v4-footer-text strong {
+  font-weight: 700 !important;
+  color: #42494e !important;
 }
 
 /* Header title - 15px font size, no truncation */
@@ -76,6 +268,20 @@
   overflow-wrap: break-word !important;
 }
 
+/* Assistant info avatar — circular, no red border, subtle shadow */
+.vfrc-widget .vfrc-assistant-info--avatar-container {
+  border: none !important;
+  outline: none !important;
+}
+.vfrc-widget .vfrc-assistant-info--avatar-container img.vfrc-avatar {
+  border: none !important;
+  border-radius: 50% !important;
+  width: 72px !important;
+  height: 72px !important;
+  background-color: #fff !important;
+  box-shadow: 0 0 0 1px #161a1e0f, 0 1px 1px #161a1e03, 0 4px 8px -18px #161a1e0a, 0 8px 12px -18px #161a1e0a, 0 10px 16px -18px #161a1e14, 0 12px 20px -18px #161a1e14, 0 16px 28px -18px #161a1e1f, 0 20px 44px -18px #161a1e1f !important;
+}
+
 /* Apply Nexa Rust Sans Black 2 to launcher widget text */
 .vfrc-launcher,
 .vfrc-launcher * {
@@ -104,8 +310,8 @@
   background-repeat: no-repeat !important;
 }
 
-/* Reset background for all inner elements */
-.vfrc-chat * {
+/* Reset background for all inner elements (except LFH extension elements that use bg images) */
+.vfrc-chat *:not([class^="lfh-"]):not([class*=" lfh-"]) {
   background-image: none;
 }
 
@@ -185,112 +391,113 @@
 }
 
 /* === Help tooltip below header (assistant info area) === */
-.lf-help-tooltip {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  position: relative;
+.vfrc-widget .lf-help-tooltip {
+  display: flex !important;
+  justify-content: center !important;
+  margin-top: 10px !important;
+  position: relative !important;
 }
 
-.lf-help-circle {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: none;
-  background: linear-gradient(180deg, #ee2e24, #CC3333);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  font-family: 'Nexa Rust Sans Black 2', system-ui, sans-serif;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-  transition: filter 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 6px rgba(204, 51, 51, 0.3);
+.vfrc-widget .lf-help-circle {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: linear-gradient(180deg, #ee2e24, #CC3333) !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  font-family: 'Nexa Rust Sans Black 2', system-ui, sans-serif !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  transition: filter 0.2s, box-shadow 0.2s !important;
+  box-shadow: 0 2px 6px rgba(204, 51, 51, 0.3) !important;
 }
 
-.lf-help-circle:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 3px 10px rgba(204, 51, 51, 0.45);
+.vfrc-widget .lf-help-circle:hover {
+  filter: brightness(1.1) !important;
+  box-shadow: 0 3px 10px rgba(204, 51, 51, 0.45) !important;
 }
 
-.lf-help-balloon {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-4px);
-  width: 220px;
-  background: #F5F5F5;
-  color: #42494e;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 14px 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
-  pointer-events: none;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 12.5px;
-  line-height: 1.6;
-  z-index: 100;
-  text-align: left;
+.vfrc-widget .lf-help-balloon {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) translateY(-4px) !important;
+  width: 220px !important;
+  background: #F5F5F5 !important;
+  color: #42494e !important;
+  border: 1px solid #ddd !important;
+  border-radius: 6px !important;
+  padding: 14px 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s !important;
+  pointer-events: none !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  font-size: 12.5px !important;
+  line-height: 1.6 !important;
+  z-index: 100 !important;
+  text-align: left !important;
 }
 
-.lf-help-balloon::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  margin-left: -6px;
-  width: 11px;
-  height: 11px;
-  background: #F5F5F5;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  transform: rotate(45deg);
+.vfrc-widget .lf-help-balloon::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -6px !important;
+  left: 50% !important;
+  margin-left: -6px !important;
+  width: 11px !important;
+  height: 11px !important;
+  background: #F5F5F5 !important;
+  border-top: 1px solid #ddd !important;
+  border-left: 1px solid #ddd !important;
+  transform: rotate(45deg) !important;
 }
 
-.lf-help-tooltip:hover .lf-help-balloon {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
+.vfrc-widget .lf-help-tooltip:hover .lf-help-balloon {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateX(-50%) translateY(0) !important;
+  pointer-events: auto !important;
 }
 
-.lf-help-balloon strong {
-  display: block;
-  margin-bottom: 8px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #e0e0e0;
-  font-family: 'Nexa Rust Sans Black 2', system-ui, sans-serif;
-  font-size: 12px;
-  color: #CC3333;
-  letter-spacing: 0.3px;
+.vfrc-widget .lf-help-balloon strong {
+  display: block !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 5px !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  font-family: 'Nexa Rust Sans Black 2', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #CC3333 !important;
+  letter-spacing: 0.3px !important;
 }
 
-.lf-help-balloon ul {
-  margin: 0;
-  padding: 0 0 0 16px;
-  list-style: none;
+.vfrc-widget .lf-help-balloon ul {
+  margin: 0 !important;
+  padding: 0 0 0 16px !important;
+  list-style: none !important;
 }
 
-.lf-help-balloon li {
-  margin-bottom: 4px;
-  color: #42494e;
-  padding-left: 2px;
+.vfrc-widget .lf-help-balloon li {
+  margin-bottom: 4px !important;
+  color: #42494e !important;
+  padding-left: 2px !important;
 }
 
-.lf-help-balloon li::before {
-  content: '\\2022';
-  color: #CC3333;
-  font-weight: 700;
-  display: inline-block;
-  width: 14px;
-  margin-left: -14px;
+.vfrc-widget .lf-help-balloon li::before {
+  content: '\\2022' !important;
+  color: #CC3333 !important;
+  font-weight: 700 !important;
+  display: inline-block !important;
+  width: 14px !important;
+  margin-left: -14px !important;
 }
     `;
 

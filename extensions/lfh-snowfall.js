@@ -38,17 +38,26 @@ export const SnowfallExtension1 = {
 };
 
 function executeSnowfall(trace) {
-  const action = trace.payload?.action || 'start'; // Default to start
+  const action = trace.payload?.action || 'start';
 
   if (action === 'start') {
-    console.log('Starting Snowify effect... ❄️');
+    console.log('Starting Snowify effect...');
     const options = trace.payload?.options || {};
     initSnowify(options);
+    // Auto-stop after 15 seconds with 2s fade-out
+    setTimeout(() => {
+      const snow = document.getElementById('snowify__snow');
+      if (snow) {
+        snow.style.transition = 'opacity 2s ease-out';
+        snow.style.opacity = '0';
+        setTimeout(() => snow.remove(), 2100);
+      }
+    }, 15000);
   } else if (action === 'stop') {
     console.log('Stopping Snowify effect...');
-    const snowCanvas = document.getElementById('snow-canvas');
-    if (snowCanvas) {
-      snowCanvas.remove();
+    const snow = document.getElementById('snowify__snow');
+    if (snow) {
+      snow.remove();
     }
   }
 }

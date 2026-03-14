@@ -71,7 +71,6 @@ export const LFH_LODGES = {
       fitness: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/19-fitness-centre.jpg',
       roomUpstairs: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-upstairs.jpg',
       roomDownstairs: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-downstairs.jpg',
-      hotTub: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/08-outdoor-hot-tub-northern-bc.jpg',
       aerial: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/2-bell-2-lodge-skeena-mountains-aerial-context.jpg',
     },
     gallery: [
@@ -82,7 +81,6 @@ export const LFH_LODGES = {
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/09-bell-2-lodge-rustic-bar.jpg',
       'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/boot-room.jpg',
       'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/sauna.jpg',
-      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/08-outdoor-hot-tub-northern-bc.jpg',
     ],
     features: {
       accommodation: 'Cozy log chalet rooms with wood-burning soapstone stoves.',
@@ -158,7 +156,7 @@ export const LFH_LODGES = {
       type: 'Coast Mountains',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Further from town. Natural old growth forest. Steeper pitches.',
-      commute: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.',
+      commute: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.',
       snowfall: '15-25 meters per winter.',
       aerialImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2019/10/4-ripley-creek-stewart-bc-aerial-context2.jpg',
       runPhotos: [
@@ -211,7 +209,7 @@ const COMPARISON_CATEGORIES = [
   {
     label: 'Commute to Terrain',
     bell2: 'Lodge departures. 5 min flights to closest runs.',
-    ripley: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.',
+    ripley: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.',
     icon: '→',
   },
   {
@@ -487,7 +485,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   headerBar.className = 'lfhlc-header-bar';
   headerBar.innerHTML = `
     <span class="lfhlc-header-title">Lodge Compare</span>
-    <button class="lfhlc-close-btn" aria-label="Close">&times;</button>
+    <button class="lfhlc-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
   `;
   modal.appendChild(headerBar);
 
@@ -1225,13 +1223,13 @@ function buildModalStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhlc-close-btn {
-  background: transparent; border: none; color: #fff;
-  font-size: 28px; cursor: pointer; padding: 0;
-  width: 44px; height: 44px; display: flex;
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  cursor: pointer; padding: 0;
+  width: 40px; height: 40px; display: flex;
   align-items: center; justify-content: center;
-  border-radius: 50%; transition: background 0.2s;
+  border-radius: 50%; transition: background 0.2s; flex-shrink: 0;
 }
-.lfhlc-close-btn:hover { background: rgba(255,255,255,0.15); }
+.lfhlc-close-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* Tab Bar */
 .lfhlc-tab-bar {

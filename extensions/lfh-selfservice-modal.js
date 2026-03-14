@@ -107,8 +107,8 @@ const VIDEOS = [
     id: 'safety',
     episode: 5,
     title: 'Safety',
-    videoId: '251401988',
-    platform: 'vimeo',
+    videoId: 'irLz2GR0tpU',
+    platform: 'youtube',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/05_Last_Frontier_Backgrounder_Series_Safety-510x340.jpg',
     description: 'How we keep you safe - Protocols and equipment',
   },
@@ -283,17 +283,18 @@ function buildModalStyles() {
   letter-spacing: 0.5px;
 }
 .lfhbss-close-btn {
-  background: none;
+  background: rgba(255,255,255,0.12);
   border: none;
   color: #FFFFFF;
-  font-size: 24px;
   cursor: pointer;
-  padding: 4px 8px;
-  line-height: 1;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  padding: 0;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+  flex-shrink: 0;
 }
-.lfhbss-close-btn:hover { opacity: 1; }
+.lfhbss-close-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* Tab Bar */
 .lfhbss-tab-bar {
@@ -754,10 +755,9 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
   headerBar.className = 'lfhbss-header-bar';
   headerBar.innerHTML = `
     <div class="lfhbss-header-left">
-      <img src="${LFH_ASSETS.logo}" alt="LFH" class="lfhbss-header-logo" />
       <span class="lfhbss-header-title">Discover Heliskiing</span>
     </div>
-    <button class="lfhbss-close-btn" aria-label="Close">&times;</button>
+    <button class="lfhbss-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
   `;
   modal.appendChild(headerBar);
 

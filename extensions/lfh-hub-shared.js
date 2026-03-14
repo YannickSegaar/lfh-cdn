@@ -164,7 +164,7 @@ export const COMPARISON_CATEGORIES = [
   { label: 'Accommodation Style', bell2: 'Log cabin chalets', ripley: 'Heritage hotel rooms', icon: '⌂' },
   { label: 'Terrain Level', bell2: 'Intermediate to Expert', ripley: 'Advanced to Expert', icon: '⛰' },
   { label: 'Snowfall', bell2: '10-15 meters per winter.', ripley: '15-25 meters per winter.', icon: '❄' },
-  { label: 'Commute to Terrain', bell2: 'Lodge departures. 5 min flights to closest runs.', ripley: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.', icon: '→' },
+  { label: 'Commute to Terrain', bell2: 'Lodge departures. 5 min flights to closest runs.', ripley: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.', icon: '→' },
   { label: 'Connectivity', bell2: 'Off-grid (WiFi available)', ripley: 'Cell service + WiFi', icon: '◎' },
   { label: 'Vibe', bell2: 'Wilderness immersion', ripley: 'Town character & culture', icon: '★' },
 ];

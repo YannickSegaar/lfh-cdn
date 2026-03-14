@@ -93,7 +93,7 @@ export function openHubModal(config = {}) {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.7); z-index: 10000;
     display: flex; justify-content: center; align-items: center;
-    animation: lfhub-fadeIn 0.3s ease;
+    animation: lfhub-fadeIn 0.3s ease; overflow: hidden;
   `;
 
   // --- Create Modal Container ---
@@ -126,7 +126,7 @@ export function openHubModal(config = {}) {
   headerBar.className = 'lfhub-header-bar';
   headerBar.innerHTML = `
     <span class="lfhub-header-title">Last Frontier Heliskiing</span>
-    <button class="lfhub-close-btn" aria-label="Close">&times;</button>
+    <button class="lfhub-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
   `;
   modal.appendChild(headerBar);
 
@@ -163,6 +163,10 @@ export function openHubModal(config = {}) {
   modal.appendChild(tabContainer);
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
+
+  // Lock body scroll while modal is open (prevents iOS horizontal drift)
+  const origBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
 
   // --- Tab switch function (shared with tab modules via config) ---
   function switchToTab(targetTab, options = {}) {
@@ -284,7 +288,7 @@ export function openHubModal(config = {}) {
     overlay.innerHTML = `
       <div class="lfhub-close-confirm-card">
         <p class="lfhub-close-confirm-title">Are you sure you want to return to the conversation?</p>
-        <p class="lfhub-close-confirm-sub">Want to come back? Just type <strong>"show me tours"</strong> or <strong>"show me lodges"</strong> in the chat and this will pop right back up.</p>
+        <p class="lfhub-close-confirm-sub">Want to come back? Just use the <strong>Menu</strong> button below the chat to open this again anytime.</p>
         <div class="lfhub-close-confirm-buttons">
           <button class="lfhub-close-confirm-yes">Yes, return to chat</button>
           <button class="lfhub-close-confirm-no">No, stay here</button>
@@ -338,6 +342,7 @@ export function openHubModal(config = {}) {
     }
 
     abortController.abort();
+    document.body.style.overflow = origBodyOverflow;
     backdrop.style.animation = 'lfhub-fadeOut 0.3s ease forwards';
     setTimeout(() => backdrop.remove(), 300);
   }
@@ -467,13 +472,13 @@ function buildHubStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhub-close-btn {
-  background: transparent; border: none; color: #fff;
-  font-size: 28px; cursor: pointer; padding: 0;
-  width: 44px; height: 44px; display: flex;
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  cursor: pointer; padding: 0;
+  width: 40px; height: 40px; display: flex;
   align-items: center; justify-content: center;
-  border-radius: 50%; transition: background 0.2s;
+  border-radius: 50%; transition: background 0.2s; flex-shrink: 0;
 }
-.lfhub-close-btn:hover { background: rgba(255,255,255,0.15); }
+.lfhub-close-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* Tab Bar */
 .lfhub-tab-bar {
@@ -522,7 +527,7 @@ function buildHubStyles() {
 @media (max-width: 500px) {
   .lfhub-header-title { font-size: 13px; letter-spacing: 1px; }
   .lfhub-header-bar { padding: 8px 12px; }
-  .lfhub-close-btn { width: 36px; height: 36px; font-size: 24px; }
+  .lfhub-close-btn { width: 36px; height: 36px; }
   .lfhub-tab { padding: 8px 6px; font-size: 10px; }
   .lfhub-tab-bar { gap: 4px; }
   .lfhub-tab-icon { width: 14px; height: 14px; }
