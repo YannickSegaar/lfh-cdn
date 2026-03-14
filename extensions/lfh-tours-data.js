@@ -302,7 +302,7 @@ export const LFH_VIDEOS = {
   location: { id: '4CaKMMpebJM', platform: 'youtube', title: 'Location' },
   lodging: { id: 'RwYTOkbnEgw', platform: 'youtube', title: 'Lodging' },
   terrain: { id: '1zneyNdALjc', platform: 'youtube', title: 'Terrain' },
-  safety: { id: '251401988', platform: 'vimeo', title: 'Safety' },
+  safety: { id: 'irLz2GR0tpU', platform: 'youtube', title: 'Safety' },
   crew: { id: '256697044', platform: 'vimeo', title: 'The Crew' },
 };
 

@@ -92,7 +92,7 @@ const videos = [
     id: 'safety',
     episode: 5,
     title: 'Safety',
-    vimeoId: '251401988',
+    vimeoId: 'irLz2GR0tpU',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/05_Last_Frontier_Backgrounder_Series_Safety-510x340.jpg',
     description: 'How we keep you safe - Protocols and equipment',
   },

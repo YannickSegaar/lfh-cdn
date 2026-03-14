@@ -71,7 +71,6 @@ export const LFH_LODGES = {
       fitness: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/19-fitness-centre.jpg',
       roomUpstairs: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-upstairs.jpg',
       roomDownstairs: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-downstairs.jpg',
-      hotTub: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/08-outdoor-hot-tub-northern-bc.jpg',
       aerial: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/2-bell-2-lodge-skeena-mountains-aerial-context.jpg',
     },
     gallery: [
@@ -82,7 +81,6 @@ export const LFH_LODGES = {
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/09-bell-2-lodge-rustic-bar.jpg',
       'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/boot-room.jpg',
       'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/sauna.jpg',
-      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/08-outdoor-hot-tub-northern-bc.jpg',
     ],
     features: {
       accommodation: 'Cozy log chalet rooms with wood-burning soapstone stoves.',
