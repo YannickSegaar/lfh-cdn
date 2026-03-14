@@ -172,7 +172,10 @@
 }
 
 /* FAQ question text — "How good do I have to be?" */
-.vfrc-widget .lfh-ss-v4-faq-question {
+.vfrc-widget button.lfh-ss-v4-faq-question,
+.vfrc-widget button.lfh-ss-v4-faq-question span,
+.vfrc-widget .lfh-ss-v4-faq-question,
+.vfrc-widget .lfh-ss-v4-faq-question span {
   font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
   font-weight: 600 !important;
