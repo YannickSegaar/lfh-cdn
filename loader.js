@@ -285,6 +285,13 @@
   document.head.appendChild(shadowScript);
 
   // ============================================
+  // 6b. POST-LOAD: Mobile font readability boost
+  // ============================================
+  var fontBoost = document.createElement('script');
+  fontBoost.src = CDN + '/styles/lfh-mobile-font-boost.js?v=1.0.0';
+  document.head.appendChild(fontBoost);
+
+  // ============================================
   // 7. POST-LOAD: Notification sound
   // ============================================
   var soundScript = document.createElement('script');
