@@ -93,7 +93,7 @@ export function openHubModal(config = {}) {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.7); z-index: 10000;
     display: flex; justify-content: center; align-items: center;
-    animation: lfhub-fadeIn 0.3s ease;
+    animation: lfhub-fadeIn 0.3s ease; overflow: hidden;
   `;
 
   // --- Create Modal Container ---
@@ -163,6 +163,10 @@ export function openHubModal(config = {}) {
   modal.appendChild(tabContainer);
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
+
+  // Lock body scroll while modal is open (prevents iOS horizontal drift)
+  const origBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
 
   // --- Tab switch function (shared with tab modules via config) ---
   function switchToTab(targetTab, options = {}) {
@@ -338,6 +342,7 @@ export function openHubModal(config = {}) {
     }
 
     abortController.abort();
+    document.body.style.overflow = origBodyOverflow;
     backdrop.style.animation = 'lfhub-fadeOut 0.3s ease forwards';
     setTimeout(() => backdrop.remove(), 300);
   }
