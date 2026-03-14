@@ -52,7 +52,6 @@
 .vfrc-widget [class*=" lfh-"] {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   overflow-wrap: anywhere !important;
-  background-image: none !important;
 }
 
 /* Restore extension font-weights that VoiceFlow's wildcard resets to 400 */
@@ -64,6 +63,18 @@
 }
 .vfrc-widget .lfh-grid-card-cta {
   font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  height: 32px !important;
+  background: #E62B1E !important;
+  background-image: none !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  letter-spacing: 0.2px !important;
+  transition: background 0.2s !important;
+  cursor: pointer !important;
 }
 .vfrc-widget .lfh-grid-footer {
   font-weight: 500 !important;
