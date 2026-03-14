@@ -268,6 +268,14 @@
   overflow-wrap: break-word !important;
 }
 
+/* Remove red circular border from assistant info avatar */
+.vfrc-widget .vfrc-assistant-info--avatar,
+.vfrc-widget img.vfrc-avatar.vfrc-assistant-info--avatar {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
 /* Apply Nexa Rust Sans Black 2 to launcher widget text */
 .vfrc-launcher,
 .vfrc-launcher * {
