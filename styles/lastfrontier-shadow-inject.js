@@ -359,6 +359,25 @@
   display: none;
 }
 
+/* Main avatar styling — 72px white circle with subtle shadow */
+.vfrc-widget .vfrc-avatar {
+  height: 72px !important;
+  width: 72px !important;
+  border-radius: 50% !important;
+  background-color: #fff !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-image: none !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #FFFFFF !important;
+  text-align: center !important;
+  box-shadow: 0 0 0 1px #161a1e0f, 0 1px 1px #161a1e03, 0 4px 8px -18px #161a1e0a, 0 8px 12px -18px #161a1e0a, 0 10px 16px -18px #161a1e14, 0 12px 20px -18px #161a1e14, 0 16px 28px -18px #161a1e1f, 0 20px 44px -18px #161a1e1f !important;
+}
+
 /* Hide timestamps on extension messages */
 .vfrc-timestamp {
   display: none;
