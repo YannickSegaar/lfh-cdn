@@ -46,18 +46,18 @@ function executeSnowfall(trace) {
     initSnowify(options);
     // Auto-stop after 15 seconds with 2s fade-out
     setTimeout(() => {
-      const canvas = document.getElementById('snow-canvas');
-      if (canvas) {
-        canvas.style.transition = 'opacity 2s ease-out';
-        canvas.style.opacity = '0';
-        setTimeout(() => canvas.remove(), 2100);
+      const snow = document.getElementById('snowify__snow');
+      if (snow) {
+        snow.style.transition = 'opacity 2s ease-out';
+        snow.style.opacity = '0';
+        setTimeout(() => snow.remove(), 2100);
       }
     }, 15000);
   } else if (action === 'stop') {
     console.log('Stopping Snowify effect...');
-    const snowCanvas = document.getElementById('snow-canvas');
-    if (snowCanvas) {
-      snowCanvas.remove();
+    const snow = document.getElementById('snowify__snow');
+    if (snow) {
+      snow.remove();
     }
   }
 }
