@@ -149,6 +149,14 @@
   document.head.appendChild(fontStyle);
 
   // ============================================
+  // 1c. PRELOAD INTER FONT (needed at document level for Shadow DOM extensions)
+  // ============================================
+  var interLink = document.createElement('link');
+  interLink.rel = 'stylesheet';
+  interLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap';
+  document.head.appendChild(interLink);
+
+  // ============================================
   // 2. LOAD VOICEFLOW WIDGET BUNDLE + SNOWIFY
   // ============================================
   var script = document.createElement('script');
