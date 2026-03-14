@@ -291,10 +291,7 @@ export function renderToursTab(container, config, savedState) {
     const videoEntry = tour.videoId ? Object.values(LFH_VIDEOS).find(v => v.id === tour.videoId) : null;
     const videoTitle = videoEntry ? videoEntry.title : '';
 
-    // For tours without a dedicated video, pick a random one for the gallery
-    const videoIds = Object.values(LFH_VIDEOS).map(v => v.id);
-    const randomVideoId = !tour.videoId ? videoIds[Math.floor(Math.random() * videoIds.length)] : null;
-    const randomVideoEntry = randomVideoId ? Object.values(LFH_VIDEOS).find(v => v.id === randomVideoId) : null;
+
 
     // Pricing: per-week tables when pricingWeeks exists, else fallback to Early/Peak
     let pricingHTML = '';
@@ -359,14 +356,7 @@ export function renderToursTab(container, config, savedState) {
       .map((img, i) => `<div class="lfhte-gallery-thumb" style="background-image: url('${img}')" data-index="${i}"></div>`)
       .join('');
 
-    // Add video thumbnail at end of gallery (dedicated video or random)
-    const galleryVideoId = tour.videoId || randomVideoId;
-    const galleryVideoTitle = tour.videoId ? videoTitle : (randomVideoEntry?.title || 'Video');
-    if (galleryVideoId) {
-      galleryHTML += `<div class="lfhte-gallery-thumb lfhte-video-thumb" data-video-id="${galleryVideoId}" data-video-title="${galleryVideoTitle}">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))"><polygon points="8,5 19,12 8,19"/></svg>
-      </div>`;
-    }
+
 
     const includedList = tour.id === 'private' ? INCLUDED_ITEMS_PRIVATE : INCLUDED_ITEMS_REGULAR;
     const includedHTML = includedList.map(
@@ -1087,6 +1077,8 @@ export function buildToursStyles() {
 .lfhte-gallery-strip {
   display: flex; gap: 8px; overflow-x: auto;
   padding-bottom: 8px; margin-bottom: 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 .lfhte-gallery-strip::-webkit-scrollbar { height: 4px; }
 .lfhte-gallery-strip::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 2px; }
@@ -1094,12 +1086,11 @@ export function buildToursStyles() {
   flex: 0 0 120px; height: 80px; border-radius: 8px;
   background-size: cover; background-position: center;
   border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+  scroll-snap-align: start;
 }
 .lfhte-gallery-thumb:hover { border-color: ${LFH_COLORS.primaryRed}; }
-.lfhte-video-thumb {
-  position: relative; background: #1a1a1a;
-  display: flex; align-items: center; justify-content: center;
-}
+
+
 
 .lfhte-detail-section { margin-bottom: 20px; }
 .lfhte-section-title {
@@ -1211,7 +1202,7 @@ export function buildToursStyles() {
 .lfhte-compare-title {
   font-size: 18px; font-weight: 700; color: ${LFH_COLORS.textPrimary}; margin: 0;
 }
-.lfhte-compare-scroll { flex: 1; overflow: auto; }
+.lfhte-compare-scroll { flex: 1; overflow-x: auto; overflow-y: hidden; }
 .lfhte-compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .lfhte-compare-table th, .lfhte-compare-table td {
   padding: 12px; border: 1px solid ${LFH_COLORS.border};

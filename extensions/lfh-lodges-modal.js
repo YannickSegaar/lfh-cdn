@@ -156,7 +156,7 @@ export const LFH_LODGES = {
       type: 'Coast Mountains',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Further from town. Natural old growth forest. Steeper pitches.',
-      commute: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.',
+      commute: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.',
       snowfall: '15-25 meters per winter.',
       aerialImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2019/10/4-ripley-creek-stewart-bc-aerial-context2.jpg',
       runPhotos: [
@@ -209,7 +209,7 @@ const COMPARISON_CATEGORIES = [
   {
     label: 'Commute to Terrain',
     bell2: 'Lodge departures. 5 min flights to closest runs.',
-    ripley: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.',
+    ripley: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.',
     icon: '→',
   },
   {
