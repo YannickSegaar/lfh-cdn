@@ -47,9 +47,25 @@
   font-display: swap;
 }
 
-/* Override VoiceFlow's CSS-in-JS font on all LFH extension elements */
+/* Override VoiceFlow's CSS-in-JS defaults on all LFH extension elements */
 [class^="lfh-"], [class*=" lfh-"] {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  overflow-wrap: anywhere !important;
+  background-image: none !important;
+}
+
+/* Restore extension font-weights that VoiceFlow's wildcard resets to 400 */
+.lfh-grid-card-title {
+  font-weight: 700 !important;
+}
+.lfh-grid-card-subtitle {
+  font-weight: 400 !important;
+}
+.lfh-grid-card-cta {
+  font-weight: 600 !important;
+}
+.lfh-grid-footer {
+  font-weight: 500 !important;
 }
 
 /* Header title - 15px font size, no truncation */
