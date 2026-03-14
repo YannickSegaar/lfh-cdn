@@ -269,9 +269,9 @@
 }
 
 /* Remove red circular border from assistant info avatar */
-.vfrc-widget .vfrc-assistant-info--avatar,
-.vfrc-widget img.vfrc-avatar.vfrc-assistant-info--avatar {
+.vfrc-widget .vfrc-assistant-info--avatar-container {
   border: none !important;
+  border-radius: 0 !important;
   box-shadow: none !important;
   outline: none !important;
 }
