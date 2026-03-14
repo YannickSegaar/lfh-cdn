@@ -20,6 +20,15 @@
     const existing = shadowRoot.getElementById('lf-custom-styles');
     if (existing) existing.remove();
 
+    // Inject Inter font into Shadow DOM (Google Fonts @font-face must be inside shadow root)
+    if (!shadowRoot.getElementById('lf-inter-font')) {
+      const interLink = document.createElement('link');
+      interLink.id = 'lf-inter-font';
+      interLink.rel = 'stylesheet';
+      interLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap';
+      shadowRoot.prepend(interLink);
+    }
+
     // Create and inject the style
     const style = document.createElement('style');
     style.id = 'lf-custom-styles';
@@ -29,13 +38,18 @@
    Shadow DOM Injection Version
    =========================================== */
 
-/* Font must be defined INSIDE Shadow DOM — external CSS can't penetrate */
+/* Fonts must be defined INSIDE Shadow DOM — external CSS can't penetrate */
 @font-face {
   font-family: 'Nexa Rust Sans Black 2';
   src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+/* Override VoiceFlow's default font on all LFH extension containers */
+[class^="lfh-"], [class*=" lfh-"] {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Header title - 15px font size, no truncation */
