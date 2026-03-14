@@ -283,18 +283,18 @@ function buildModalStyles() {
   letter-spacing: 0.5px;
 }
 .lfhbss-close-btn {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.12);
   border: none;
   color: #FFFFFF;
-  font-size: 28px;
   cursor: pointer;
   padding: 0;
-  width: 44px; height: 44px;
+  width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
   border-radius: 50%;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
-.lfhbss-close-btn:hover { background: rgba(255,255,255,0.2); }
+.lfhbss-close-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* Tab Bar */
 .lfhbss-tab-bar {
@@ -757,7 +757,7 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
     <div class="lfhbss-header-left">
       <span class="lfhbss-header-title">Discover Heliskiing</span>
     </div>
-    <button class="lfhbss-close-btn" aria-label="Close">&times;</button>
+    <button class="lfhbss-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
   `;
   modal.appendChild(headerBar);
 
