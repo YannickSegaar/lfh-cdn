@@ -47,9 +47,9 @@
   font-display: swap;
 }
 
-/* Override VoiceFlow's default font on all LFH extension containers */
+/* Override VoiceFlow's CSS-in-JS font on all LFH extension elements */
 [class^="lfh-"], [class*=" lfh-"] {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
 /* Header title - 15px font size, no truncation */
