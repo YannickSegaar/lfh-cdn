@@ -52,6 +52,21 @@
   .lfhte-included-item {
     font-size: 13px !important;
   }
+  .lfhte-tray-thumb {
+    font-size: 12px !important;
+  }
+  .lfhte-filter-bar,
+  .lfhte-filter-btn {
+    font-size: 13px !important;
+  }
+
+  /* --- Tours Grid cards (lfhte-gw- prefix) --- */
+  .lfhte-gw-badge {
+    font-size: 11px !important;
+  }
+  .lfhte-gw-card-price {
+    font-size: 13px !important;
+  }
 
   /* --- Hub: Lodges Tab (lfhlc- prefix) --- */
   .lfhlc-comp-cell,
@@ -72,12 +87,14 @@
   }
 
   /* --- Self-Service (lfhbss- prefix) --- */
+  .lfhbss-tab,
   .lfhbss-tab-label,
   .lfhbss-resource-desc {
     font-size: 13px !important;
   }
   .lfhbss-faq-question,
-  .lfhbss-faq-answer {
+  .lfhbss-faq-answer,
+  .lfhbss-faq-answer-inner {
     font-size: 14px !important;
   }
 
@@ -94,8 +111,23 @@
   .lfh-v3-checkbox-label {
     font-size: 13px !important;
   }
+  .lfh-v3-progress-label {
+    font-size: 11px !important;
+  }
+  .lfh-v3-progress-optional {
+    font-size: 11px !important;
+  }
+  .lfh-v3-season-dates,
+  .lfh-v3-season-terrain {
+    font-size: 12px !important;
+  }
 
-  /* --- Weather (lfhwc- prefix) --- */
+  /* --- Weather widget (lfhww2- prefix) --- */
+  .lfhww2-subtitle {
+    font-size: 13px !important;
+  }
+
+  /* --- Weather modal (lfhwc- prefix) --- */
   .lfhwc-stat-value,
   .lfhwc-stat-label {
     font-size: 13px !important;
