@@ -273,8 +273,7 @@
   border: none !important;
   outline: none !important;
 }
-.vfrc-widget img.vfrc-avatar,
-.vfrc-widget .vfrc-assistant-info--avatar-container img {
+.vfrc-widget .vfrc-assistant-info--avatar-container img.vfrc-avatar {
   border: none !important;
   border-radius: 50% !important;
   width: 72px !important;
