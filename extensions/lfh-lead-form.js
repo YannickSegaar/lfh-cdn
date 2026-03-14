@@ -370,6 +370,32 @@ export const LastFrontierLeadForm_v4_Unified = {
   margin-bottom: 10px;
 }
 
+.lfh-v3-inquiry-type-cards {
+  display: flex;
+  gap: 10px;
+}
+.lfh-v3-inquiry-type-card {
+  flex: 1;
+  background: ${colors.background};
+  border: 1.5px solid ${colors.border};
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.lfh-v3-inquiry-type-card:hover {
+  border-color: ${colors.primaryRed};
+}
+.lfh-v3-inquiry-type-card.selected {
+  border-color: ${colors.primaryRed};
+  background: ${colors.selectedTint};
+  border-width: 2px;
+}
+.lfh-v3-inquiry-type-card input[type="radio"] {
+  display: none;
+}
+
 .lfh-v3-intent-cards {
   display: flex;
   flex-direction: column;
@@ -1124,6 +1150,20 @@ export const LastFrontierLeadForm_v4_Unified = {
   <!-- STEP 1: Contact & Intent -->
   <div id="lfh-v3-step-1" class="lfh-v3-step active">
     <form id="lfh-v3-contact-form">
+      <div class="lfh-v3-form-group">
+        <div class="lfh-v3-section-title">Is this about... <span class="lfh-v3-required">*</span></div>
+        <div class="lfh-v3-inquiry-type-cards">
+          <label class="lfh-v3-inquiry-type-card" for="inquiry-new">
+            <input type="radio" id="inquiry-new" name="inquiryType" value="new_inquiry" required>
+            <div class="lfh-v3-intent-title">A new inquiry</div>
+          </label>
+          <label class="lfh-v3-inquiry-type-card" for="inquiry-existing">
+            <input type="radio" id="inquiry-existing" name="inquiryType" value="existing_booking">
+            <div class="lfh-v3-intent-title">An existing booking</div>
+          </label>
+        </div>
+      </div>
+
       <div class="lfh-v3-form-row">
         <div class="lfh-v3-form-group">
           <label class="lfh-v3-label">First Name <span class="lfh-v3-required">*</span></label>
@@ -1555,6 +1595,7 @@ export const LastFrontierLeadForm_v4_Unified = {
       });
     }
 
+    setupCardSelection('.lfh-v3-inquiry-type-card', '.lfh-v3-inquiry-type-cards');
     setupCardSelection('.lfh-v3-intent-card', '.lfh-v3-intent-cards');
     setupCardSelection('.lfh-v3-exp-card', '.lfh-v3-exp-cards');
     setupCardSelection('.lfh-v3-toggle-btn', '.lfh-v3-toggle-options');
@@ -1916,6 +1957,12 @@ export const LastFrontierLeadForm_v4_Unified = {
         emailField.classList.add('error');
       }
 
+      // Inquiry type selection
+      const inquiryTypeSelected = container.querySelector('input[name="inquiryType"]:checked');
+      if (!inquiryTypeSelected) {
+        isValid = false;
+      }
+
       // Intent selection
       const intentSelected = container.querySelector('input[name="intent"]:checked');
       if (!intentSelected) {
@@ -1954,6 +2001,7 @@ export const LastFrontierLeadForm_v4_Unified = {
       const getVal = (id) => container.querySelector(id)?.value?.trim() || '';
       const getRadio = (name) => container.querySelector(`input[name="${name}"]:checked`)?.value || '';
 
+      const inquiryType = getRadio('inquiryType');
       const intent = getRadio('intent');
       const skiDays = getRadio('skiDaysPerYear');
       const leadPriority = computeLeadPriority(intent, skiDays);
@@ -1970,6 +2018,7 @@ export const LastFrontierLeadForm_v4_Unified = {
           country: getVal('#lfh-v3-country'),
           city: getVal('#lfh-v3-city'),
           hearAboutUs: getVal('#lfh-v3-hearAboutUs'),
+          inquiryType: inquiryType,
           intent: intent,
         },
         tripPreferences: {
