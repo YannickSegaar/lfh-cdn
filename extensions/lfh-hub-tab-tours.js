@@ -925,7 +925,7 @@ export function buildToursStyles() {
 .lfhte-lodge-name-link:hover { color: #c4221a; }
 
 .lfhte-content {
-  flex: 1; overflow-y: auto; padding: 20px;
+  flex: 1; overflow-x: hidden; overflow-y: auto; padding: 20px;
   font-family: 'Inter', sans-serif;
 }
 .lfhte-content::-webkit-scrollbar { width: 6px; }
@@ -1034,7 +1034,7 @@ export function buildToursStyles() {
   text-transform: uppercase; letter-spacing: 1px;
 }
 .lfhte-detail-subtitle { font-size: 13px; color: ${LFH_COLORS.textSecondary}; font-style: italic; }
-.lfhte-detail-scroll { flex: 1; overflow-y: auto; }
+.lfhte-detail-scroll { flex: 1; overflow-x: hidden; overflow-y: auto; }
 
 .lfhte-hero-media { margin-bottom: 12px; }
 .lfhte-hero-img {
