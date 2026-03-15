@@ -203,7 +203,13 @@ export const LFHDisclaimerModal = {
       </div>
     `;
 
+    // Hide initially, show after 2s delay so it doesn't pop up too fast
+    overlay.style.display = 'none';
     element.appendChild(overlay);
+    setTimeout(function() {
+      overlay.style.display = '';
+      disableChatInput();
+    }, 2000);
 
     // Disable chat input while disclaimer is active (same pattern as lead form)
     function getShadowRoot() {
@@ -224,8 +230,6 @@ export const LFHDisclaimerModal = {
       var inputContainer = shadowRoot.querySelector('.vfrc-input-container');
       if (inputContainer) inputContainer.style.display = '';
     }
-
-    disableChatInput();
 
     // Accept handler
     function accept() {
