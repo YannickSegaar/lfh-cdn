@@ -121,7 +121,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 @font-face {
   font-family: 'Nexa Rust Sans Black 2';
   src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
-  font-weight: 100 900;
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
@@ -187,7 +187,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   z-index: 2;
   font-family: 'Nexa Rust Sans Black 2', 'Inter', sans-serif;
   font-size: 20px;
-  font-weight: 900;
+  font-weight: normal;
   color: #FFFFFF;
   text-transform: uppercase;
   letter-spacing: 3px;

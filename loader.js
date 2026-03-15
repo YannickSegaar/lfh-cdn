@@ -145,12 +145,12 @@
   document.head.appendChild(fontLink);
 
   var fontStyle = document.createElement('style');
-  fontStyle.textContent = "@font-face { font-family: 'Nexa Rust Sans Black 2'; src: url('" + CDN + "/fonts/NexaRustSansBlack2.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }";
+  fontStyle.textContent = "@font-face { font-family: 'Nexa Rust Sans Black 2'; src: url('" + CDN + "/fonts/NexaRustSansBlack2.woff2') format('woff2'); font-weight: normal; font-style: normal; font-display: swap; }";
   document.head.appendChild(fontStyle);
 
   // Force-load the font so it's available inside Shadow DOM
   if (document.fonts && document.fonts.load) {
-    document.fonts.load("900 16px 'Nexa Rust Sans Black 2'").catch(function() {});
+    document.fonts.load("16px 'Nexa Rust Sans Black 2'").catch(function() {});
   }
 
   // ============================================
