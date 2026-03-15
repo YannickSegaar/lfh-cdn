@@ -258,7 +258,7 @@
       extensions: extensions
     },
     session: {
-      resumeOnReload: disclaimerAccepted
+      resumeOnReload: true
     }
   });
 

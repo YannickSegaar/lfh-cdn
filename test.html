@@ -264,6 +264,13 @@
 })();
 </script>
 
+<!-- Reload debugger — logs real page reloads to console -->
+<script>
+window.addEventListener('beforeunload', function() {
+  console.log('[LFH] PAGE RELOAD DETECTED at ' + new Date().toISOString());
+});
+</script>
+
 <!-- Widget detection -->
 <script>
 (function() {
