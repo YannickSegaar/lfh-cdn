@@ -192,7 +192,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   text-transform: uppercase;
   letter-spacing: 3px;
   margin: 0 0 8px 0;
-  padding-right: 70px;
+  padding-right: 44px;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
@@ -710,18 +710,18 @@ export const LastFrontierLeadForm_v4_Unified = {
   letter-spacing: 2px;
 }
 
-.lfh-mobile .lfh-v3-collapse-btn {
-  right: 8px;
-}
-
 .lfh-mobile .lfh-v3-content {
   max-height: none;
   overflow-y: visible;
-  padding: 12px;
+  padding: 14px;
 }
 
-.lfh-mobile .lfh-v3-content .lfh-v3-field-group {
-  margin-bottom: 12px;
+.lfh-mobile .lfh-v3-form-group {
+  margin-bottom: 16px;
+}
+
+.lfh-mobile .lfh-v3-label {
+  margin-bottom: 6px;
 }
 
 .lfh-mobile .lfh-v3-progress {
@@ -729,7 +729,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 
 .lfh-mobile .lfh-v3-btn-container {
-  padding: 10px 12px;
+  padding: 12px 14px;
 }
 
 /* Mobile card overrides removed — all converted to <select> dropdowns */
@@ -737,48 +737,45 @@ export const LastFrontierLeadForm_v4_Unified = {
 /* ===== COLLAPSIBLE FORM ===== */
 .lfh-v3-collapse-btn {
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 8px;
+  top: 8px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.35);
+  justify-content: center;
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.5);
   color: white;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  padding: 0;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 50%;
   z-index: 3;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s;
-  min-height: 44px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 .lfh-v3-collapse-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   transition: transform 0.3s ease;
-  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
 }
 .lfh-v3-collapse-btn:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.35);
 }
 .lfh-v3-collapse-btn:active {
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.45);
 }
 
 /* Transition support for collapsible sections */
 .lfh-v3-progress,
-.lfh-v3-content,
 .lfh-v3-btn-container {
   transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
   overflow: hidden;
+}
+/* Content needs overflow-y: auto for scrolling — overflow: hidden applied via JS during animation only */
+.lfh-v3-content {
+  transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }
 
 /* Collapsed state */
@@ -811,7 +808,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   </div>
   <p class="lfh-v3-header-label">${displayTitle}</p>
   <p class="lfh-v3-header-description">${displaySubtitle}</p>
-  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form"><span class="lfh-v3-collapse-label">Hide</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
 </div>
 
 <!-- PROGRESS -->
@@ -1079,24 +1076,25 @@ export const LastFrontierLeadForm_v4_Unified = {
       '.lfh-v3-progress, .lfh-v3-content, .lfh-v3-btn-container'
     );
 
-    const collapseLabel = collapseBtn.querySelector('.lfh-v3-collapse-label');
     collapseBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isCollapsed = container.classList.toggle('lfh-v3-collapsed');
       collapseBtn.setAttribute('aria-expanded', !isCollapsed);
-      if (collapseLabel) collapseLabel.textContent = isCollapsed ? 'Show' : 'Hide';
 
       collapsibleSections.forEach(section => {
         if (isCollapsed) {
+          section.style.overflow = 'hidden';
           section.style.maxHeight = section.scrollHeight + 'px';
           section.offsetHeight; // force reflow
           section.style.maxHeight = '0';
           section.style.opacity = '0';
         } else {
+          section.style.overflow = 'hidden';
           section.style.maxHeight = section.scrollHeight + 'px';
           section.style.opacity = '1';
           section.addEventListener('transitionend', function handler() {
             section.style.maxHeight = '';
+            section.style.overflow = '';
             section.removeEventListener('transitionend', handler);
           });
         }
