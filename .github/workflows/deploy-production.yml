@@ -1,0 +1,36 @@
+name: Deploy Production
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-current
+        continue-on-error: true
+
+      - name: Prepare deploy (preserve staging)
+        run: |
+          mkdir -p deploy
+          rsync -a --exclude='.github' --exclude='.git' --exclude='deploy' --exclude='gh-pages-current' . deploy/
+          if [ -d gh-pages-current/staging ]; then
+            cp -r gh-pages-current/staging deploy/staging
+          fi
+
+      - name: Deploy to GitHub Pages (root)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          publish_branch: gh-pages
