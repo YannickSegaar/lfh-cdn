@@ -189,11 +189,9 @@ export const LFHDisclaimerModal = {
           <img class="lfh-disclaimer-logo"
                src="${CDN}/images/LFH_Logo_FullName_White.svg"
                alt="Last Frontier Heliskiing" />
-          <div class="lfh-disclaimer-title">You're Talking to an AI Assistant</div>
+          <div class="lfh-disclaimer-title">You're Talking to an AI Agent</div>
           <div class="lfh-disclaimer-body">
-            Hi there! I'm a smart assistant for Last Frontier Heliskiing. I've been trained to answer
-            your questions about our lodges, tours, and heliskiing experience — but since I'm still
-            learning, we recommend double-checking critical details with our team.
+            Hi there! I'm the new AI agent for Last Frontier Heliskiing. I'm still learning, but I've been through a rigorous training regime from my human colleagues. You'll find my knowledge runs deep — but if there's a piece of info that's critical, then it's wise to double-check it with our team.
           </div>
           <button class="lfh-disclaimer-btn" id="lfh-disclaimer-accept">I Understand</button>
           <br>
