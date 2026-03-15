@@ -1538,7 +1538,7 @@ function buildModalStyles() {
 
 /* Pricing Table */
 .lfhte-pricing-table {
-  width: 100%; border-collapse: collapse; font-size: 12px;
+  width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;
 }
 .lfhte-pricing-table th {
   padding: 10px 8px; background: ${LFH_COLORS.textPrimary};
@@ -1556,7 +1556,7 @@ function buildModalStyles() {
 }
 .lfhte-vertical-note {
   font-size: 11px; color: ${LFH_COLORS.textSecondary};
-  font-style: italic; margin: 4px 0 0 0; text-align: center;
+  font-style: italic; margin: 8px 0 20px 0; text-align: left;
 }
 
 /* Included Grid */
@@ -1639,7 +1639,10 @@ function buildModalStyles() {
 /* Mobile breakpoint */
 @media (max-width: 500px) {
   .lfhte-stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .lfhte-pricing-table { display: block; overflow-x: auto; }
+  .lfhte-pricing-table { display: block; overflow-x: auto; min-width: 100%; }
+  .lfhte-pricing-table thead,
+  .lfhte-pricing-table tbody,
+  .lfhte-pricing-table tr { display: table; width: 100%; table-layout: fixed; }
   .lfhte-compare-table { min-width: 500px; }
   .lfhte-hero-image { height: 200px; }
   .lfhte-filter-bar { padding: 10px 12px; }

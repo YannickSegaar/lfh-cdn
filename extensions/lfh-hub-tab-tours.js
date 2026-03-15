@@ -1128,7 +1128,7 @@ export function buildToursStyles() {
   text-transform: uppercase; letter-spacing: 0.3px;
 }
 
-.lfhte-pricing-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.lfhte-pricing-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
 .lfhte-pricing-table th {
   padding: 10px 8px; background: ${LFH_COLORS.textPrimary};
   color: #fff; text-align: left; font-weight: 600;
@@ -1145,7 +1145,7 @@ export function buildToursStyles() {
 }
 .lfhte-vertical-note {
   font-size: 11px; color: ${LFH_COLORS.textSecondary};
-  font-style: italic; margin: 4px 0 16px 0; text-align: center;
+  font-style: italic; margin: 8px 0 20px 0; text-align: left;
 }
 
 .lfhte-included-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
