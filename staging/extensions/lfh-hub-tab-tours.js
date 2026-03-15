@@ -241,8 +241,8 @@ export function renderToursTab(container, config, savedState) {
           <h3 class="lfhte-card-title">${tour.name}</h3>
           <div class="lfhte-card-stats">
             <span>${tour.duration}</span>
-            <span class="lfhte-stat-divider">|</span>
-            <span>${tour.verticalGuarantee}</span>
+            ${tour.verticalGuarantee ? `<span class="lfhte-stat-divider">|</span>
+            <span>${tour.verticalGuarantee}</span>` : ''}
             <span class="lfhte-stat-divider">|</span>
             <span>4 guests/guide</span>
           </div>
@@ -409,10 +409,10 @@ export function renderToursTab(container, config, savedState) {
             <div class="lfhte-stat-value">${tour.duration}</div>
             <div class="lfhte-stat-label">Duration</div>
           </div>
-          <div class="lfhte-stat-box">
+          ${tour.verticalGuarantee ? `<div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' ? '*' : ''}</div>
             <div class="lfhte-stat-label">Vertical Guarantee</div>
-          </div>
+          </div>` : ''}
           <div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.skillLevel.replace(' / Expert', '')}</div>
             <div class="lfhte-stat-label">Skill Level</div>
@@ -646,7 +646,7 @@ export function renderToursTab(container, config, savedState) {
 
     const rows = [
       { label: 'Duration', fn: t => t.duration },
-      { label: 'Vertical Guarantee', fn: t => t.verticalGuarantee },
+      { label: 'Vertical Guarantee', fn: t => t.verticalGuarantee || '—' },
       { label: 'Lodges', fn: t => t.lodges.includes('both') ? 'Both Lodges' : t.lodges.map(lodgeName).join(' or ') },
       { label: 'Time of Season', fn: t => (t.months || []).map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') },
       { label: 'Starting Price', fn: t => `$${t.priceFrom.toLocaleString()} CAD` },

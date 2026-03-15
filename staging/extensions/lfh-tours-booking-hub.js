@@ -589,7 +589,7 @@ export function renderBookingForm(container, options = {}) {
         <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
         <div class="lfhte-bf-tour-info">
           <p class="lfhte-bf-tour-name">${tour.name}</p>
-          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay} &middot; ${tour.verticalGuarantee} vertical</p>
+          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
           <p class="lfhte-bf-tour-price">From $${tour.priceFrom.toLocaleString()} CAD</p>
         </div>
       </div>
@@ -747,7 +747,7 @@ export function renderBookingForm(container, options = {}) {
         <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
         <div class="lfhte-bf-tour-info">
           <p class="lfhte-bf-tour-name">${tour.name}</p>
-          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay} &middot; ${tour.verticalGuarantee} vertical</p>
+          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
           <p class="lfhte-bf-tour-price">From $${tour.priceFrom.toLocaleString()} CAD</p>
         </div>
       </div>
