@@ -29,7 +29,7 @@ export const LFH_TOURS = [
     id: '4day',
     name: '4-Day Tour',
     subtitle: 'The Quick Getaway',
-    description: 'Perfect for a focused heliski experience. Four days of world-class powder in the remote mountains of Northern BC, with a guaranteed 17,500 meters of vertical skiing. Available in March only.',
+    description: 'Perfect for a focused heliski experience when time is at a premium. Four days of skiing with a guaranteed 17,500 vertical meters of skiing. Available in March only.',
     lodges: ['bell2', 'ripley'],
     duration: '4 days',
     durationDays: 4,
@@ -81,7 +81,7 @@ export const LFH_TOURS = [
     id: '5day',
     name: '5-Day Tour',
     subtitle: 'The Sweet Spot',
-    description: 'Our most popular package balancing time and value. Five days of helicopter skiing with a 22,000-meter vertical guarantee. Available January through April at both lodges, this tour gives you enough time to settle into the rhythm of mountain life.',
+    description: 'Our most popular package balances time and value. Five days of helicopter skiing with a 22,000 vertical meter guarantee. Available January through April at both lodges, this tour gives you enough time to settle into the rhythm of mountain life.',
     lodges: ['bell2', 'ripley'],
     duration: '5 days',
     durationDays: 5,
@@ -858,7 +858,7 @@ export function openTourExplorerModal(focusTourId = null) {
             <div class="lfhte-stat-label">Duration</div>
           </div>
           <div class="lfhte-stat-box">
-            <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' ? '*' : ''}</div>
+            <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' && tour.id !== '4day' ? '*' : ''}</div>
             <div class="lfhte-stat-label">Vertical Guarantee</div>
           </div>
           <div class="lfhte-stat-box">
@@ -870,7 +870,7 @@ export function openTourExplorerModal(focusTourId = null) {
             <div class="lfhte-stat-label">${tour.id === 'private' ? 'of 4 (up to 8 pax)' : 'Guest:Guide'}</div>
           </div>
         </div>
-        ${tour.id !== 'private' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
+        ${tour.id !== 'private' && tour.id !== '4day' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
 
         <!-- Pricing Table -->
         <div class="lfhte-detail-section">

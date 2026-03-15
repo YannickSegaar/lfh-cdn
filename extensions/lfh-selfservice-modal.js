@@ -74,7 +74,7 @@ const VIDEOS = [
     videoId: '4CaKMMpebJM',
     platform: 'youtube',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/01_Last_Frontier_Backgrounder_Series_Location-510x339.jpg',
-    description: "Where we fly - Northern BC's Skeena Mountains",
+    description: "Where we fly: Northern BC's Skeena & Coast Mountains",
   },
   {
     id: 'lodging',
@@ -83,7 +83,7 @@ const VIDEOS = [
     videoId: 'RwYTOkbnEgw',
     platform: 'youtube',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/02_Last_Frontier_Backgrounder_Series_Lodging-510x340.jpg',
-    description: 'Where you stay - Two unique lodge experiences',
+    description: 'Where you stay: Bell 2 Lodge & Ripley Creek',
   },
   {
     id: 'terrain',
@@ -92,7 +92,7 @@ const VIDEOS = [
     videoId: '1zneyNdALjc',
     platform: 'youtube',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/03_Last_Frontier_Backgrounder_Series_Terrain-496x350.jpg',
-    description: 'What you ski - From alpine bowls to gladed trees',
+    description: 'What you can ski: From alpine bowls to gladed trees.',
   },
   {
     id: 'day-in-life',
@@ -101,7 +101,7 @@ const VIDEOS = [
     videoId: 'liycyjm5xs8',
     platform: 'youtube',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/04_Last_Frontier_Backgrounder_Series_Day_In_The_Life-510x340.jpg',
-    description: 'How a day unfolds - 8-12 runs, 15,000+ feet',
+    description: 'How a day unfolds: From breakfast to after dinner.',
   },
   {
     id: 'safety',
@@ -110,7 +110,7 @@ const VIDEOS = [
     videoId: 'irLz2GR0tpU',
     platform: 'youtube',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/05_Last_Frontier_Backgrounder_Series_Safety-510x340.jpg',
-    description: 'How we keep you safe - Protocols and equipment',
+    description: 'How we keep you safe: Protocols and equipment.',
   },
   {
     id: 'crew',
@@ -119,7 +119,7 @@ const VIDEOS = [
     videoId: '256697044',
     platform: 'vimeo',
     thumbnail: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/06_Last_Frontier_Backgrounder_Series_The_Crew-510x340.jpg',
-    description: "Who you'll meet - Guides, pilots, and staff",
+    description: 'Who will look after you: Guides, pilots and lodge crew.',
   },
 ];
 
@@ -133,13 +133,13 @@ const FAQS = [
     id: 'skill',
     question: 'How good do I have to be?',
     answer:
-      "You should be a strong intermediate skier comfortable on ungroomed terrain. You don't need to be a pro, but you do need confident parallel turns and the ability to handle varied snow conditions. For Ripley Creek specifically, expert-level skills are required.",
+      "You should be a strong intermediate skier/rider comfortable on ungroomed terrain. You don't need to be a pro, but you do need to be able to make confident parallel turns and have the ability to handle varied snow conditions. For Ripley Creek we request that you are advanced or higher in your ability level.",
   },
   {
     id: 'included',
     question: "What's included?",
     answer:
-      'Your package includes helicopter access, certified guides, all meals, lodging, powder skis/poles, and complete safety equipment (transceivers, ABS airbags). You just need to bring your boots and outerwear.',
+      "Your package includes return ground transfer from Terrace, helicopter access, certified guides, all meals, lodging, powder skis/poles and complete safety equipment (transceivers, probe, shovel, radio & airbag). What's not included: Extra vertical footage, pre & post trip hotels, flights, alcoholic and specialty drinks, gift shop purchases, massages and tips.",
   },
   {
     id: 'safety',
@@ -151,13 +151,13 @@ const FAQS = [
     id: 'day',
     question: 'What does a typical day look like?',
     answer:
-      "After breakfast, you'll fly out around 8:30 AM. Expect 8-12 runs totaling 15,000-20,000+ vertical feet. Lunch is in the mountains. You're usually back at the lodge by 4 PM for hot tub, sauna, and dinner.",
+      "After breakfast, you'll fly out around 8:30 AM. Expect 6-12+ runs totaling 5,000-10,000+ vertical meters. Lunch is in the mountains. You're usually back at the lodge by 4 PM for a hot tub, sauna, and dinner.",
   },
   {
     id: 'lodge',
     question: 'Which lodge should I choose?',
     answer:
-      'Bell 2 Lodge is great for strong intermediate to expert skiers who want a remote, off-grid experience. Ripley Creek is for experts only - steeper terrain, 30% more snow, quirky historic town setting.',
+      'Bell 2 Lodge is great for strong intermediate to expert skiers who want a remote, off-grid experience. Ripley Creek is for experts only - steeper terrain, 30% more snow and quirky historic town setting.',
   },
   {
     id: 'bring',

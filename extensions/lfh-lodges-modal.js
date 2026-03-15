@@ -56,9 +56,9 @@ export const LFH_LODGES = {
     location: 'Skeena Mountains',
     style: 'Log Cabins',
     description:
-      'Off-the-grid village custom-built for heli skiing. A purpose-built heliski village nestled in the heart of the Skeena Mountains, Bell 2 Lodge offers total immersion in the wilderness with no distractions.',
+      'A purpose-built heliski village nestled in the heart of the Skeena Mountains. Cozy log chalet rooms with wood-burning soapstone stoves, a main lodge with bar and dining room, plus hot tub, sauna, gym and games room.',
     fullDescription:
-      'Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. This off-the-grid sanctuary offers total immersion in the wilderness—no cell service, no distractions, just pristine powder and mountain living. The lodge features cozy log chalets with wood-burning soapstone stoves, a main lodge with world-class dining, and a true sense of adventure community.',
+      "Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. You'll stay in our cozy log chalet rooms, each equipped with wood-burning soapstone stoves and extremely comfortable beds. Social gatherings come alive in our main lodge where you'll find the bar and dining room. Other amenities include: gear room, ski tuning shop, hot tub, sauna, gym and games room.",
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
     images: {
       hero: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
@@ -84,14 +84,14 @@ export const LFH_LODGES = {
     ],
     features: {
       accommodation: 'Cozy log chalet rooms with wood-burning soapstone stoves.',
-      dining: 'Main lodge dining room with full bar and professional chefs.',
+      dining: 'Communal dining room in the main lodge with a full bar upstairs.',
       amenities: ['Hot tub', 'Sauna', 'Fitness centre', 'Games room', 'Gift shop', 'Bar', 'Boot room'],
       activities: ['Snowshoeing', 'Fat biking', 'Polar Dips', 'Skeet shooting'],
       connectivity: 'Off-grid, no cell service, high-speed internet available.',
       helipad: 'On-site, depart directly from lodge.',
     },
     terrain: {
-      skillLevel: 'Intermediate to Expert.',
+      skillLevel: 'Strong Intermediate to Expert.',
       type: 'Coast and Skeena Mountains.',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Close to lodge. Natural and man-made gladed skiing.',
@@ -116,9 +116,9 @@ export const LFH_LODGES = {
     location: 'Stewart, BC (Alaska Border)',
     style: 'Heritage Hotel',
     description:
-      'Historic mining town of Stewart, BC offers a unique character-filled experience. The Ripley Creek Inn features quirky heritage rooms in converted prospector houses and old shops, with the charming town of Stewart at your doorstep.',
+      'Nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests stay in the Ripley Creek Inn, funky heritage buildings with hot tub, sauna, and soulful food at the Bitter Creek Cafe.',
     fullDescription:
-      'Ripley Creek offers a completely different heliski experience in the historic mining town of Stewart, BC, at the Alaska border. The quirky heritage accommodations are spread across converted prospector houses and old shops, each with unique character. After skiing the massive Coast Mountain terrain, explore the charming town, visit local establishments, and experience the legendary "getting Hyderized" across the border in Hyder, Alaska.',
+      'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn, which is made up of funky heritage buildings. This lodge is about the bare essentials: hot tub and sauna for the muscles, and soulful food served across the street at the Bitter Creek Cafe, which conveniently doubles up as our Bar.',
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
     images: {
       hero: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
@@ -145,7 +145,7 @@ export const LFH_LODGES = {
     ],
     features: {
       accommodation: 'Unique heritage rooms - converted prospector houses and old shops.',
-      dining: 'Bitter Creek Cafe across the street, legendary local cuisine.',
+      dining: 'Communal dining in the Bitter Creek Cafe.',
       amenities: ['Hot tub', 'Sauna', 'Lounge areas', 'Gift shop', 'Boot room', 'Bar'],
       activities: ['Explore Stewart', 'Museum visits', 'Get Hyderized in Alaska', 'Local pubs', 'Polar Dips in Ocean', 'Snowshoeing'],
       connectivity: 'Cell service and medium-speed internet.',
