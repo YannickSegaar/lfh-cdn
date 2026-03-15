@@ -8,7 +8,7 @@
  *
  * Blocking modal shown to first-time visitors. Branded overlay disclosing
  * the AI nature of the assistant. Sets localStorage flag on acceptance.
- * 30-second auto-dismiss failsafe.
+ * Blocks chat input until accepted. No auto-dismiss.
  */
 
 export const LFHDisclaimerModal = {
@@ -191,9 +191,9 @@ export const LFHDisclaimerModal = {
                alt="Last Frontier Heliskiing" />
           <div class="lfh-disclaimer-title">You're Talking to an AI Assistant</div>
           <div class="lfh-disclaimer-body">
-            I'm here to help you explore our lodges, tours, and heliskiing experience in Northern BC.
-            While I do my best to be accurate, pricing, availability, and trip details may change
-            — always confirm the latest with our team.
+            Hi there! I'm a smart assistant for Last Frontier Heliskiing. I've been trained to answer
+            your questions about our lodges, tours, and heliskiing experience — but since I'm still
+            learning, we recommend double-checking critical details with our team.
           </div>
           <button class="lfh-disclaimer-btn" id="lfh-disclaimer-accept">I Understand</button>
           <br>
@@ -207,9 +207,32 @@ export const LFHDisclaimerModal = {
 
     element.appendChild(overlay);
 
+    // Disable chat input while disclaimer is active (same pattern as lead form)
+    function getShadowRoot() {
+      var host = document.getElementById('voiceflow-chat');
+      return host && host.shadowRoot ? host.shadowRoot : null;
+    }
+
+    function disableChatInput() {
+      var shadowRoot = getShadowRoot();
+      if (!shadowRoot) return;
+      var inputContainer = shadowRoot.querySelector('.vfrc-input-container');
+      if (inputContainer) inputContainer.style.display = 'none';
+    }
+
+    function reEnableChatInput() {
+      var shadowRoot = getShadowRoot();
+      if (!shadowRoot) return;
+      var inputContainer = shadowRoot.querySelector('.vfrc-input-container');
+      if (inputContainer) inputContainer.style.display = '';
+    }
+
+    disableChatInput();
+
     // Accept handler
     function accept() {
       try { localStorage.setItem('lfh_ai_disclaimer_accepted', 'true'); } catch (e) {}
+      reEnableChatInput();
       overlay.style.opacity = '0';
       overlay.style.transition = 'opacity 0.2s ease-out';
       setTimeout(function() {
@@ -222,14 +245,6 @@ export const LFHDisclaimerModal = {
     }
 
     overlay.querySelector('#lfh-disclaimer-accept').addEventListener('click', accept);
-
-    // 30-second auto-dismiss failsafe
-    setTimeout(function() {
-      if (overlay.parentNode) {
-        console.warn('[LFH] Disclaimer auto-dismissed after 30s timeout');
-        accept();
-      }
-    }, 30000);
   }
 };
 
