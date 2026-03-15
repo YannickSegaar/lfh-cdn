@@ -192,7 +192,6 @@ export const LastFrontierLeadForm_v4_Unified = {
   text-transform: uppercase;
   letter-spacing: 3px;
   margin: 0 0 8px 0;
-  padding-right: 44px;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
@@ -734,67 +733,6 @@ export const LastFrontierLeadForm_v4_Unified = {
 
 /* Mobile card overrides removed — all converted to <select> dropdowns */
 
-/* ===== COLLAPSIBLE FORM ===== */
-.lfh-v3-collapse-btn {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.2);
-  border: 1.5px solid rgba(255,255,255,0.5);
-  color: white;
-  padding: 0;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 3;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.2s;
-}
-.lfh-v3-collapse-btn svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-}
-.lfh-v3-collapse-btn:hover {
-  background: rgba(255,255,255,0.35);
-}
-.lfh-v3-collapse-btn:active {
-  background: rgba(255,255,255,0.45);
-}
-
-/* Transition support for collapsible sections */
-.lfh-v3-progress,
-.lfh-v3-btn-container {
-  transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
-  overflow: hidden;
-}
-/* Content needs overflow-y: auto for scrolling — overflow: hidden applied via JS during animation only */
-.lfh-v3-content {
-  transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
-}
-
-/* Collapsed state */
-.lfh-v3-collapsed .lfh-v3-collapse-btn svg {
-  transform: rotate(-90deg);
-}
-.lfh-v3-collapsed .lfh-v3-header {
-  padding: 16px 20px;
-}
-.lfh-v3-collapsed .lfh-v3-header-description {
-  display: none;
-}
-.lfh-v3-collapsed .lfh-v3-progress,
-.lfh-v3-collapsed .lfh-v3-content,
-.lfh-v3-collapsed .lfh-v3-btn-container {
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-}
 </style>
 
 <!-- HEADER - Full dark wood background with logo overlay -->
@@ -808,7 +746,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   </div>
   <p class="lfh-v3-header-label">${displayTitle}</p>
   <p class="lfh-v3-header-description">${displaySubtitle}</p>
-  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+
 </div>
 
 <!-- PROGRESS -->
@@ -1067,39 +1005,6 @@ export const LastFrontierLeadForm_v4_Unified = {
 `;
 
     element.appendChild(container);
-
-    // ========================================================================
-    // COLLAPSE / EXPAND TOGGLE
-    // ========================================================================
-    const collapseBtn = container.querySelector('.lfh-v3-collapse-btn');
-    const collapsibleSections = container.querySelectorAll(
-      '.lfh-v3-progress, .lfh-v3-content, .lfh-v3-btn-container'
-    );
-
-    collapseBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isCollapsed = container.classList.toggle('lfh-v3-collapsed');
-      collapseBtn.setAttribute('aria-expanded', !isCollapsed);
-
-      collapsibleSections.forEach(section => {
-        if (isCollapsed) {
-          section.style.overflow = 'hidden';
-          section.style.maxHeight = section.scrollHeight + 'px';
-          section.offsetHeight; // force reflow
-          section.style.maxHeight = '0';
-          section.style.opacity = '0';
-        } else {
-          section.style.overflow = 'hidden';
-          section.style.maxHeight = section.scrollHeight + 'px';
-          section.style.opacity = '1';
-          section.addEventListener('transitionend', function handler() {
-            section.style.maxHeight = '';
-            section.style.overflow = '';
-            section.removeEventListener('transitionend', handler);
-          });
-        }
-      });
-    });
 
     // ========================================================================
     // DISABLE CHAT INPUT while form is visible in the DOM
