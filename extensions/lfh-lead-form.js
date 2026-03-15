@@ -192,6 +192,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   text-transform: uppercase;
   letter-spacing: 3px;
   margin: 0 0 8px 0;
+  padding-right: 70px;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
@@ -710,8 +711,25 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 
 .lfh-mobile .lfh-v3-collapse-btn {
-  right: 2px;
-  top: 2px;
+  right: 8px;
+}
+
+.lfh-mobile .lfh-v3-content {
+  max-height: none;
+  overflow-y: visible;
+  padding: 12px;
+}
+
+.lfh-mobile .lfh-v3-content .lfh-v3-field-group {
+  margin-bottom: 12px;
+}
+
+.lfh-mobile .lfh-v3-progress {
+  padding: 8px 12px;
+}
+
+.lfh-mobile .lfh-v3-btn-container {
+  padding: 10px 12px;
 }
 
 /* Mobile card overrides removed — all converted to <select> dropdowns */
@@ -719,33 +737,40 @@ export const LastFrontierLeadForm_v4_Unified = {
 /* ===== COLLAPSIBLE FORM ===== */
 .lfh-v3-collapse-btn {
   position: absolute;
-  right: 4px;
-  top: 4px;
-  width: 44px;
-  height: 44px;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.8);
+  gap: 4px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   cursor: pointer;
-  padding: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
   z-index: 3;
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+  min-height: 44px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 .lfh-v3-collapse-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   transition: transform 0.3s ease;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  flex-shrink: 0;
 }
 .lfh-v3-collapse-btn:hover {
-  color: white;
+  background: rgba(255,255,255,0.25);
 }
 .lfh-v3-collapse-btn:active {
-  color: white;
-  transform: scale(0.9);
+  background: rgba(255,255,255,0.35);
 }
 
 /* Transition support for collapsible sections */
@@ -786,7 +811,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   </div>
   <p class="lfh-v3-header-label">${displayTitle}</p>
   <p class="lfh-v3-header-description">${displaySubtitle}</p>
-  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form"><span class="lfh-v3-collapse-label">Hide</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
 </div>
 
 <!-- PROGRESS -->
@@ -1054,10 +1079,12 @@ export const LastFrontierLeadForm_v4_Unified = {
       '.lfh-v3-progress, .lfh-v3-content, .lfh-v3-btn-container'
     );
 
+    const collapseLabel = collapseBtn.querySelector('.lfh-v3-collapse-label');
     collapseBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isCollapsed = container.classList.toggle('lfh-v3-collapsed');
       collapseBtn.setAttribute('aria-expanded', !isCollapsed);
+      if (collapseLabel) collapseLabel.textContent = isCollapsed ? 'Show' : 'Hide';
 
       collapsibleSections.forEach(section => {
         if (isCollapsed) {
