@@ -8,11 +8,11 @@
   // CONFIGURATION
   // ============================================
   // Derive CDN base from this script's own URL (works on any host page)
-  var scriptEl = document.currentScript;
+  // Note: document.currentScript is null in ES modules, so we use import.meta.url
   var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
   var useFallback = false;
   try {
-    var scriptUrl = new URL(scriptEl.src);
+    var scriptUrl = new URL(import.meta.url);
     CDN = scriptUrl.origin + scriptUrl.pathname.replace(/\/loader\.js$/, '');
     useFallback = scriptUrl.searchParams.get('fallback') === 'true';
   } catch (e) {}
