@@ -362,339 +362,12 @@ export const LastFrontierLeadForm_v4_Unified = {
   line-height: 1.4;
 }
 
-/* ===== INTENT CARDS ===== */
+/* ===== SECTION TITLES ===== */
 .lfh-v3-section-title {
   font-size: 12px;
   font-weight: 600;
   color: ${colors.textPrimary};
   margin-bottom: 10px;
-}
-
-.lfh-v3-inquiry-type-cards {
-  display: flex;
-  gap: 10px;
-}
-.lfh-v3-inquiry-type-card {
-  flex: 1;
-  background: ${colors.background};
-  border: 1.5px solid ${colors.border};
-  border-radius: 8px;
-  padding: 12px 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-.lfh-v3-inquiry-type-card:hover {
-  border-color: ${colors.primaryRed};
-}
-.lfh-v3-inquiry-type-card.selected {
-  border-color: ${colors.primaryRed};
-  background: ${colors.selectedTint};
-  border-width: 2px;
-}
-.lfh-v3-inquiry-type-card input[type="radio"] {
-  display: none;
-}
-
-.lfh-v3-intent-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.lfh-v3-intent-card {
-  background: ${colors.background};
-  border: 1.5px solid ${colors.border};
-  border-radius: 8px;
-  padding: 12px 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.lfh-v3-intent-card:hover {
-  border-color: ${colors.primaryRed};
-}
-
-.lfh-v3-intent-card.selected {
-  border-left: 3px solid ${colors.primaryRed};
-  background: ${colors.selectedTint};
-  border-color: ${colors.primaryRed};
-}
-
-.lfh-v3-intent-card input[type="radio"] {
-  display: none;
-}
-
-.lfh-v3-intent-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: ${colors.textPrimary};
-  margin-bottom: 2px;
-}
-
-.lfh-v3-intent-desc {
-  font-size: 11px;
-  color: ${colors.textSecondary};
-}
-
-/* ===== EXPERIENCE CARDS (Horizontal) ===== */
-.lfh-v3-exp-cards {
-  display: flex;
-  gap: 8px;
-}
-
-.lfh-v3-exp-card {
-  flex: 1;
-  background: ${colors.infoBox};
-  border: 1.5px solid ${colors.border};
-  border-radius: 6px;
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.lfh-v3-exp-card:hover {
-  border-color: ${colors.primaryRed};
-}
-
-.lfh-v3-exp-card.selected {
-  border-color: ${colors.primaryRed};
-  border-width: 2px;
-  background: ${colors.selectedTint};
-}
-
-.lfh-v3-exp-card input[type="radio"] {
-  display: none;
-}
-
-.lfh-v3-exp-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: ${colors.textPrimary};
-}
-
-/* ===== YES/NO TOGGLES ===== */
-.lfh-v3-toggle-row {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.lfh-v3-toggle-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: ${colors.infoBox};
-  border-radius: 8px;
-  padding: 10px 14px;
-  border: 1.5px solid ${colors.border};
-}
-
-.lfh-v3-toggle-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: ${colors.textPrimary};
-  flex: 1;
-  min-width: 0;
-}
-
-.lfh-v3-toggle-options {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.lfh-v3-toggle-btn {
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-  background: ${colors.background};
-  border: 1.5px solid ${colors.border};
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: ${colors.textPrimary};
-}
-
-.lfh-v3-toggle-btn:hover {
-  border-color: ${colors.primaryRed};
-}
-
-.lfh-v3-toggle-btn.selected {
-  border-color: ${colors.primaryRed};
-  background: ${colors.selectedTint};
-  color: ${colors.primaryRed};
-}
-
-.lfh-v3-toggle-btn input[type="radio"] {
-  display: none;
-}
-
-/* ===== SEASON CARDS ===== */
-.lfh-v3-season-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-@media (max-width: 400px) {
-  .lfh-v3-season-cards {
-    grid-template-columns: 1fr;
-  }
-}
-
-.lfh-v3-season-card {
-  background: ${colors.infoBox};
-  border: 1.5px solid ${colors.border};
-  border-radius: 8px;
-  padding: 10px 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.lfh-v3-season-card:hover {
-  border-color: ${colors.primaryRed};
-}
-
-.lfh-v3-season-card.selected {
-  border-color: ${colors.primaryRed};
-  border-width: 2px;
-  background: ${colors.selectedTint};
-}
-
-.lfh-v3-season-card input[type="radio"] {
-  display: none;
-}
-
-.lfh-v3-season-name {
-  font-size: 11px;
-  font-weight: 700;
-  color: ${colors.textPrimary};
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-.lfh-v3-season-dates {
-  font-size: 9px;
-  color: ${colors.textSecondary};
-  margin-bottom: 6px;
-}
-
-.lfh-v3-season-icon {
-  height: 28px;
-  margin-bottom: 4px;
-}
-
-.lfh-v3-season-icon img {
-  height: 100%;
-  width: auto;
-}
-
-.lfh-v3-season-terrain {
-  font-size: 9px;
-  color: ${colors.textSecondary};
-  margin-bottom: 2px;
-}
-
-.lfh-v3-season-price {
-  font-size: 10px;
-  font-weight: 600;
-  color: ${colors.textPrimary};
-  margin-bottom: 2px;
-}
-
-.lfh-v3-season-snow {
-  display: flex;
-  justify-content: center;
-  gap: 2px;
-}
-
-.lfh-v3-season-snow img {
-  height: 12px;
-  width: auto;
-}
-
-/* ===== LODGE CARDS ===== */
-.lfh-v3-lodge-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.lfh-v3-lodge-card {
-  background: ${colors.infoBox};
-  border: 1.5px solid ${colors.border};
-  border-radius: 8px;
-  padding: 12px 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.lfh-v3-lodge-card:hover {
-  border-color: ${colors.primaryRed};
-}
-
-.lfh-v3-lodge-card.selected {
-  border-color: ${colors.primaryRed};
-  border-width: 2px;
-  background: ${colors.selectedTint};
-}
-
-.lfh-v3-lodge-card input[type="radio"] {
-  display: none;
-}
-
-.lfh-v3-lodge-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.lfh-v3-lodge-icon-wrapper img {
-  max-height: 32px;
-  max-width: 32px;
-  width: auto;
-  height: auto;
-}
-
-.lfh-v3-lodge-icon-safari {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-}
-
-.lfh-v3-lodge-icon-safari img {
-  max-height: 24px;
-  max-width: 24px;
-}
-
-.lfh-v3-lodge-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.lfh-v3-lodge-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: ${colors.textPrimary};
-  margin-bottom: 2px;
-}
-
-.lfh-v3-lodge-desc {
-  font-size: 11px;
-  color: ${colors.textSecondary};
-  line-height: 1.3;
 }
 
 /* ===== TOUR DATE SELECT ===== */
@@ -1044,76 +717,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   letter-spacing: 2px;
 }
 
-/* Mobile intent cards: compact 2x2 grid, no descriptions */
-.lfh-mobile .lfh-v3-intent-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.lfh-mobile .lfh-v3-intent-card {
-  padding: 10px 12px;
-  text-align: center;
-}
-
-.lfh-mobile .lfh-v3-intent-desc {
-  display: none;
-}
-
-.lfh-mobile .lfh-v3-intent-title {
-  font-size: 12px;
-  margin-bottom: 0;
-}
-
-/* Mobile season cards: horizontal pills, text only */
-.lfh-mobile .lfh-v3-season-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.lfh-mobile .lfh-v3-season-card {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 10px 14px;
-  border-radius: 20px;
-}
-
-.lfh-mobile .lfh-v3-season-icon,
-.lfh-mobile .lfh-v3-season-terrain,
-.lfh-mobile .lfh-v3-season-price,
-.lfh-mobile .lfh-v3-season-snow {
-  display: none;
-}
-
-.lfh-mobile .lfh-v3-season-dates {
-  margin-bottom: 0;
-}
-
-/* Mobile lodge cards: compact name-only chips */
-.lfh-mobile .lfh-v3-lodge-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.lfh-mobile .lfh-v3-lodge-card {
-  padding: 10px 12px;
-  justify-content: center;
-  text-align: center;
-}
-
-.lfh-mobile .lfh-v3-lodge-icon-wrapper {
-  display: none;
-}
-
-.lfh-mobile .lfh-v3-lodge-desc {
-  display: none;
-}
-
-.lfh-mobile .lfh-v3-lodge-name {
-  font-size: 12px;
-}
+/* Mobile card overrides removed — all converted to <select> dropdowns */
 </style>
 
 <!-- HEADER - Full dark wood background with logo overlay -->
@@ -1152,16 +756,11 @@ export const LastFrontierLeadForm_v4_Unified = {
     <form id="lfh-v3-contact-form">
       <div class="lfh-v3-form-group">
         <div class="lfh-v3-section-title">Is this about... <span class="lfh-v3-required">*</span></div>
-        <div class="lfh-v3-inquiry-type-cards">
-          <label class="lfh-v3-inquiry-type-card" for="inquiry-new">
-            <input type="radio" id="inquiry-new" name="inquiryType" value="new_inquiry" required>
-            <div class="lfh-v3-intent-title">A new inquiry</div>
-          </label>
-          <label class="lfh-v3-inquiry-type-card" for="inquiry-existing">
-            <input type="radio" id="inquiry-existing" name="inquiryType" value="existing_booking">
-            <div class="lfh-v3-intent-title">An existing booking</div>
-          </label>
-        </div>
+        <select id="lfh-v3-inquiryType" name="inquiryType" class="lfh-v3-select" required>
+          <option value="">Select...</option>
+          <option value="new_inquiry">A new inquiry</option>
+          <option value="existing_booking">An existing booking</option>
+        </select>
       </div>
 
       <div class="lfh-v3-form-row">
@@ -1188,7 +787,7 @@ export const LastFrontierLeadForm_v4_Unified = {
       <div class="lfh-v3-form-group">
         <label class="lfh-v3-label">Country <span class="lfh-v3-required">*</span></label>
         <div class="lfh-v3-country-wrapper">
-          <input type="text" id="lfh-v3-country-input" class="lfh-v3-country-input" placeholder="Select your country" autocomplete="country-name" readonly>
+          <input type="text" id="lfh-v3-country-input" class="lfh-v3-country-input" placeholder="Type or select your country" autocomplete="country-name">
           <input type="hidden" id="lfh-v3-country" name="country" required>
           <span class="lfh-v3-country-arrow">▼</span>
           <div id="lfh-v3-country-dropdown" class="lfh-v3-country-dropdown"></div>
@@ -1218,28 +817,13 @@ export const LastFrontierLeadForm_v4_Unified = {
       <!-- INTENT QUALIFIER -->
       <div class="lfh-v3-form-group">
         <div class="lfh-v3-section-title">What brings you here today? <span class="lfh-v3-required">*</span></div>
-        <div class="lfh-v3-intent-cards">
-          <label class="lfh-v3-intent-card" for="intent-learning">
-            <input type="radio" id="intent-learning" name="intent" value="learning" required>
-            <div class="lfh-v3-intent-title">Learning about heliskiing</div>
-            <div class="lfh-v3-intent-desc">Just exploring what's possible</div>
-          </label>
-          <label class="lfh-v3-intent-card" for="intent-comparing">
-            <input type="radio" id="intent-comparing" name="intent" value="comparing">
-            <div class="lfh-v3-intent-title">Comparing operators</div>
-            <div class="lfh-v3-intent-desc">Researching my options</div>
-          </label>
-          <label class="lfh-v3-intent-card" for="intent-planning">
-            <input type="radio" id="intent-planning" name="intent" value="planning">
-            <div class="lfh-v3-intent-title">Planning a trip</div>
-            <div class="lfh-v3-intent-desc">Thinking about dates and details</div>
-          </label>
-          <label class="lfh-v3-intent-card" for="intent-ready">
-            <input type="radio" id="intent-ready" name="intent" value="ready_to_book">
-            <div class="lfh-v3-intent-title">Ready to book</div>
-            <div class="lfh-v3-intent-desc">Want to discuss availability</div>
-          </label>
-        </div>
+        <select id="lfh-v3-intent" name="intent" class="lfh-v3-select" required>
+          <option value="">Select...</option>
+          <option value="learning">Learning about heliskiing</option>
+          <option value="comparing">Comparing operators</option>
+          <option value="planning">Planning a trip</option>
+          <option value="ready_to_book">Ready to book</option>
+        </select>
       </div>
 
       <div class="lfh-v3-checkbox-group">
@@ -1259,96 +843,43 @@ export const LastFrontierLeadForm_v4_Unified = {
       <!-- SKI EXPERIENCE -->
       <div class="lfh-v3-form-group">
         <label class="lfh-v3-label">How many days a year do you ski?</label>
-        <div class="lfh-v3-exp-cards">
-          <label class="lfh-v3-exp-card" for="ski-days-1">
-            <input type="radio" id="ski-days-1" name="skiDaysPerYear" value="0-10">
-            <div class="lfh-v3-exp-label">0-10</div>
-          </label>
-          <label class="lfh-v3-exp-card" for="ski-days-2">
-            <input type="radio" id="ski-days-2" name="skiDaysPerYear" value="10-30">
-            <div class="lfh-v3-exp-label">10-30</div>
-          </label>
-          <label class="lfh-v3-exp-card" for="ski-days-3">
-            <input type="radio" id="ski-days-3" name="skiDaysPerYear" value="30+">
-            <div class="lfh-v3-exp-label">30+</div>
-          </label>
-        </div>
+        <select id="lfh-v3-skiDaysPerYear" name="skiDaysPerYear" class="lfh-v3-select">
+          <option value="">Select...</option>
+          <option value="0-10">0\u201310 days</option>
+          <option value="10-30">10\u201330 days</option>
+          <option value="30+">30+ days</option>
+        </select>
       </div>
 
       <!-- CAT/HELI EXPERIENCE -->
-      <div class="lfh-v3-toggle-row">
-        <div class="lfh-v3-toggle-group">
-          <div class="lfh-v3-toggle-label">Have you cat skied?</div>
-          <div class="lfh-v3-toggle-options">
-            <label class="lfh-v3-toggle-btn" for="cat-yes">
-              <input type="radio" id="cat-yes" name="catSkied" value="yes">
-              Yes
-            </label>
-            <label class="lfh-v3-toggle-btn" for="cat-no">
-              <input type="radio" id="cat-no" name="catSkied" value="no">
-              No
-            </label>
-          </div>
+      <div class="lfh-v3-form-row">
+        <div class="lfh-v3-form-group">
+          <label class="lfh-v3-label">Cat skied?</label>
+          <select name="catSkied" class="lfh-v3-select">
+            <option value="">\u2013</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
         </div>
-        <div class="lfh-v3-toggle-group">
-          <div class="lfh-v3-toggle-label">Have you heli skied?</div>
-          <div class="lfh-v3-toggle-options">
-            <label class="lfh-v3-toggle-btn" for="heli-yes">
-              <input type="radio" id="heli-yes" name="heliSkied" value="yes">
-              Yes
-            </label>
-            <label class="lfh-v3-toggle-btn" for="heli-no">
-              <input type="radio" id="heli-no" name="heliSkied" value="no">
-              No
-            </label>
-          </div>
+        <div class="lfh-v3-form-group">
+          <label class="lfh-v3-label">Heli skied?</label>
+          <select name="heliSkied" class="lfh-v3-select">
+            <option value="">\u2013</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
         </div>
       </div>
 
       <!-- SEASON PREFERENCE -->
       <div class="lfh-v3-form-group">
         <label class="lfh-v3-label">When would you like to visit?</label>
-        <div class="lfh-v3-season-cards">
-          <label class="lfh-v3-season-card" for="season-early">
-            <input type="radio" id="season-early" name="seasonPreference" value="early">
-            <div class="lfh-v3-season-name">Early</div>
-            <div class="lfh-v3-season-dates">Dec-Jan</div>
-            <div class="lfh-v3-season-icon"><img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/mostly-trees.svg" alt="Trees"></div>
-            <div class="lfh-v3-season-terrain">More Trees</div>
-            <div class="lfh-v3-season-price">$$</div>
-            <div class="lfh-v3-season-snow">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-            </div>
-          </label>
-          <label class="lfh-v3-season-card" for="season-middle">
-            <input type="radio" id="season-middle" name="seasonPreference" value="middle">
-            <div class="lfh-v3-season-name">Middle</div>
-            <div class="lfh-v3-season-dates">Feb-Mar</div>
-            <div class="lfh-v3-season-icon"><img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/mix-trees.svg" alt="Alpine+Trees"></div>
-            <div class="lfh-v3-season-terrain">Alpine+Trees</div>
-            <div class="lfh-v3-season-price">$$$$</div>
-            <div class="lfh-v3-season-snow">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-            </div>
-          </label>
-          <label class="lfh-v3-season-card" for="season-late">
-            <input type="radio" id="season-late" name="seasonPreference" value="late">
-            <div class="lfh-v3-season-name">Late</div>
-            <div class="lfh-v3-season-dates">April</div>
-            <div class="lfh-v3-season-icon"><img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/mostly-alpine.svg" alt="Alpine"></div>
-            <div class="lfh-v3-season-terrain">Mostly Alpine</div>
-            <div class="lfh-v3-season-price">$$$</div>
-            <div class="lfh-v3-season-snow">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/icon-snow.svg" alt="*">
-            </div>
-          </label>
-        </div>
+        <select id="lfh-v3-seasonPreference" name="seasonPreference" class="lfh-v3-select">
+          <option value="">Select...</option>
+          <option value="early">Early Season (Dec\u2013Jan)</option>
+          <option value="middle">Mid Season (Feb\u2013Mar)</option>
+          <option value="late">Late Season (April)</option>
+        </select>
       </div>
 
       <!-- TOUR DATE SELECTION -->
@@ -1397,49 +928,13 @@ export const LastFrontierLeadForm_v4_Unified = {
       <!-- LODGE PREFERENCE -->
       <div class="lfh-v3-form-group">
         <label class="lfh-v3-label">Which lodge interests you?</label>
-        <div class="lfh-v3-lodge-cards">
-          <label class="lfh-v3-lodge-card" for="lodge-bell2">
-            <input type="radio" id="lodge-bell2" name="lodge" value="bell2">
-            <div class="lfh-v3-lodge-icon-wrapper">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/home.svg" alt="Bell 2">
-            </div>
-            <div class="lfh-v3-lodge-content">
-              <div class="lfh-v3-lodge-name">Bell 2 Lodge</div>
-              <div class="lfh-v3-lodge-desc">Remote chalets, 36 guests. Strong intermediate+</div>
-            </div>
-          </label>
-          <label class="lfh-v3-lodge-card" for="lodge-ripley">
-            <input type="radio" id="lodge-ripley" name="lodge" value="ripley">
-            <div class="lfh-v3-lodge-icon-wrapper">
-              <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/ripley-icon.png" alt="Ripley Creek">
-            </div>
-            <div class="lfh-v3-lodge-content">
-              <div class="lfh-v3-lodge-name">Ripley Creek</div>
-              <div class="lfh-v3-lodge-desc">Historic mining town, 24 guests. Advanced/expert only</div>
-            </div>
-          </label>
-          <label class="lfh-v3-lodge-card" for="lodge-both">
-            <input type="radio" id="lodge-both" name="lodge" value="both">
-            <div class="lfh-v3-lodge-icon-wrapper">
-              <span class="lfh-v3-lodge-icon-safari">
-                <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/home.svg" alt="Bell 2">
-                <img src="https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/ripley-icon.png" alt="Ripley Creek">
-              </span>
-            </div>
-            <div class="lfh-v3-lodge-content">
-              <div class="lfh-v3-lodge-name">Both (Safari)</div>
-              <div class="lfh-v3-lodge-desc">Experience both lodges</div>
-            </div>
-          </label>
-          <label class="lfh-v3-lodge-card" for="lodge-not-sure">
-            <input type="radio" id="lodge-not-sure" name="lodge" value="not_sure">
-            <div class="lfh-v3-lodge-icon-wrapper"></div>
-            <div class="lfh-v3-lodge-content">
-              <div class="lfh-v3-lodge-name">Not sure yet</div>
-              <div class="lfh-v3-lodge-desc">Help me decide</div>
-            </div>
-          </label>
-        </div>
+        <select id="lfh-v3-lodge" name="lodge" class="lfh-v3-select">
+          <option value="">Select...</option>
+          <option value="bell2">Bell 2 Lodge</option>
+          <option value="ripley">Ripley Creek</option>
+          <option value="both">Both (Safari)</option>
+          <option value="not_sure">Not sure yet</option>
+        </select>
       </div>
 
       <!-- GROUP SIZE -->
@@ -1580,29 +1075,6 @@ export const LastFrontierLeadForm_v4_Unified = {
     const btnContainer = container.querySelector('#lfh-v3-btn-container');
 
     // ========================================================================
-    // CARD SELECTION HANDLERS
-    // ========================================================================
-    function setupCardSelection(selector, containerClass) {
-      const cards = container.querySelectorAll(selector);
-      cards.forEach(card => {
-        card.addEventListener('click', () => {
-          const parent = card.closest(containerClass) || card.parentElement;
-          parent.querySelectorAll(selector.split(' ')[0]).forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
-          const radio = card.querySelector('input[type="radio"]');
-          if (radio) radio.checked = true;
-        });
-      });
-    }
-
-    setupCardSelection('.lfh-v3-inquiry-type-card', '.lfh-v3-inquiry-type-cards');
-    setupCardSelection('.lfh-v3-intent-card', '.lfh-v3-intent-cards');
-    setupCardSelection('.lfh-v3-exp-card', '.lfh-v3-exp-cards');
-    setupCardSelection('.lfh-v3-toggle-btn', '.lfh-v3-toggle-options');
-    setupCardSelection('.lfh-v3-season-card', '.lfh-v3-season-cards');
-    setupCardSelection('.lfh-v3-lodge-card', '.lfh-v3-lodge-cards');
-
-    // ========================================================================
     // SEARCHABLE COUNTRY DROPDOWN
     // ========================================================================
     const countries = [
@@ -1687,9 +1159,7 @@ export const LastFrontierLeadForm_v4_Unified = {
       isDropdownOpen = false;
       countryDropdown.classList.remove('open');
       countryWrapper.classList.remove('open');
-      // Restore readonly and placeholder
-      countryInput.setAttribute('readonly', '');
-      countryInput.placeholder = 'Select your country';
+      countryInput.placeholder = 'Type or select your country';
       // If nothing selected, clear the input
       if (!countryHidden.value) {
         countryInput.value = '';
@@ -1958,14 +1428,14 @@ export const LastFrontierLeadForm_v4_Unified = {
       }
 
       // Inquiry type selection
-      const inquiryTypeSelected = container.querySelector('input[name="inquiryType"]:checked');
-      if (!inquiryTypeSelected) {
+      const inquiryTypeSelect = container.querySelector('#lfh-v3-inquiryType');
+      if (!inquiryTypeSelect || !inquiryTypeSelect.value) {
         isValid = false;
       }
 
       // Intent selection
-      const intentSelected = container.querySelector('input[name="intent"]:checked');
-      if (!intentSelected) {
+      const intentSelect = container.querySelector('#lfh-v3-intent');
+      if (!intentSelect || !intentSelect.value) {
         isValid = false;
       }
 
@@ -1999,11 +1469,11 @@ export const LastFrontierLeadForm_v4_Unified = {
     // ========================================================================
     async function submitToWebhook() {
       const getVal = (id) => container.querySelector(id)?.value?.trim() || '';
-      const getRadio = (name) => container.querySelector(`input[name="${name}"]:checked`)?.value || '';
+      const getSelect = (name) => container.querySelector(`select[name="${name}"]`)?.value || '';
 
-      const inquiryType = getRadio('inquiryType');
-      const intent = getRadio('intent');
-      const skiDays = getRadio('skiDaysPerYear');
+      const inquiryType = getSelect('inquiryType');
+      const intent = getSelect('intent');
+      const skiDays = getSelect('skiDaysPerYear');
       const leadPriority = computeLeadPriority(intent, skiDays);
 
       const intentScores = { learning: 1, comparing: 2, planning: 3, ready_to_book: 4 };
@@ -2023,11 +1493,11 @@ export const LastFrontierLeadForm_v4_Unified = {
         },
         tripPreferences: {
           skiDaysPerYear: skiDays,
-          catSkied: getRadio('catSkied'),
-          heliSkied: getRadio('heliSkied'),
-          seasonPreference: getRadio('seasonPreference'),
+          catSkied: getSelect('catSkied'),
+          heliSkied: getSelect('heliSkied'),
+          seasonPreference: getSelect('seasonPreference'),
           tourDate: getVal('#lfh-v3-tourDate'),
-          lodge: getRadio('lodge'),
+          lodge: getSelect('lodge'),
           groupSize: getVal('#lfh-v3-groupSize') === '12' ? '12+' : getVal('#lfh-v3-groupSize'),
           additionalQuestions: getVal('#lfh-v3-additionalQuestions'),
         },
@@ -2156,8 +1626,8 @@ export const LastFrontierLeadForm_v4_Unified = {
               data: {
                 action: isForceHandoff ? 'force_handoff_lead_captured' : 'lead_captured_v3',
                 priority: computeLeadPriority(
-                  container.querySelector('input[name="intent"]:checked')?.value || 'learning',
-                  container.querySelector('input[name="skiDaysPerYear"]:checked')?.value || ''
+                  container.querySelector('select[name="intent"]')?.value || 'learning',
+                  container.querySelector('select[name="skiDaysPerYear"]')?.value || ''
                 ),
                 isForceHandoff: isForceHandoff,
               }
