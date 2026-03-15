@@ -1,0 +1,2780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Last Frontier Heliskiing — Content Review</title>
+<style>
+@font-face {
+  font-family: 'Nexa Rust';
+  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #e62b1e;
+  --text: #42494e;
+  --text-light: #666666;
+  --bg: #FFFFFF;
+  --section-bg: #F5F5F5;
+  --border: #e0e0e0;
+  --sidebar-w: 260px;
+  --header-h: 72px;
+  --gutter-w: 300px;
+  --gutter-gap: 24px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+/* HEADER */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--header-h);
+  background: var(--text);
+  display: flex; align-items: center; padding: 0 32px;
+  gap: 20px;
+}
+.header img { height: 36px; }
+.header h1 {
+  font-family: 'Nexa Rust', sans-serif;
+  color: #fff; font-size: 20px; font-weight: 900; letter-spacing: 0.02em;
+}
+
+/* DISCLAIMER BANNER */
+.disclaimer {
+  position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 99;
+  background: #fef3cd; border-bottom: 1px solid #ffc107;
+  padding: 10px 32px; font-size: 13px; color: #856404;
+  text-align: center;
+}
+.disclaimer-height { height: 40px; }
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed; top: calc(var(--header-h) + 40px); left: 0; bottom: 0;
+  width: var(--sidebar-w); background: #fafafa; border-right: 1px solid var(--border);
+  overflow-y: auto; padding: 20px 0; z-index: 50;
+}
+.sidebar-group { margin-bottom: 16px; }
+.sidebar-group-title {
+  font-family: 'Nexa Rust', sans-serif;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-light); padding: 4px 24px; margin-bottom: 2px;
+}
+.sidebar a {
+  display: block; padding: 6px 24px; color: var(--text);
+  text-decoration: none; font-size: 14px; transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.sidebar a:hover { background: #f0f0f0; }
+.sidebar a.active {
+  color: var(--red); border-left-color: var(--red);
+  background: rgba(230,43,30,0.05); font-weight: 600;
+}
+
+/* MOBILE HAMBURGER */
+.hamburger {
+  display: none; position: fixed; top: calc(var(--header-h) + 48px); left: 12px;
+  z-index: 200; background: var(--text); color: #fff; border: none;
+  width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer;
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-right: calc(var(--gutter-w) + var(--gutter-gap));
+  margin-top: calc(var(--header-h) + 40px);
+  padding: 40px 48px 120px;
+  max-width: 900px;
+  position: relative;
+}
+
+/* SECTIONS */
+.section { margin-bottom: 56px; scroll-margin-top: calc(var(--header-h) + 56px); }
+.section-title {
+  font-family: 'Nexa Rust', sans-serif;
+  font-size: 26px; color: var(--text); margin-bottom: 8px;
+  padding-bottom: 12px; border-bottom: 3px solid var(--red);
+}
+.section-subtitle {
+  font-size: 14px; color: var(--text-light); margin-bottom: 24px;
+}
+
+/* KB CONTENT CARDS */
+.kb-content {
+  background: var(--section-bg); border-radius: 8px;
+  padding: 28px 32px; margin-bottom: 20px;
+}
+.kb-content h2 { font-family: 'Nexa Rust', sans-serif; font-size: 20px; margin: 24px 0 12px; color: var(--text); }
+.kb-content h2:first-child { margin-top: 0; }
+.kb-content h3 { font-size: 16px; font-weight: 700; margin: 20px 0 8px; color: var(--text); }
+.kb-content h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+.kb-content p { margin-bottom: 12px; }
+.kb-content ul, .kb-content ol { margin: 8px 0 12px 20px; }
+.kb-content li { margin-bottom: 4px; }
+.kb-content table { width: 100%; border-collapse: collapse; margin: 12px 0 16px; font-size: 14px; }
+.kb-content th { background: var(--text); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.kb-content td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.kb-content tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+.kb-content blockquote {
+  border-left: 3px solid var(--red); padding: 8px 16px; margin: 12px 0;
+  background: rgba(230,43,30,0.03); font-style: italic;
+}
+.kb-content strong { font-weight: 700; }
+.kb-content em { font-style: italic; }
+.kb-content hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* PROMPT CARDS */
+.prompt-card {
+  background: var(--section-bg); border-radius: 8px;
+  padding: 24px 28px; margin-bottom: 16px;
+  border-left: 4px solid var(--red);
+}
+.prompt-card-title {
+  font-family: 'Nexa Rust', sans-serif;
+  font-size: 16px; margin-bottom: 10px; color: var(--text);
+}
+.prompt-card p { margin-bottom: 8px; font-size: 14px; }
+.prompt-card ul { margin: 6px 0 10px 18px; font-size: 14px; }
+.prompt-card li { margin-bottom: 3px; }
+.prompt-card table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 13px; }
+.prompt-card th { background: var(--text); color: #fff; padding: 6px 10px; text-align: left; }
+.prompt-card td { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+
+/* EXIT CARDS */
+.exit-card {
+  background: var(--section-bg); border-radius: 8px;
+  padding: 20px 24px; margin-bottom: 12px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.exit-icon {
+  width: 40px; height: 40px; border-radius: 8px; background: var(--red);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.exit-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.exit-info p { font-size: 13px; color: var(--text-light); }
+
+/* PRICING TABLE */
+.pricing-group { margin-bottom: 28px; }
+.pricing-group h3 {
+  font-family: 'Nexa Rust', sans-serif;
+  font-size: 18px; margin-bottom: 12px;
+}
+.pricing-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.pricing-table th {
+  background: var(--text); color: #fff; padding: 10px 14px;
+  text-align: left; font-size: 13px; font-weight: 600;
+}
+.pricing-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.pricing-table tr:nth-child(even) td { background: var(--section-bg); }
+.pricing-note { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+/* CHANGES TABLE */
+.changes-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.changes-table th {
+  background: var(--text); color: #fff; padding: 10px 14px;
+  text-align: left; font-size: 13px;
+}
+.changes-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.changes-table tr:nth-child(even) td { background: var(--section-bg); }
+.changes-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+}
+.changes-badge.updated { background: #d4edda; color: #155724; }
+.changes-badge.added { background: #cce5ff; color: #004085; }
+.changes-badge.removed { background: #f8d7da; color: #721c24; }
+
+/* INLINE COMMENTING */
+.comment-hint {
+  display: flex; align-items: center; gap: 8px;
+  background: #e8f4fd; border: 1px solid #b6d4fe; border-radius: 8px;
+  padding: 10px 16px; margin-bottom: 24px; font-size: 13px; color: #084298;
+}
+.comment-hint::before { content: '💬'; font-size: 16px; }
+
+.comments-gutter {
+  position: fixed;
+  top: calc(var(--header-h) + 40px);
+  right: 0;
+  width: var(--gutter-w);
+  bottom: 0;
+  overflow-y: auto;
+  padding: 20px 16px;
+  border-left: 1px solid var(--border);
+  background: #fafafa;
+  z-index: 40;
+}
+.comments-gutter-title {
+  font-family: 'Nexa Rust', sans-serif;
+  font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-light); margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.comments-gutter-empty {
+  font-size: 13px; color: var(--text-light); font-style: italic;
+  padding: 20px 0;
+}
+
+.comment-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 10px; font-size: 13px;
+  position: relative; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.comment-card:hover, .comment-card.active {
+  border-color: #ffc107; box-shadow: 0 0 0 1px #ffc107;
+}
+.comment-card .comment-meta {
+  font-size: 11px; color: var(--text-light); margin-bottom: 6px;
+}
+.comment-card .comment-quote {
+  background: rgba(255, 212, 0, 0.15); border-left: 2px solid #ffc107;
+  padding: 4px 8px; margin-bottom: 8px; font-size: 12px;
+  color: var(--text); max-height: 48px; overflow: hidden;
+  text-overflow: ellipsis; font-style: italic;
+}
+.comment-card .comment-text {
+  color: var(--text); line-height: 1.5;
+}
+.comment-card .comment-section-badge {
+  display: inline-block; font-size: 10px; background: var(--section-bg);
+  border-radius: 3px; padding: 1px 6px; color: var(--text-light);
+  margin-top: 6px;
+}
+.comment-card .comment-actions {
+  position: absolute; top: 6px; right: 6px;
+  display: flex; gap: 2px;
+}
+.comment-card .comment-action-btn {
+  background: none; border: none; font-size: 13px;
+  cursor: pointer; color: var(--text-light); padding: 3px 4px;
+  line-height: 1; border-radius: 3px;
+}
+.comment-card .comment-action-btn:hover { background: #f0f0f0; color: var(--text); }
+.comment-card .comment-action-btn.delete:hover { background: #f8d7da; color: #721c24; }
+.comment-card.resolved {
+  opacity: 0.5; border-style: dashed;
+}
+.comment-card.resolved .comment-text { text-decoration: line-through; }
+
+.comment-edit-area {
+  width: 100%; padding: 6px 8px; border: 1px solid var(--border);
+  border-radius: 4px; font-family: inherit; font-size: 13px;
+  resize: vertical; min-height: 50px; margin-bottom: 6px;
+}
+.comment-edit-area:focus { outline: none; border-color: var(--red); }
+.comment-edit-actions {
+  display: flex; gap: 4px; justify-content: flex-end;
+}
+.comment-edit-actions button {
+  padding: 3px 10px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; cursor: pointer; border: none;
+}
+.comment-edit-actions .btn-save { background: var(--red); color: #fff; }
+.comment-edit-actions .btn-save:hover { opacity: 0.85; }
+.comment-edit-actions .btn-edit-cancel { background: #eee; color: var(--text); }
+.comment-edit-actions .btn-edit-cancel:hover { background: #ddd; }
+
+.comment-highlight {
+  background: rgba(255, 212, 0, 0.3);
+  cursor: pointer;
+  border-bottom: 2px solid #ffc107;
+  transition: background 0.15s;
+}
+.comment-highlight:hover, .comment-highlight.active {
+  background: rgba(255, 212, 0, 0.5);
+}
+
+.comment-popover {
+  position: fixed; z-index: 1000;
+  display: none;
+}
+.comment-popover button {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; background: var(--text); color: #fff;
+  border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+.comment-popover button:hover { background: #2a3035; }
+
+.comment-input-card {
+  background: #fff; border: 1px solid #ffc107; border-radius: 8px;
+  padding: 12px 14px; margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.comment-input-card .comment-input-quote {
+  background: rgba(255, 212, 0, 0.15); border-left: 2px solid #ffc107;
+  padding: 4px 8px; margin-bottom: 8px; font-size: 12px;
+  color: var(--text); max-height: 48px; overflow: hidden;
+  font-style: italic;
+}
+.comment-input-card textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border);
+  border-radius: 4px; font-family: inherit; font-size: 13px;
+  resize: vertical; min-height: 60px;
+}
+.comment-input-card textarea:focus { outline: none; border-color: var(--red); }
+.comment-input-actions {
+  display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end;
+}
+.comment-input-actions button {
+  padding: 5px 14px; border-radius: 4px; font-size: 12px;
+  font-weight: 600; cursor: pointer; border: none;
+}
+.comment-input-actions .btn-submit {
+  background: var(--red); color: #fff;
+}
+.comment-input-actions .btn-submit:hover { opacity: 0.85; }
+.comment-input-actions .btn-cancel {
+  background: #eee; color: var(--text);
+}
+.comment-input-actions .btn-cancel:hover { background: #ddd; }
+
+@keyframes flash-highlight {
+  0%, 100% { background: rgba(255, 212, 0, 0.3); }
+  50% { background: rgba(255, 212, 0, 0.7); }
+}
+@keyframes flash-card {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+  50% { box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5); }
+}
+
+/* GENERAL FEEDBACK */
+.general-feedback-box {
+  background: var(--section-bg); border-radius: 8px;
+  padding: 28px 32px;
+}
+.general-feedback-box textarea {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+  border-radius: 6px; font-family: inherit; font-size: 14px;
+  resize: vertical; min-height: 100px; margin-bottom: 12px;
+}
+.general-feedback-box textarea:focus { outline: none; border-color: var(--red); }
+.general-feedback-submit {
+  padding: 10px 28px; background: var(--red); color: #fff;
+  border: none; border-radius: 6px; font-size: 14px;
+  font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+}
+.general-feedback-submit:hover { opacity: 0.85; }
+.general-feedback-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+.general-feedback-status {
+  margin-top: 12px; font-size: 14px; display: none;
+  padding: 10px 14px; border-radius: 6px;
+}
+.general-feedback-status.success { background: #d4edda; color: #155724; }
+.general-feedback-status.error { background: #f8d7da; color: #721c24; }
+
+/* COMMENT EXPORT */
+.comments-gutter-footer {
+  margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.comment-export-btn {
+  width: 100%; padding: 8px 14px; background: var(--text); color: #fff;
+  border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.comment-export-btn:hover { background: #2a3035; }
+.comment-export-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.comment-export-btn.sent { background: #155724; }
+
+/* FEEDBACK REPORT STICKY BAR */
+.feedback-report-bar {
+  position: fixed; bottom: 0; left: 280px; right: 320px;
+  background: #fff; border-top: 2px solid var(--red);
+  padding: 12px 24px; z-index: 100;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  display: none;
+}
+.feedback-report-bar-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 900px; margin: 0 auto;
+}
+.feedback-report-summary {
+  font-size: 13px; color: var(--text-light);
+}
+.feedback-pdf-btn {
+  padding: 10px 28px; background: #42494e; color: #fff;
+  border: none; border-radius: 6px; font-size: 14px;
+  cursor: pointer; white-space: nowrap; margin-right: 8px;
+}
+.feedback-pdf-btn:hover { opacity: 0.85; }
+.feedback-report-btn {
+  padding: 10px 28px; background: var(--red); color: #fff;
+  border: none; border-radius: 6px; font-size: 14px;
+  font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.feedback-report-btn:hover { opacity: 0.85; }
+.feedback-report-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.feedback-report-btn.sent { background: #155724; }
+@media (max-width: 768px) {
+  .feedback-report-bar { left: 0; right: 0; }
+}
+@media (max-width: 1100px) {
+  .feedback-report-bar { right: 0; }
+}
+
+/* GENERAL FEEDBACK LIST */
+.general-feedback-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; background: #f8f8f8; border-radius: 6px;
+  margin-bottom: 8px; font-size: 14px; line-height: 1.5;
+}
+.general-feedback-item .gf-text { flex: 1; }
+.general-feedback-item .gf-time { font-size: 11px; color: var(--text-light); white-space: nowrap; }
+.general-feedback-item .gf-actions { display: flex; gap: 4px; }
+.general-feedback-item .gf-actions button {
+  background: none; border: none; cursor: pointer; font-size: 14px;
+  opacity: 0.5; padding: 2px 4px;
+}
+.general-feedback-item .gf-actions button:hover { opacity: 1; }
+.persistence-notice {
+  font-size: 12px; color: var(--text-light); margin-top: 8px;
+  line-height: 1.4; font-style: italic;
+}
+
+/* SIGN-OFF */
+.signoff-box {
+  background: var(--section-bg); border: 2px solid var(--red);
+  border-radius: 12px; padding: 32px; text-align: center;
+}
+.signoff-box h3 {
+  font-family: 'Nexa Rust', sans-serif;
+  font-size: 22px; margin-bottom: 12px;
+}
+.signoff-box p { margin-bottom: 20px; color: var(--text-light); }
+.signoff-checkbox {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 20px; font-size: 15px;
+}
+.signoff-checkbox input { width: 18px; height: 18px; accent-color: var(--red); }
+.signoff-btn {
+  padding: 14px 40px; background: var(--red); color: #fff;
+  border: none; border-radius: 8px; font-size: 16px;
+  font-family: 'Nexa Rust', sans-serif; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.signoff-btn:hover { opacity: 0.85; }
+.signoff-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.signoff-status { margin-top: 16px; font-size: 15px; display: none; }
+
+/* OVERVIEW BOX */
+.overview-box {
+  background: var(--section-bg); border-radius: 8px;
+  padding: 24px 28px; margin-bottom: 24px;
+}
+.overview-box h3 { font-family: 'Nexa Rust', sans-serif; font-size: 18px; margin-bottom: 10px; }
+.overview-box p { margin-bottom: 10px; }
+.overview-box ul { margin: 8px 0 0 18px; }
+.overview-box li { margin-bottom: 4px; }
+
+/* DEFERRED ITEMS */
+.deferred-box {
+  background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px;
+  padding: 16px 20px; margin-top: 16px; font-size: 14px;
+}
+.deferred-box h4 { font-size: 14px; margin-bottom: 6px; color: #856404; }
+.deferred-box ul { margin: 4px 0 0 16px; color: #856404; }
+
+/* LOGIN OVERLAY */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #1a1a1a;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.login-overlay.hidden { display: none; }
+.login-box {
+  text-align: center; width: 100%; max-width: 380px; padding: 0 24px;
+}
+.login-box img {
+  height: 48px; margin-bottom: 40px;
+}
+.login-box h2 {
+  font-family: 'Nexa Rust', sans-serif;
+  color: #fff; font-size: 22px; letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.login-box p {
+  color: #999; font-size: 14px; margin-bottom: 32px;
+}
+.login-field {
+  position: relative; margin-bottom: 16px;
+}
+.login-field input {
+  width: 100%; padding: 14px 48px 14px 16px;
+  background: #2a2a2a; border: 1px solid #444;
+  border-radius: 8px; color: #fff; font-size: 15px;
+  font-family: inherit; outline: none; transition: border-color 0.2s;
+}
+.login-field input::placeholder { color: #777; }
+.login-field input:focus { border-color: #e62b1e; }
+.login-field .toggle-eye {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: #777;
+  cursor: pointer; padding: 0; line-height: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.login-field .toggle-eye:hover { color: #bbb; }
+.login-btn {
+  width: 100%; padding: 14px; background: #e62b1e; color: #fff;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+  font-family: 'Nexa Rust', sans-serif; letter-spacing: 0.04em;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.login-btn:hover { opacity: 0.85; }
+.login-error {
+  color: #ff6b6b; font-size: 13px; margin-top: 12px;
+  display: none;
+}
+@keyframes login-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.login-field.shake { animation: login-shake 0.4s ease; }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .comments-gutter { width: 260px; }
+  .main { margin-right: calc(260px + var(--gutter-gap)); }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; width: 260px; }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+  .main { margin-left: 0; margin-right: 0; padding: 40px 20px 120px; }
+  .comments-gutter { display: none; }
+  .comment-popover { display: none !important; }
+  .comment-hint { display: none; }
+  .mobile-feedback-hint {
+    display: flex; align-items: center; gap: 8px;
+    background: #e8f4fd; border: 1px solid #b6d4fe; border-radius: 8px;
+    padding: 10px 16px; margin-bottom: 24px; font-size: 13px; color: #084298;
+  }
+  .header { padding: 0 16px; }
+  .header h1 { font-size: 16px; }
+  .section-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <img src="https://yannicksegaar.github.io/lfh-cdn/images/LFH_Logo_FullName_White.svg" alt="Last Frontier Heliskiing">
+    <h2>Content Review Access</h2>
+    <p>Enter the password to access the content review</p>
+    <div class="login-field" id="login-field">
+      <input type="password" id="login-password" placeholder="Password" autocomplete="off">
+      <button type="button" class="toggle-eye" id="toggle-eye" tabindex="-1">
+        <svg id="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        <svg id="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+      </button>
+    </div>
+    <button class="login-btn" id="login-btn">Enter</button>
+    <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <img src="https://yannicksegaar.github.io/lfh-cdn/images/LFH_Logo_FullName_White.svg" alt="Last Frontier Heliskiing">
+  <h1>Content Review</h1>
+</header>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  This review covers knowledge base content, agent instructions, and 2027 pricing. Visual design, images, and interactive features are handled separately.
+</div>
+
+<!-- HAMBURGER (mobile) -->
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Overview</div>
+    <a href="#overview">Welcome</a>
+    <a href="#changes">Changes Summary</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Knowledge Base</div>
+    <a href="#kb-lodges">Lodges</a>
+    <a href="#kb-tours">Tours &amp; Packages</a>
+    <a href="#kb-safety">Safety &amp; Operations</a>
+    <a href="#kb-booking">Booking</a>
+    <a href="#kb-faq">FAQ</a>
+    <a href="#kb-preparation">Trip Preparation</a>
+    <a href="#kb-location">Location &amp; Terrain</a>
+    <a href="#kb-seasonal">Seasonal</a>
+    <a href="#kb-company">Company</a>
+    <a href="#kb-miscellaneous">Philosophy &amp; History</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Agent Behavior</div>
+    <a href="#agent-instructions">How the Agent Responds</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Pricing</div>
+    <a href="#pricing">2027 Season Pricing</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Interactive Features</div>
+    <a href="#exits">Feature Triggers</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">General</div>
+    <a href="#other-feedback">Other Feedback</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Approval</div>
+    <a href="#signoff">Sign Off</a>
+  </div>
+</nav>
+
+<!-- COMMENT POPOVER (hidden, positioned dynamically) -->
+<div class="comment-popover" id="comment-popover">
+  <button onclick="CommentSystem.startComment()">💬 Comment</button>
+</div>
+
+<!-- COMMENTS GUTTER -->
+<aside class="comments-gutter" id="comments-gutter">
+  <div class="comments-gutter-title">Comments <span id="comment-count-badge" style="display:none; font-family:-apple-system,sans-serif; font-size:12px; background:var(--red); color:#fff; padding:1px 7px; border-radius:10px; margin-left:6px; vertical-align:middle;"></span></div>
+  <div class="comments-gutter-empty" id="comments-empty">Select any text to leave a comment</div>
+  <div id="comments-list"></div>
+  <div class="comments-gutter-footer" id="comments-footer" style="display:none;">
+    <button class="comment-export-btn" id="export-btn" onclick="sendFeedbackReport(this)">Send Feedback Report</button>
+    <div class="persistence-notice">Your feedback is saved in this browser. When you're ready, click "Send Feedback Report" to send everything to the team.</div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- COMMENT HINT -->
+<div class="comment-hint">Select any text on this page to leave an inline comment. Click "Send Feedback Report" when you're done.</div>
+<div class="mobile-feedback-hint" style="display:none">On mobile? Email your feedback to <a href="mailto:info@romaix.ai?subject=KB%20Review%20Feedback">info@romaix.ai</a></div>
+
+<!-- ============================================================ -->
+<!-- OVERVIEW -->
+<!-- ============================================================ -->
+<div class="section" id="overview">
+  <h2 class="section-title">Welcome</h2>
+  <p class="section-subtitle">A quick orientation before you dive in</p>
+
+  <div class="overview-box">
+    <h3>What is this page?</h3>
+    <p>This is the finalized content that powers your AI assistant on lastfrontierheli.com. We've integrated all feedback from the internal team testing phase (March 9-12) — 45 items from the comprehensive feedback report and 28 items from your direct input.</p>
+    <p>We believe we're about 98% there. This page lets you:</p>
+    <ul>
+      <li>Read through all 10 knowledge base documents the agent draws from</li>
+      <li>See how the agent is instructed to behave and respond</li>
+      <li>Verify 2027 pricing is accurate</li>
+      <li>Review the interactive features and when they appear</li>
+      <li>Select any text and leave an inline comment — like Google Docs</li>
+      <li>Give final approval when you're satisfied</li>
+    </ul>
+  </div>
+
+  <div class="overview-box">
+    <h3>What to look for</h3>
+    <ul>
+      <li><strong>Factual accuracy</strong> — Are the details correct? Lodge descriptions, pricing, policies?</li>
+      <li><strong>Tone</strong> — Does it sound like Last Frontier? Not too corporate, not too casual?</li>
+      <li><strong>Missing information</strong> — Anything important that's not covered?</li>
+      <li><strong>Things that shouldn't be there</strong> — Outdated info, wrong claims, competitor mentions?</li>
+    </ul>
+    <p>Highlight any text on this page and click "Comment" to flag it. No detail is too small.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CHANGES SUMMARY -->
+<!-- ============================================================ -->
+<div class="section" id="changes">
+  <h2 class="section-title">Changes Summary</h2>
+  <p class="section-subtitle">Everything that changed based on your feedback and the team testing</p>
+
+  <table class="changes-table">
+    <thead>
+      <tr><th>Change</th><th>Where</th><th>Type</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tenure claim softened to "one of the largest"</td><td>Location, Company, Misc, FAQ</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>Telemark policy reversed — <strong>now permitted</strong></td><td>Safety, Preparation, FAQ</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>"Open powder" changed to "untracked powder"</td><td>Location</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>"Bluebird conditions" removed from April descriptions</td><td>Seasonal, Miscellaneous</td><td><span class="changes-badge removed">Removed</span></td></tr>
+      <tr><td>Lifestyle Financial insurance removed</td><td>Booking, FAQ</td><td><span class="changes-badge removed">Removed</span></td></tr>
+      <tr><td>Payment methods added (Visa/MC/Amex, bank, e-transfer)</td><td>Booking, FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>Helicopter fleet details per lodge</td><td>Lodges, Safety</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>Kids policy (14+ with 4 rules)</td><td>Safety, FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>Friend grouping FAQ added</td><td>Tours, FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>WestJet restriction for transfer-day flights</td><td>Booking</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>Electric gloves FAQ added</td><td>FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>BCA pack storage FAQ added</td><td>FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>International reps genericized</td><td>Company</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>Discover Heliskiing episode titles updated</td><td>Company, Miscellaneous</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>4 FAQ answers rewritten with your exact wording</td><td>FAQ</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>Lodge descriptions rewritten with your text</td><td>Lodges</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>April and early season language corrected</td><td>Seasonal</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>Lodge/social packing section added</td><td>Preparation</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>Electronics &amp; boots PDF guidance integrated</td><td>Safety, Preparation, FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+      <tr><td>Touring boot language strengthened (ISO references)</td><td>Safety, Preparation, FAQ</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>Safety policy PDF guidance verified</td><td>Safety</td><td><span class="changes-badge updated">Updated</span></td></tr>
+      <tr><td>Gift shop merchandise list with categories</td><td>FAQ</td><td><span class="changes-badge added">Added</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="deferred-box">
+    <h4>Still pending your input</h4>
+    <ul>
+      <li><strong>Snowshoeing boots:</strong> Do the lodges provide boots for guests who want to go snowshoeing, or should they bring their own?</li>
+      <li><strong>Cash at the lodges:</strong> For on-site extras (gift shop, massages, extra vertical, alcohol, gratuities) — do the lodges still accept cash (CAD, EUR, GBP, CHF, USD), or is it card-only now?</li>
+      <li><strong>Terrain stats — two blanks from your list:</strong> What is the <em>highest alpine drop-off elevation</em> and the <em>lowest pickup elevation</em>? Also, can you confirm the lodge distance (153 km by road / 90 km by air)?</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: LODGES -->
+<!-- ============================================================ -->
+<div class="section" id="kb-lodges">
+  <h2 class="section-title">Lodges</h2>
+  <p class="section-subtitle">Everything the agent knows about Bell 2 Lodge and Ripley Creek</p>
+  <div class="kb-content">
+    <h2>Overview</h2>
+    <p>Last Frontier Heliskiing operates two distinct lodges in Northern British Columbia. Whether planning a solo mission, family holiday, or trip with friends, both lodges offer character, charm, and direct access to world-class heliskiing terrain spanning one of the largest heli ski areas in the world at 10,100 km².</p>
+
+    <hr>
+    <h2>Bell 2 Mountain Lodge</h2>
+    <p><strong>36 Guests | Log Cabins | Remote &amp; Off-the-Grid | Skeena Mountains | Open Year-Round</strong></p>
+    <p>Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. You'll stay in cozy log chalet rooms, each equipped with wood-burning soapstone stoves and extremely comfortable beds. Social gatherings come alive in the main lodge where you'll find the bar and dining room. Other amenities include: gear room, ski tuning shop, hot tub, sauna, gym and games room.</p>
+    <p>Bell 2 Lodge is open year-round — not just during the heliskiing season.</p>
+
+    <h3>Accommodation</h3>
+    <ul>
+      <li>Cozy log chalet rooms with wood-burning soapstone stoves</li>
+      <li>Extremely comfortable beds</li>
+      <li>Chalets have two rooms upstairs and two downstairs</li>
+      <li>Queen size beds (some with king size) in both upper and lower floor rooms</li>
+    </ul>
+
+    <h3>Main Lodge Facilities</h3>
+    <table>
+      <tr><th>Facility</th><th>Description</th></tr>
+      <tr><td>Bar &amp; Dining Room</td><td>Communal dining room in the main lodge with a full bar upstairs</td></tr>
+      <tr><td>Gear Room</td><td>Dedicated space for ski and snowboard tuning</td></tr>
+      <tr><td>Boot Room</td><td>Gear drying facilities</td></tr>
+      <tr><td>Gift Shop</td><td>Souvenirs and essentials</td></tr>
+      <tr><td>Front Desk</td><td>Customer service</td></tr>
+    </table>
+
+    <h3>Luxury Amenities</h3>
+    <ul>
+      <li>Hot tub and sauna in the heart of the village</li>
+      <li>On-site fitness centre</li>
+      <li>Games room and table tennis</li>
+      <li>Stretch class space</li>
+      <li>Media room</li>
+    </ul>
+
+    <h3>Laundry</h3>
+    <ul>
+      <li>Self-service washing machines available (free)</li>
+      <li>Housekeeping bag service — leave your laundry and it will be returned (free)</li>
+    </ul>
+
+    <h3>Location Features</h3>
+    <ul>
+      <li>Remote location in the Skeena Mountains</li>
+      <li>Helipads on site — groups generally depart from lodge</li>
+      <li>Additional road staging 10-20 minutes drive North &amp; South</li>
+      <li>Smack in the middle of the tenure — heliski in all directions</li>
+      <li><strong>Connectivity:</strong> Off the grid — no cell phone service (cell coming soon), fiber optic internet connection (medium speed)</li>
+    </ul>
+
+    <h3>Terrain Access</h3>
+    <ul>
+      <li>Towering peaks, wide-open bowls, glaciers, natural glades</li>
+      <li>Terrain suited to <strong>strong intermediate to expert</strong> skiers and snowboarders</li>
+      <li>Treed terrain options close to the lodge during unfavourable weather</li>
+      <li>Closest runs are a <strong>5-minute flight</strong> from the lodge</li>
+      <li>All groups fly direct from Bell 2 Lodge helipads most of the time</li>
+      <li>Bell 2 Lodge skis in both the <strong>Coast and Skeena Mountains</strong></li>
+    </ul>
+
+    <h3>Downtime Activities</h3>
+    <ul>
+      <li>Hot tub and sauna</li>
+      <li>Snowshoeing trails</li>
+      <li>Fat biking trails</li>
+      <li>Bonfires</li>
+      <li>Skeet shooting</li>
+      <li>Polar dips in the lake</li>
+      <li>Wildlife spotting (moose in nearby river)</li>
+    </ul>
+
+    <hr>
+    <h2>Ripley Creek Lodge</h2>
+    <p><strong>24 Guests | Quirky Heritage Hotel | Stewart, BC | Next to Alaska</strong></p>
+    <p>The Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn, which is made up of funky heritage buildings. This lodge is about the bare essentials: hot tub and sauna for the muscles, and soulful food served across the street at the Bitter Creek Cafe, which conveniently doubles up as the Bar.</p>
+    <p><em>Note: LFH does NOT own the Ripley Creek Inn itself. The Bitter Creek Cafe is owned and operated by Last Frontier.</em></p>
+
+    <h3>Accommodation</h3>
+    <ul>
+      <li>Funky heritage buildings converted into the Inn</li>
+      <li><strong>No two rooms alike</strong> — stay in a prospector's house, old clothing shop, or former brothel (well cleaned!)</li>
+      <li>Space for up to 24 guests</li>
+      <li>Rustic, character-filled lodging</li>
+    </ul>
+
+    <h3>Amenities</h3>
+    <ul>
+      <li>Hot tub and sauna for post-ski recovery</li>
+      <li><strong>Bitter Creek Cafe</strong> across the street for meals — owned and operated by Last Frontier</li>
+      <li>Cafe doubles as the bar</li>
+      <li>Focus on the bare essentials and soulful food</li>
+    </ul>
+
+    <h3>Laundry</h3>
+    <ul>
+      <li>Coin-operated washing machine at the King Eddy Pub</li>
+      <li>Alternatively, bring laundry to the restaurant and staff will take care of it</li>
+    </ul>
+
+    <h3>Location Features</h3>
+    <ul>
+      <li>Based in the frontier town of Stewart, BC</li>
+      <li>Helipads in town for first group departures</li>
+      <li>Second and third groups drive 10-40 minutes to heli staging areas</li>
+      <li><strong>Connectivity:</strong> Cellular service available in Stewart. Medium speed internet.</li>
+      <li>Walk to museum, shops, restaurants</li>
+    </ul>
+
+    <h3>Terrain Access</h3>
+    <ul>
+      <li>Skiing and snowboarding in the <strong>Coast Range</strong> near the Alaskan Panhandle</li>
+      <li>Rugged terrain with epic old growth tree skiing</li>
+      <li>Massive glacier runs</li>
+      <li>Suited to <strong>advanced to expert</strong> skiers and snowboarders</li>
+      <li><strong>15-25 meters of snow per winter</strong> — significantly more than Bell 2</li>
+    </ul>
+
+    <h3>Downtime Activities</h3>
+    <ul>
+      <li>Bike exploration of Stewart's quirky back streets</li>
+      <li>Museum visits</li>
+      <li>Fire evenings</li>
+      <li>Cross the border to Alaska to get "Hyderized"</li>
+      <li>Polar dips in the Ocean</li>
+      <li>Snowshoeing</li>
+    </ul>
+
+    <hr>
+    <h2>Lodge Comparison</h2>
+    <table>
+      <tr><th>Feature</th><th>Bell 2 Lodge</th><th>Ripley Creek</th></tr>
+      <tr><td>Capacity</td><td>36 guests/week</td><td>24 guests/week</td></tr>
+      <tr><td>Setting</td><td>Remote mountain village</td><td>Historic mining town</td></tr>
+      <tr><td>Style</td><td>Custom-built log chalets</td><td>Funky heritage buildings</td></tr>
+      <tr><td>Mountains</td><td>Coast &amp; Skeena Mountains</td><td>Coast Mountains</td></tr>
+      <tr><td>Terrain Level</td><td>Strong intermediate to expert</td><td>Advanced to expert</td></tr>
+      <tr><td>Snow</td><td>10-15 meters per winter</td><td>15-25 meters per winter</td></tr>
+      <tr><td>Heli Departure</td><td>Depart from lodge</td><td>10-40 min drive to staging</td></tr>
+      <tr><td>Cell Service</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Hot Tub/Sauna</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Dining</td><td>Main lodge</td><td>Bitter Creek Cafe</td></tr>
+    </table>
+
+    <hr>
+    <h2>Helicopter Fleet</h2>
+    <table>
+      <tr><th></th><th>Bell 2 Lodge</th><th>Ripley Creek</th></tr>
+      <tr><td>Helicopters</td><td>3 (+ extra for private groups)</td><td>2 (+ extra for private groups)</td></tr>
+      <tr><td>Guest Capacity</td><td>36 guests (12 per heli, 3 groups of 4)</td><td>24 guests (12 per heli, 3 groups of 4)</td></tr>
+      <tr><td>Aircraft</td><td>A-Star helicopters</td><td>A-Star helicopters</td></tr>
+    </table>
+    <p>A-Star helicopters feature an open cockpit configuration — 4 guests in the back facing forward, guide in the front seat. An additional helicopter is only brought in for private group bookings.</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: TOURS -->
+<!-- ============================================================ -->
+<div class="section" id="kb-tours">
+  <h2 class="section-title">Tours &amp; Packages</h2>
+  <p class="section-subtitle">Tour types, what's included, vertical guarantee, and group formation</p>
+  <div class="kb-content">
+    <h2>Overview</h2>
+    <p>With a serious focus on heli boarding and helicopter skiing in Canada, Last Frontier hosts guests from all walks of life to share in the passion for powder in an informal setting. Operating since 1996, Last Frontier has spent over two decades crafting the perfect heliskiing formula: <strong>small groups</strong> (4 guests per guide), <strong>nimble helicopters</strong>, and <strong>two lodges</strong> with access to 10,100 km² of prime Canadian wilderness.</p>
+    <p><strong>Key Principle:</strong> You pay for what you ski. The vertical drop guarantee offers the best possible value for money with up-front honesty.</p>
+
+    <hr>
+    <h2>What's Included in Regular Tours</h2>
+    <ul>
+      <li><strong>Only 3 Groups of 4 Guests</strong> — Flying in A-Star B2/B3 helicopters</li>
+      <li><strong>Accommodation and All Meals</strong> — Full board at Bell 2 Lodge or Ripley Creek</li>
+      <li><strong>Guide Services</strong> — All guides ACMG, UIAGM or CSGA certified</li>
+      <li><strong>Ski &amp; Snowboard Equipment</strong> — Powder skis, poles, or limited snowboards</li>
+      <li><strong>All Safety Gear</strong> — Avalanche transceiver, ABS Airbag, radio, probe, shovel</li>
+      <li><strong>Return Ground Transfers</strong> — Get yourself to Terrace and we'll take care of the rest</li>
+    </ul>
+
+    <hr>
+    <h2>Small Groups: The Last Frontier Difference</h2>
+    <p>At Last Frontier, <strong>less is more</strong>. Heliskiing in intimate groups of just four means fresh lines for everyone, skiing/riding at a pace that's right for you, and maximized time exploring the mountains.</p>
+    <table>
+      <tr><th>Factor</th><th>Small Groups (4)</th><th>Big Groups (10-11)</th></tr>
+      <tr><td>Organizing</td><td>Need only 3 friends</td><td>Finding 10 friends is harder</td></tr>
+      <tr><td>Ability Matching</td><td>Higher likelihood of similar ability</td><td>More difficult to match</td></tr>
+      <tr><td>Terrain Access</td><td>Small helicopters access more terrain</td><td>Bigger helicopters need more space</td></tr>
+      <tr><td>Guide Ratio</td><td>1 guide per 4 guests</td><td>1 guide per 10-11 guests</td></tr>
+    </table>
+    <p><strong>Friends skiing together:</strong> If you're booking with friends, let the team know — we try to keep friends together.</p>
+
+    <hr>
+    <h2>Vertical Drop Guarantee</h2>
+    <p>Last Frontier believes in telling it like it is. The vertical drop guarantee means <strong>you pay for what you ski</strong>.</p>
+    <h3>How It Works</h3>
+    <ul>
+      <li>If you ski <strong>less</strong> than the guarantee due to technical issues or bad weather, <strong>you will be refunded accordingly</strong></li>
+      <li>If you ski <strong>more</strong> than the guaranteed vertical, you will be charged additional costs</li>
+      <li>Pace can be increased or decreased based on your wishes</li>
+    </ul>
+    <h3>Vertical Statistics</h3>
+    <table>
+      <tr><th>Trip Length</th><th>Average</th><th>Guarantee</th><th>If You're Lucky!</th></tr>
+      <tr><td>4 Days</td><td>22,300 m</td><td>17,500 m</td><td>30,500+ m</td></tr>
+      <tr><td>5 Days</td><td>29,000 m</td><td>22,000 m</td><td>39,600+ m</td></tr>
+      <tr><td>7 Days</td><td>42,500 m</td><td>30,500 m</td><td>55,000+ m</td></tr>
+      <tr><td>10 Days</td><td>61,000 m</td><td>43,600 m</td><td>76,000+ m</td></tr>
+    </table>
+    <p><strong>Extra Vertical Pricing:</strong> CAD $218 per 1,000 vertical meters (CAD $66.50 per 1,000 vertical feet)</p>
+
+    <hr>
+    <h2>2027 Group Offers</h2>
+    <p>Ski or ride with friends and save:</p>
+    <ul>
+      <li><strong>Group of 4</strong> = Receive 1/2 of a Free Seat</li>
+      <li><strong>Group of 8</strong> = Receive 1 Free Seat</li>
+      <li><strong>Group of 12</strong> = Receive 2 Free Seats</li>
+    </ul>
+    <p>Open to anyone — seasoned guests or first-timers. Discount can be shared equally among group members or applied to a single person. Limited to 12 seats per tour.</p>
+
+    <hr>
+    <h2>Loyalty Programs</h2>
+    <h3>Powder Credit</h3>
+    <p>Pay $2,000 at checkout while at the lodge, receive $2,500 toward your next trip (effectively a $500 discount). Valid for 3 seasons.</p>
+    <h3>Powder Rewards</h3>
+    <table>
+      <tr><th>Tier</th><th>Days</th><th>Key Benefits</th></tr>
+      <tr><td>Silver</td><td>4-21 days</td><td>$500 referral credit, 15% off gift shop, buy 2 massages get 3rd free</td></tr>
+      <tr><td>Gold</td><td>22-48 days</td><td>All Silver + upper floor room, 10% off extra vertical, free internet</td></tr>
+      <tr><td>Platinum</td><td>49+ days</td><td>All Gold + free pre/post hotel, 20% off extra vertical</td></tr>
+    </table>
+
+    <hr>
+    <h2>What's NOT Included</h2>
+    <ul>
+      <li>5% GST tax</li>
+      <li>Extra vertical beyond guarantee</li>
+      <li>Flights to/from Terrace</li>
+      <li>Gratuities</li>
+      <li>Travel insurance</li>
+      <li>Personal equipment (boots)</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: SAFETY -->
+<!-- ============================================================ -->
+<div class="section" id="kb-safety">
+  <h2 class="section-title">Safety &amp; Operations</h2>
+  <p class="section-subtitle">Safety protocols, guide certifications, equipment, and daily program</p>
+  <div class="kb-content">
+    <h2>Overview</h2>
+    <p>Guest safety is fundamental to everything Last Frontier does. Operating since 1996, the operation strikes a balance between showing guests the time of their life and keeping them safe through industry collaboration, refined protocols, experienced staff, and comprehensive safety equipment.</p>
+
+    <h2>Daily Heliski Program</h2>
+    <table>
+      <tr><th>Time</th><th>Activity</th></tr>
+      <tr><td>7:15</td><td>Morning stretch class (optional)</td></tr>
+      <tr><td>8:00</td><td>Buffet breakfast</td></tr>
+      <tr><td>8:45</td><td>Get gear ready</td></tr>
+      <tr><td>9:00</td><td>Depart from lodge</td></tr>
+      <tr><td>9:00 - 12:00</td><td>Morning heli skiing</td></tr>
+      <tr><td>12:00</td><td>Picnic-style lunch in the mountains</td></tr>
+      <tr><td>13:00 - 16:00</td><td>Afternoon heli skiing</td></tr>
+      <tr><td>16:00 - 19:00</td><td>Apres-ski and snacks</td></tr>
+      <tr><td>19:00</td><td>Dinner</td></tr>
+      <tr><td>20:30+</td><td>Bar open</td></tr>
+    </table>
+
+    <h2>Certified Mountain Guides</h2>
+    <p>All guides are certified by ACMG, IFMGA, or CSGA. They recertify annually and have an average of ~18 years experience. Guides are chosen not only for their skill but also for their charisma and enthusiasm.</p>
+    <h3>Key Guide Staff</h3>
+    <table>
+      <tr><th>Name</th><th>Role</th></tr>
+      <tr><td>Cliff Umpleby</td><td>Director of Operations &amp; Lead Guide</td></tr>
+      <tr><td>Colin Moorhead</td><td>Guiding Manager &amp; Lead Guide (Ripley Creek)</td></tr>
+      <tr><td>Dave Stimson</td><td>Guiding Manager &amp; Lead Guide (Bell 2 Lodge)</td></tr>
+      <tr><td>Melissa Makepeace</td><td>Assistant Guiding Manager &amp; Lead Guide (Ripley Creek)</td></tr>
+    </table>
+
+    <h2>Safety Equipment Provided</h2>
+    <table>
+      <tr><th>Equipment</th><th>Purpose</th></tr>
+      <tr><td>Avalanche beacon (transceiver)</td><td>Locating a person in an avalanche</td></tr>
+      <tr><td>BCA Airbag Backpack</td><td>Minimizes burial risk; limited storage but room for extra layer and small items</td></tr>
+      <tr><td>Shovel</td><td>Digging in avalanche rescue</td></tr>
+      <tr><td>Probe</td><td>Pinpointing location in avalanche rescue</td></tr>
+      <tr><td>Radio</td><td>Continuous contact with guides</td></tr>
+    </table>
+
+    <h2>Electronic Interference &amp; Device Policies</h2>
+    <table>
+      <tr><th>Device</th><th>Policy</th></tr>
+      <tr><td>GoPro (helmet mount)</td><td>Allowed</td></tr>
+      <tr><td>GoPro (chest mount)</td><td>Prohibited — too close to transceiver</td></tr>
+      <tr><td>WiFi-paired cameras</td><td>Prohibited during heli-skiing</td></tr>
+      <tr><td>Electric gloves/jackets/vests</td><td>Prohibited — interferes with search function</td></tr>
+      <tr><td>Cellular phones</td><td>Allowed but must be in airplane mode</td></tr>
+      <tr><td>Drones</td><td>Not allowed while skiing or around the lodge</td></tr>
+      <tr><td>Magnets (jacket closures)</td><td>Prohibited — disrupts transceiver signals</td></tr>
+      <tr><td>Heat reflective foil liners</td><td>Prohibited — disrupts transceiver signals</td></tr>
+      <tr><td>Headphones</td><td>Not allowed while skiing</td></tr>
+    </table>
+
+    <h2>Touring Boots Policy</h2>
+    <p>Touring boots are <strong>highly discouraged</strong>. Recent tests have shown that all makes and models of touring boots have failed release function tests — this may contribute to non-release of the binding during an avalanche. We recommend ISO 5355 compliant alpine ski boots. The functionality of ISO 9523 AT boots with alpine, AT, or MNC bindings is still under evaluation.</p>
+    <p>Guests using touring boots must sign an additional waiver.</p>
+    <p><strong>Telemark skiing is permitted.</strong> We use Salomon Warden MNC bindings — compatible with all boot types except pin boots.</p>
+
+    <h2>Children &amp; Minimum Age Policy</h2>
+    <p>Minimum age: <strong>14 years old</strong>, subject to:</p>
+    <ul>
+      <li>The child must be able to follow guide instructions and behave appropriately</li>
+      <li>Parents must be comfortable that the lodge can be an adult environment</li>
+      <li>The child must ski at an adequate pace and not hold groups up</li>
+      <li>All guests under 19 must ski with a parent at all times — no exceptions</li>
+    </ul>
+    <p>Children under 14 may be considered case-by-case after discussion with the Director of Operations.</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: BOOKING -->
+<!-- ============================================================ -->
+<div class="section" id="kb-booking">
+  <h2 class="section-title">Booking</h2>
+  <p class="section-subtitle">Booking process, payment terms, cancellation, insurance, and transfers</p>
+  <div class="kb-content">
+    <h2>7-Step Booking Process</h2>
+    <ol>
+      <li><strong>Choose Your Tour and Lodge</strong></li>
+      <li><strong>Pick Your Tour and Hold Seats</strong> — 5-7 day hold available without deposit</li>
+      <li><strong>Pay Your Deposit</strong> — 20% non-refundable deposit</li>
+      <li><strong>Get Insurance</strong> — Trip cancellation, medical, heli-evacuation (~6% of trip cost)</li>
+      <li><strong>Finalize Trip Details</strong> — Flights, hotels, dietary needs</li>
+      <li><strong>Final Payment</strong> — Due 90 days prior (full payment if booking within 90 days)</li>
+      <li><strong>Get Heliski-Ready</strong> — Conditioning program recommended</li>
+    </ol>
+
+    <h2>Payment Terms</h2>
+    <p><strong>All payments are non-refundable.</strong> Late payment fee: 4%.</p>
+    <h3>Private Tours</h3>
+    <ul>
+      <li>20% deposit at booking</li>
+      <li>50% due 180 days prior</li>
+      <li>Balance due 90 days prior</li>
+      <li>No refunds if group size decreases</li>
+    </ul>
+
+    <h2>Payment Methods</h2>
+    <ul>
+      <li>Credit cards: Visa, MasterCard, American Express</li>
+      <li>Bank wire transfers</li>
+      <li>E-transfers (Canadian residents only)</li>
+    </ul>
+    <p><strong>Not accepted for bookings:</strong> Cash, cryptocurrency.</p>
+
+    <h2>Cancellation Policy</h2>
+    <ul>
+      <li>More than 90 days before: Last Frontier retains deposit</li>
+      <li>Less than 90 days before: Total package payments retained</li>
+      <li>Resell option: If seat resold, receive credit minus $500 admin fee</li>
+      <li>Replacement option: Find your own replacement (always incurs $500 booking fee)</li>
+    </ul>
+
+    <h2>Transfer-Day Flight Recommendation</h2>
+    <p>For inbound flights on transfer day, we ask guests <strong>not to use WestJet</strong> as the schedule does not align with our transfer timing. We recommend Air Canada for transfer-day flights. Outbound WestJet is fine.</p>
+
+    <h2>Insurance</h2>
+    <p>Highly recommended: Trip Cancellation, Trip Interruption, Out of Country Medical, Heli-Evacuation. Costs approximately 6% of trip cost. Contact the reservation team for help: info@lastfrontierheli.com</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: FAQ -->
+<!-- ============================================================ -->
+<div class="section" id="kb-faq">
+  <h2 class="section-title">Frequently Asked Questions</h2>
+  <p class="section-subtitle">25+ questions the agent can answer — the most common topics guests ask about</p>
+  <div class="kb-content">
+    <h2>Skill &amp; Fitness</h2>
+    <p><strong>Q: How good do I have to be?</strong><br>
+    You should be a strong intermediate skier/rider comfortable on ungroomed terrain. You don't need to be a pro, but you do need confident parallel turns and the ability to handle varied snow conditions. For Ripley Creek, we request advanced or higher.</p>
+
+    <p><strong>Q: How fit do I need to be?</strong><br>
+    You'll clock 5,000-10,000+ vertical meters daily for 4+ days straight. The fitter you are, the more you'll enjoy it. If unable to keep up with your group, you may be asked to sit out.</p>
+
+    <h2>Equipment</h2>
+    <p><strong>Q: Do you rent ski boots?</strong><br>
+    No. You must bring your own boots. We strongly recommend traveling with boots as hand luggage.</p>
+
+    <p><strong>Q: Can I use touring boots?</strong><br>
+    Highly discouraged — all makes and models have failed release function tests. We recommend ISO 5355 compliant alpine ski boots. Additional waiver required.</p>
+
+    <p><strong>Q: Can I use telemark skis?</strong><br>
+    Yes, telemark skiing is permitted. We use Salomon Warden MNC bindings — compatible with all boot types except pin boots.</p>
+
+    <p><strong>Q: Can I use electric or heated gloves while skiing?</strong><br>
+    No — electric gloves, heated vests, and other electronic devices interfere with avalanche transceivers and are not permitted while skiing.</p>
+
+    <p><strong>Q: Is there room in the BCA pack for personal items?</strong><br>
+    Limited space, but there is room for an extra layer and small personal items.</p>
+
+    <h2>Groups</h2>
+    <p><strong>Q: How many people are in each ski group?</strong><br>
+    Maximum 4 guests per guide.</p>
+
+    <p><strong>Q: Can my friends and I be in the same group?</strong><br>
+    Yes, we try to keep friends together. Let the team know when booking or email info@lastfrontierheli.com.</p>
+
+    <p><strong>Q: How are groups formed?</strong><br>
+    Each skier fills a questionnaire asking about desired pace and ability level. Groups are formed based on bookings plus questionnaire feedback. Once skiing, groups can be mixed around if they're not working. With only 4 people in a group and 3 groups per heli, there is a lot of flexibility.</p>
+
+    <h2>Daily Operations</h2>
+    <p><strong>Q: How many runs per day?</strong><br>
+    Typically 8 to 15 runs, with 5,000-10,000+ vertical meters depending on conditions.</p>
+
+    <p><strong>Q: What happens on down days?</strong><br>
+    Both lodges offer activities during weather down days. Down days occur less than 1 per week on average and tend to be followed by epic ski days.</p>
+
+    <h2>Booking &amp; Pricing</h2>
+    <p><strong>Q: Do you offer day heli skiing?</strong><br>
+    No, the minimum trip length is 4 days.</p>
+
+    <p><strong>Q: What's the deposit requirement?</strong><br>
+    20% non-refundable deposit required to confirm reservation. Balance due 90 days prior.</p>
+
+    <p><strong>Q: What payment methods are accepted?</strong><br>
+    Credit cards (Visa, MasterCard, American Express), bank wire transfers, and e-transfers (Canadian residents only). No cash or cryptocurrency for bookings.</p>
+
+    <h2>General</h2>
+    <p><strong>Q: What is the minimum age for guests?</strong><br>
+    14 years old with parent/guardian, subject to conditions. Under-19 must ski with parent at all times.</p>
+
+    <p><strong>Q: How do I get there?</strong><br>
+    Fly to Vancouver, then 1.5-hour flight to Terrace, then 4-hour ground transfer to the lodge.</p>
+
+    <p><strong>Q: How big is the ski area?</strong><br>
+    10,100 km² — one of the largest heli ski areas in the world.</p>
+
+    <p><strong>Q: How do I contact Last Frontier?</strong><br>
+    Phone: 1-888-655-5566 (North America) / +1-250-558-7980 (international). Email: ski@lastfrontierheli.com (new bookings) / info@lastfrontierheli.com (existing reservations).</p>
+
+    <h2>Gift Shop</h2>
+    <p>Both lodges have gift shops. Items available for purchase include:</p>
+    <p><strong>Apparel:</strong> Base layers, button-up shirts, light jackets, puffer jackets/vests, shell jackets, long and short sleeve t-shirts, kids t-shirts, balaclavas</p>
+    <p><strong>Accessories:</strong> Socks, electronic heated socks, baseball caps, winter hats, slippers, men's and women's gloves, belts, ski goggles, goggle socks</p>
+    <p><strong>Gear:</strong> Rubber boots, winter boots</p>
+    <p><strong>Souvenirs:</strong> Stickers, terrain maps, post cards, key chains, licence plate frames</p>
+    <p><strong>Other:</strong> Sunscreen, lip balm, leather balm, single use heat packs</p>
+    <p><strong>Not sold:</strong> Helmets, snowpants, sunglasses, ski buffs</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: PREPARATION -->
+<!-- ============================================================ -->
+<div class="section" id="kb-preparation">
+  <h2 class="section-title">Trip Preparation</h2>
+  <p class="section-subtitle">Fitness, packing, travel logistics, and restaurant recommendations</p>
+  <div class="kb-content">
+    <h2>Fitness Preparation</h2>
+    <p>You'll clock 5,000-10,000+ vertical meters daily for 4+ days straight. Start conditioning 8-12 weeks before your trip. Focus on leg strength and cardiovascular endurance. Hit the slopes a few times before arriving — don't arrive cold.</p>
+
+    <h2>What to Bring</h2>
+    <h3>Provided by Last Frontier</h3>
+    <ul>
+      <li>Powder skis (Faction brand) and poles</li>
+      <li>Limited snowboards (contact in advance)</li>
+      <li>All safety equipment</li>
+    </ul>
+    <h3>You MUST Bring</h3>
+    <ul>
+      <li><strong>Ski/snowboard boots</strong> — no rentals available, travel as hand luggage</li>
+      <li>Ski jacket, ski pants/bibs</li>
+      <li>Mid layers (fleece, down jacket)</li>
+      <li>Base layers (thermal top and bottom)</li>
+      <li>Gloves/mitts, warm hat/toque, helmet</li>
+      <li>Goggles, sunglasses</li>
+      <li>Ski socks (multiple pairs)</li>
+    </ul>
+
+    <h3>Lodge &amp; Social Attire</h3>
+    <ul>
+      <li>Stretch/comfortable clothes for lounging</li>
+      <li>Bathing suit (hot tub and sauna at both lodges)</li>
+      <li>Light casual wear for evenings</li>
+      <li>"Dress up night" outfit — Bell 2 Lodge hosts a themed dinner night during each tour week</li>
+    </ul>
+
+    <h3>Leave at Home</h3>
+    <ul>
+      <li>Drones — not allowed</li>
+      <li>Electric gloves/jackets/vests — prohibited</li>
+      <li>Jackets with magnets or heat reflective foil liners</li>
+      <li>Chest-mount GoPro harness (helmet mount is OK)</li>
+      <li>Heavy workload expectations</li>
+    </ul>
+
+    <h2>Getting There</h2>
+    <table>
+      <tr><th>Step</th><th>Details</th></tr>
+      <tr><td>1. Start</td><td>Arrive in Vancouver, BC</td></tr>
+      <tr><td>2. Flight</td><td>1.5-hour flight to Terrace (YXT)</td></tr>
+      <tr><td>3. Ground Transfer</td><td>4-hour transfer into Coast and Skeena Mountains</td></tr>
+      <tr><td>4. Destination</td><td>Bell 2 Lodge or Ripley Creek</td></tr>
+    </table>
+    <p><strong>Important:</strong> Travel with ski boots and ski outerwear as carry-on for ALL flights. Check in online 24 hours before your Vancouver-Terrace flight. Activate WIFI calling before leaving home (Bell 2 has no cell service).</p>
+
+    <h2>Restaurant Recommendations</h2>
+    <p>Staff-recommended restaurants in Terrace, Smithers, and Vancouver are included in the knowledge base. The agent can share these when guests ask about dining options before or after their trip.</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: LOCATION -->
+<!-- ============================================================ -->
+<div class="section" id="kb-location">
+  <h2 class="section-title">Location &amp; Terrain</h2>
+  <p class="section-subtitle">Geography, terrain access, snowpack, and why the location matters</p>
+  <div class="kb-content">
+    <h2>One of the World's Largest Heli Skiing Areas</h2>
+    <table>
+      <tr><th>Metric</th><th>Value</th></tr>
+      <tr><td>Tenure Size</td><td>10,100 km²</td></tr>
+      <tr><td>Comparison</td><td>~4x the average BC heliski area</td></tr>
+      <tr><td>Annual Snowfall</td><td>15 to 25 meters</td></tr>
+      <tr><td>Named Runs</td><td>1,000+</td></tr>
+      <tr><td>Longest Run</td><td>2,000+ vertical meters</td></tr>
+      <tr><td>Elevation Range</td><td>300m to 2,500m</td></tr>
+      <tr><td>Highest Peak</td><td>Delta Peak (2,469m)</td></tr>
+    </table>
+    <p><strong>Terrain Reality:</strong> Most skiing is untracked powder in alpine bowls and gladed tree runs — varied and expansive. Technical terrain exists but is NOT the norm and cannot be guaranteed.</p>
+
+    <h2>Two Mountain Ranges</h2>
+    <p><strong>Coast &amp; Skeena Mountains (Bell 2 Lodge):</strong> Interior and coastal ranges, varied terrain with excellent tree skiing and significant glacier skiing. Bell 2 Lodge located right in the middle of the tenure.</p>
+    <p><strong>Coast Mountains (Ripley Creek):</strong> Coastal range near Alaska border. More rugged, glaciated terrain. 15-25 meters of snow per winter.</p>
+
+    <h2>Snowpack Quality</h2>
+    <p>Although Last Frontier is on the North Coast, the snowpack is not coastal like Whistler. The lodges sit 150 km inland from the ocean, and combined with the northern latitude, the result is good quality powder. It might not be as dry as the Rockies, but that pays dividends in snowpack stability — a safer, more predictable base that lasts well into April.</p>
+
+    <h2>Using the Full Tenure</h2>
+    <p>A road bisects the tenure both North/South and East/West, providing a massive logistics boost. A remote fueling cache in the middle of the tenure means helicopters can refuel without flying back to home base. Having one of the biggest heli ski tenures really pays dividends during prolonged snow droughts — there's always somewhere to find fresh snow.</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: SEASONAL -->
+<!-- ============================================================ -->
+<div class="section" id="kb-seasonal">
+  <h2 class="section-title">Seasonal Information</h2>
+  <p class="section-subtitle">What to expect in each part of the season</p>
+  <div class="kb-content">
+    <h2>Season Periods</h2>
+    <h3>Early Season (December - January)</h3>
+    <p>Building snowpack, shorter days, quieter lodges. More frequent snowfall, cooler temperatures. Best value period and great for tree skiing enthusiasts.</p>
+
+    <h3>Mid-Season (February - March)</h3>
+    <p>Deep, established snowpack. Mix of alpine and tree skiing with longer daylight hours. Highest rates. February and March often fill a year in advance.</p>
+
+    <h3>Late Season (April)</h3>
+    <p>Still winter-like in early April, spring conditions develop mid-April onward. Primarily alpine skiing, but April storms still bring fresh snow at all elevations. Preserved powder on north and east-facing slopes. Snowpack typically reaches its deepest in April. Longest daylight hours. Mid-range rates.</p>
+
+    <h2>Seasonal Comparison</h2>
+    <table>
+      <tr><th>Factor</th><th>Early (Dec &amp; Jan)</th><th>Middle (Feb &amp; Mar)</th><th>Late (April)</th></tr>
+      <tr><td>Skiing/Riding</td><td>More Trees</td><td>Mix of Alpine &amp; Trees</td><td>Mostly Alpine</td></tr>
+      <tr><td>Package Cost</td><td>Best Value</td><td>Higher</td><td>Mid-Range</td></tr>
+      <tr><td>Avg Snowfall Weekly</td><td>67 cm</td><td>52 cm</td><td>34 cm</td></tr>
+      <tr><td>Avg Vertical Skied Weekly</td><td>33,000 m</td><td>48,000 m</td><td>43,000 m</td></tr>
+      <tr><td>Avg Snowbase at 1,000m</td><td>200 cm</td><td>320 cm</td><td>330 cm</td></tr>
+      <tr><td>Avg Daily Low at 1,000m</td><td>-13.5°C</td><td>-9.6°C</td><td>-4.9°C</td></tr>
+      <tr><td>Avg Daylight</td><td>7.5 Hours</td><td>11 Hours</td><td>14 Hours</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: COMPANY -->
+<!-- ============================================================ -->
+<div class="section" id="kb-company">
+  <h2 class="section-title">Company Information</h2>
+  <p class="section-subtitle">History, team, contact details, and environmental initiatives</p>
+  <div class="kb-content">
+    <h2>Company Background</h2>
+    <p>In 1996, founding partners George Rosset, Franz Fux, Mike Watling, and Geoff Straight set out to explore uncharted mountain ranges in Northern BC. That passion for exploration lives on in the DNA today.</p>
+
+    <h2>Key Milestones</h2>
+    <table>
+      <tr><th>Year</th><th>Event</th></tr>
+      <tr><td>1996</td><td>First 8-week exploratory season with single A-Star helicopter</td></tr>
+      <tr><td>2005</td><td>Ripley Creek born in Stewart, BC</td></tr>
+      <tr><td>2008</td><td>First operation to adopt mandatory avalanche airbags</td></tr>
+      <tr><td>2014</td><td>Mike Watling becomes Managing Partner</td></tr>
+      <tr><td>2017</td><td>Groups reduced from 5 to 4 guests per guide</td></tr>
+      <tr><td>2022</td><td>Complete sauna building overhaul</td></tr>
+      <tr><td>2023</td><td>Guest room renovation</td></tr>
+      <tr><td>Jan 2026</td><td>Celebrated 30th birthday</td></tr>
+    </table>
+
+    <h2>Leadership Team</h2>
+    <table>
+      <tr><th>Name</th><th>Role</th></tr>
+      <tr><td>Mike Watling</td><td>Managing Partner / Owner</td></tr>
+      <tr><td>Cliff Umpleby</td><td>Director of Operations &amp; Lead Guide</td></tr>
+      <tr><td>Steve Rosset</td><td>Director of Media &amp; Marketing</td></tr>
+      <tr><td>Natalie Ovens</td><td>Sales/Reservations &amp; Head Office Manager</td></tr>
+      <tr><td>Jonathan Therrien</td><td>General Manager - Both Lodges</td></tr>
+    </table>
+
+    <h2>Global Representatives</h2>
+    <p>Last Frontier works with various tour operators, agents and ambassadors worldwide. If you would like to speak with someone in your native language, the team can put you in touch with a local representative if one is available in your region. Contact ski@lastfrontierheli.com.</p>
+
+    <h2>Environmental &amp; Wildlife Initiatives</h2>
+    <ul>
+      <li>Double-walled envirotanks for safe fuel storage</li>
+      <li>Systematic wildlife sighting reporting</li>
+      <li>Energy reduction programs at both lodges</li>
+      <li>Consumer product recycling</li>
+      <li>Mountain goat research partnerships</li>
+      <li>Designated no-fly zones</li>
+      <li>Seasonal wildlife sensitivity protocols</li>
+    </ul>
+
+    <h2>Discover Heliskiing Video Series</h2>
+    <p>A 6-part backgrounder series:</p>
+    <ol>
+      <li>Where we fly: Northern BC's Skeena &amp; Coast Mountains</li>
+      <li>Where you stay: Bell 2 Lodge &amp; Ripley Creek</li>
+      <li>What you can ski: From alpine bowls to gladed trees</li>
+      <li>How a day unfolds: From breakfast to after dinner</li>
+      <li>How we keep you safe: Protocols and equipment</li>
+      <li>Who will look after you: Guides, pilots and lodge crew</li>
+    </ol>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- KB: MISCELLANEOUS -->
+<!-- ============================================================ -->
+<div class="section" id="kb-miscellaneous">
+  <h2 class="section-title">Philosophy &amp; Industry History</h2>
+  <p class="section-subtitle">The heli skiing philosophy, Hans Gmoser, and the Last Frontier formula</p>
+  <div class="kb-content">
+    <h2>What Is Heli Skiing?</h2>
+    <p>Heli skiing started in the 1960s when Hans Gmoser utilized helicopters to transport skiers to remote terrain in search of fresh powder. It has since grown into an industry allowing thrill-seeking skiers and snowboarders to experience high quality powder skiing in untouched terrain, far from traditional ski resorts.</p>
+
+    <h2>The Last Frontier Formula</h2>
+    <ol>
+      <li><strong>Small Groups</strong> — 4 guests per guide</li>
+      <li><strong>World-Class Guides</strong> — ACMG/IFMGA/CSGA certified</li>
+      <li><strong>Two Lodges</strong> — Bell 2 and Ripley Creek</li>
+      <li><strong>One of the Largest Heli Ski Areas in the World</strong> — 10,100 km²</li>
+      <li><strong>Extensive Terrain Variety</strong> — December through April season</li>
+    </ol>
+    <p><strong>Motto:</strong> "Minimal downtime, maximum heli skiing."</p>
+
+    <h2>The Heli Skiing Ethos</h2>
+    <ul>
+      <li>Stunning scenery and bragging rights</li>
+      <li>Fresh powder and untracked terrain</li>
+      <li>Complete disconnection from everyday life</li>
+      <li>First descents — still possible after 30 years of operation</li>
+      <li>A collaborative approach to staying safe in the mountains</li>
+    </ul>
+
+    <h2>History of Heli Skiing</h2>
+    <table>
+      <tr><th>Year</th><th>Event</th></tr>
+      <tr><td>1948</td><td>First documented helicopter-skiing at Grouse Mountain, BC</td></tr>
+      <tr><td>1963</td><td>Gmoser and Patterson offer first heli ski days ($20)</td></tr>
+      <tr><td>1965</td><td>Gmoser commercializes heli skiing in Canada</td></tr>
+      <tr><td>1996</td><td>Last Frontier Heliskiing founded</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- AGENT INSTRUCTIONS -->
+<!-- ============================================================ -->
+<div class="section" id="agent-instructions">
+  <h2 class="section-title">How the Agent Responds</h2>
+  <p class="section-subtitle">The rules and personality guiding your AI assistant's behavior</p>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Identity</div>
+    <p>The AI assistant for Last Frontier Heliskiing — a premium helicopter skiing operator in Northern BC, Canada. Two lodges: Bell 2 Lodge (Coast &amp; Skeena Mountains) and Ripley Creek (Stewart, BC). Season: December–April. Operating 30+ years.</p>
+    <p>The agent operates in a small chat widget where users see about 3-4 lines at a time. Every word must earn its place.</p>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Brand Voice</div>
+    <p><em>"Precise answers, but also not take ourselves too seriously. There is a fine balance — we are organizing fun for people and it shouldn't feel laborious to book a trip."</em></p>
+    <p><em>"Not too formal, but also not forced. Not too young and hip. Our core team is middle-aged, but we are adventurous, direct and honest. The key is to match what we have on our website — not over the top, grounded, but also proud of what we've built over the last 30 years."</em></p>
+    <p><strong>Tagline:</strong> "We call it like it is" — honest about skill requirements, conditions, expectations. Never oversell.</p>
+    <p><strong>Voice:</strong> Authentic and down-to-earth. Passionate and knowledgeable. Approachable and welcoming. Honest and direct. Like an experienced guide at the lodge bar, not a corporate rep.</p>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Language Rules</div>
+    <ul>
+      <li>Uses "we" (not "Last Frontier offers...")</li>
+      <li>Concrete details over vague praise</li>
+      <li>Matches the guest's energy</li>
+      <li>Conversational, not robotic</li>
+      <li>Occasional emojis (doesn't overdo)</li>
+      <li>Sign-offs: "Over and out" or "Until next time"</li>
+      <li>Never references US-specific resorts — global audience</li>
+    </ul>
+    <p><strong>Preferred words:</strong> terrain, guests, guides, deep powder, big days, remote, off-grid, wild, honest, real</p>
+    <p><strong>Words we avoid:</strong> "best," "greatest," "most amazing," "exclusive," "luxury," "bucket list," generic tourism language, corporate-speak</p>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Response Format</div>
+    <ul>
+      <li>60 words max per message</li>
+      <li>Maximum 2 messages per turn</li>
+      <li>Each message makes ONE point</li>
+      <li>Answers the question first, then adds context</li>
+      <li>All prices in Canadian Dollars (CAD)</li>
+      <li>Never fabricates or guarantees availability</li>
+      <li>Adapts formatting for mobile vs desktop</li>
+    </ul>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Tone by Context</div>
+    <table>
+      <tr><th>Guest Mood</th><th>Agent Approach</th></tr>
+      <tr><td>Excited guest</td><td>Match enthusiasm, share enticing details</td></tr>
+      <tr><td>Nervous guest</td><td>Reassuring but honest, provide specifics</td></tr>
+      <tr><td>Technical question</td><td>Precise, proper terminology</td></tr>
+      <tr><td>Can't answer</td><td>Casual and honest, offer to connect with the team</td></tr>
+      <tr><td>Under pressure</td><td>Gets WARMER — not colder, not defensive. Represents 30 years of passionate mountain people</td></tr>
+    </table>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Information Boundaries</div>
+    <ul>
+      <li>Only answers questions about Last Frontier, heliskiing, and related travel topics</li>
+      <li>Only cites facts from the knowledge base — acknowledges when uncertain</li>
+      <li>Never discusses fleet size, revenue, margins, staff personal details, or incident history</li>
+      <li>Never promises or oversells technical terrain — frames terrain honestly as "varied" and "expansive"</li>
+      <li>Never implies guides tailor the program to individual preferences — guides make collective decisions based on safety conditions</li>
+      <li>Never makes specific claims about competitor operations</li>
+      <li>Never makes specific weather claims — can share seasonal characteristics but not current conditions</li>
+      <li>For safety-record questions: shares protocols and equipment, provides direct contact info</li>
+    </ul>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Conversation Strategy</div>
+    <p>The agent detects guest intent level and adjusts its approach:</p>
+    <table>
+      <tr><th>Intent</th><th>Signals</th><th>Approach</th></tr>
+      <tr><td>HIGH</td><td>Specific dates, group size, booking questions</td><td>Guide efficiently to contact form</td></tr>
+      <tr><td>MEDIUM</td><td>Researching, comparing, no timeline</td><td>Helpful info + qualifying questions</td></tr>
+      <tr><td>LOW</td><td>"Just curious," "saw videos"</td><td>Be genuinely helpful, no pressure</td></tr>
+      <tr><td>ASPIRATIONAL</td><td>"Dreaming," "someday"</td><td>Inspire and educate, no pressure</td></tr>
+    </table>
+    <p><strong>Key principle:</strong> For low intent and aspirational guests, the agent is genuinely helpful without any push toward commitment. Trust that good service brings people back.</p>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Multilingual Support</div>
+    <p>The agent detects the user's language from their browser or first message and responds accordingly. Supports English, French, German, and Spanish. Brand names always stay in English ("Bell 2 Lodge", "Ripley Creek", "Last Frontier Heliskiing"). Uses informal "you" forms (tu/du/tú).</p>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Contact Routing</div>
+    <ul>
+      <li><strong>New inquiries &amp; bookings:</strong> ski@lastfrontierheli.com</li>
+      <li><strong>Existing reservations:</strong> info@lastfrontierheli.com</li>
+      <li><strong>Phone (North America):</strong> 1-888-655-5566</li>
+      <li><strong>Phone (International):</strong> +1 250-558-7980</li>
+    </ul>
+    <p>Always leads with phone numbers when a user asks for direct contact. The contact form is for booking interest, not a substitute for contact info.</p>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-title">Special Topic Handling</div>
+    <ul>
+      <li><strong>Competitors:</strong> Deflects to Last Frontier strengths — never makes specific claims about other operators</li>
+      <li><strong>Safety record / casualties:</strong> Shares protocols, provides contact info directly — does not offer booking forms for sensitive topics</li>
+      <li><strong>Weather:</strong> Answers from knowledge base first, then offers live conditions widget. Never claims to know current weather</li>
+      <li><strong>Private tours:</strong> Discusses 1-group and 2-group options by default. Only mentions 3-group option if specifically asked</li>
+      <li><strong>WestJet:</strong> Recommends against WestJet for inbound transfer-day flights (schedule doesn't align). Outbound is fine</li>
+      <li><strong>Lodge buyouts:</strong> Directs to sales team immediately — does not quote pricing</li>
+      <li><strong>Existing customers:</strong> Acknowledges guest status, directs to info@ email for existing reservations</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- 2027 PRICING -->
+<!-- ============================================================ -->
+<div class="section" id="pricing">
+  <h2 class="section-title">2027 Season Pricing</h2>
+  <p class="section-subtitle">All prices in Canadian Dollars (CAD), based on double occupancy</p>
+
+  <div class="pricing-group">
+    <h3>7-Day Tours</h3>
+    <p class="pricing-note">Vertical guarantee: 24,400m (Dec-Jan tours) / 30,500m (Feb-Apr tours)</p>
+    <table class="pricing-table">
+      <tr><th>Tour No.</th><th>Dates</th><th>Bell 2 Lodge</th><th>Ripley Creek</th></tr>
+      <tr><td>2027-4</td><td>Dec 30 - Jan 6</td><td>$16,750</td><td>—</td></tr>
+      <tr><td>2027-5</td><td>Jan 6 - 13</td><td>$18,030</td><td>$15,580</td></tr>
+      <tr><td>2027-7</td><td>Jan 23 - 30</td><td>$20,270</td><td>$18,010</td></tr>
+      <tr><td>2027-9</td><td>Feb 4 - 11</td><td>$21,820</td><td>$19,380</td></tr>
+      <tr><td>2027-11</td><td>Feb 21 - 28</td><td>$21,820</td><td>$19,380</td></tr>
+      <tr><td>2027-13</td><td>Mar 5 - 12</td><td>$21,820</td><td>$19,380</td></tr>
+      <tr><td>2027-15</td><td>Mar 21 - 28</td><td>$20,970</td><td>$18,630</td></tr>
+    </table>
+  </div>
+
+  <div class="pricing-group">
+    <h3>5-Day Tours</h3>
+    <p class="pricing-note">Vertical guarantee: 17,600m (Jan 13-23 tours) / 22,000m (Jan 30 onward)</p>
+    <table class="pricing-table">
+      <tr><th>Tour No.</th><th>Dates</th><th>Bell 2 Lodge</th><th>Ripley Creek</th></tr>
+      <tr><td>2027-5-5</td><td>Jan 13 - 18</td><td>$13,210</td><td>$11,760</td></tr>
+      <tr><td>2027-6-5</td><td>Jan 18 - 23</td><td>$14,570</td><td>$12,940</td></tr>
+      <tr><td>2027-8-5</td><td>Jan 30 - Feb 4</td><td>$15,040</td><td>$13,370</td></tr>
+      <tr><td>2027-9-5</td><td>Feb 11 - 16</td><td>$16,270</td><td>$14,450</td></tr>
+      <tr><td>2027-10-5</td><td>Feb 16 - 21</td><td>$16,270</td><td>$14,450</td></tr>
+      <tr><td>2027-12-5</td><td>Feb 28 - Mar 5</td><td>$16,270</td><td>$14,450</td></tr>
+      <tr><td>2027-14-5</td><td>Mar 16 - 21</td><td>$16,270</td><td>$14,450</td></tr>
+      <tr><td>2027-16-5</td><td>Mar 28 - Apr 2</td><td>$15,020</td><td>$13,360</td></tr>
+      <tr><td>2027-17-5</td><td>Apr 2 - 7</td><td>$14,420</td><td>$12,810</td></tr>
+      <tr><td>2027-18-5</td><td>Apr 7 - 12</td><td>$14,030</td><td>$12,460</td></tr>
+    </table>
+  </div>
+
+  <div class="pricing-group">
+    <h3>4-Day Tour</h3>
+    <p class="pricing-note">Vertical guarantee: 17,500m</p>
+    <table class="pricing-table">
+      <tr><th>Tour No.</th><th>Dates</th><th>Bell 2 Lodge</th><th>Ripley Creek</th></tr>
+      <tr><td>2027-14-4</td><td>Mar 12 - 16</td><td>$13,220</td><td>$11,770</td></tr>
+    </table>
+  </div>
+
+  <div class="pricing-group">
+    <h3>Safari Tours (Both Lodges)</h3>
+    <table class="pricing-table">
+      <tr><th>Type</th><th>Dates</th><th>Price</th><th>Vertical Guarantee</th></tr>
+      <tr><td>10-Day Safari</td><td>Jan 13 - 23</td><td>$23,620</td><td>35,200m</td></tr>
+      <tr><td>10-Day Safari</td><td>Feb 11 - 21</td><td>$27,660</td><td>44,000m</td></tr>
+      <tr><td>10-Day Safari</td><td>Mar 28 - Apr 7</td><td>$25,020</td><td>44,000m</td></tr>
+      <tr><td>9-Day Safari</td><td>Mar 12 - 21</td><td>$25,070</td><td>39,500m</td></tr>
+      <tr><td>7-Day Safari</td><td>Feb 4 - 11</td><td>$20,940</td><td>30,500m</td></tr>
+    </table>
+  </div>
+
+  <div class="pricing-group">
+    <h3>Private Tours — 1 Group (4 guests)</h3>
+    <table class="pricing-table">
+      <tr><th>Lodge</th><th>Duration</th><th>Season Period</th><th>Price</th></tr>
+      <tr><td>Bell 2 Lodge</td><td>7 Days</td><td>Dec &amp; Jan</td><td>$123,840</td></tr>
+      <tr><td>Bell 2 Lodge</td><td>7 Days</td><td>Feb - Apr</td><td>$150,200</td></tr>
+      <tr><td>Bell 2 Lodge</td><td>5 Days</td><td>Dec &amp; Jan</td><td>$93,150</td></tr>
+      <tr><td>Bell 2 Lodge</td><td>5 Days</td><td>Feb - Apr</td><td>$112,700</td></tr>
+      <tr><td>Ripley Creek</td><td>7 Days</td><td>January</td><td>$115,620</td></tr>
+      <tr><td>Ripley Creek</td><td>7 Days</td><td>Feb - Apr</td><td>$141,100</td></tr>
+      <tr><td>Ripley Creek</td><td>5 Days</td><td>January</td><td>$86,910</td></tr>
+      <tr><td>Ripley Creek</td><td>5 Days</td><td>Feb - Apr</td><td>$103,900</td></tr>
+    </table>
+  </div>
+
+  <div class="pricing-group">
+    <h3>Private Tours — 2 Groups (8 guests)</h3>
+    <table class="pricing-table">
+      <tr><th>Lodge</th><th>Duration</th><th>Season Period</th><th>Price</th></tr>
+      <tr><td>Bell 2 Lodge</td><td>7 Days</td><td>Dec &amp; Jan</td><td>$188,980</td></tr>
+      <tr><td>Bell 2 Lodge</td><td>7 Days</td><td>Feb - Apr</td><td>$229,350</td></tr>
+      <tr><td>Bell 2 Lodge</td><td>5 Days</td><td>Dec &amp; Jan</td><td>$145,250</td></tr>
+      <tr><td>Bell 2 Lodge</td><td>5 Days</td><td>Feb - Apr</td><td>$172,350</td></tr>
+      <tr><td>Ripley Creek</td><td>7 Days</td><td>January</td><td>$173,970</td></tr>
+      <tr><td>Ripley Creek</td><td>7 Days</td><td>Feb - Apr</td><td>$206,500</td></tr>
+      <tr><td>Ripley Creek</td><td>5 Days</td><td>January</td><td>$134,900</td></tr>
+      <tr><td>Ripley Creek</td><td>5 Days</td><td>Feb - Apr</td><td>$157,360</td></tr>
+    </table>
+  </div>
+
+  <div class="pricing-group">
+    <h3>Pricing Small Print</h3>
+    <ul>
+      <li>All prices based on double occupancy</li>
+      <li>5% GST applied to all packages</li>
+      <li>Extra vertical: CAD $218 per 1,000m (CAD $66.50 per 1,000 ft)</li>
+      <li>20% non-refundable deposit required</li>
+    </ul>
+    <h3>Single Room Supplements</h3>
+    <table class="pricing-table">
+      <tr><th>Location</th><th>Nightly Rate</th></tr>
+      <tr><td>Bell 2 Lodge - Chalet</td><td>$317/night</td></tr>
+      <tr><td>Bell 2 Lodge - Cabin</td><td>$265/night</td></tr>
+      <tr><td>Ripley Creek</td><td>$125/night</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- EXIT CONDITIONS (Interactive Features) -->
+<!-- ============================================================ -->
+<div class="section" id="exits">
+  <h2 class="section-title">Interactive Features</h2>
+  <p class="section-subtitle">When the agent offers visual tools and interactive elements during conversation</p>
+
+  <div class="overview-box" style="margin-bottom: 24px;">
+    <p>During conversation, the agent can offer interactive features at the right moment. These appear as visual widgets inside the chat — tour browsers, lodge comparisons, weather reports, and more. Here's what triggers each one and what the guest sees.</p>
+  </div>
+
+  <div class="exit-card">
+    <div class="exit-icon">&#128100;</div>
+    <div class="exit-info">
+      <h4>Contact Form</h4>
+      <p><strong>When:</strong> Guest shows strong booking interest (discussing specific dates, group size, commitment) or explicitly asks to speak with the team. The agent asks a confirming question before showing the form.</p>
+      <p><strong>What appears:</strong> A contact form where the guest can leave their details for the team to follow up.</p>
+    </div>
+  </div>
+
+  <div class="exit-card">
+    <div class="exit-icon">&#9968;</div>
+    <div class="exit-info">
+      <h4>Tour Explorer</h4>
+      <p><strong>When:</strong> Guest is actively exploring or comparing tours and visual browsing would help. Not for single-tour text questions.</p>
+      <p><strong>What appears:</strong> Interactive tour carousel with pricing, dates, and details for all tour types.</p>
+    </div>
+  </div>
+
+  <div class="exit-card">
+    <div class="exit-icon">&#127968;</div>
+    <div class="exit-info">
+      <h4>Lodge Explorer</h4>
+      <p><strong>When:</strong> Guest wants to compare lodges visually or see detailed lodge information. Not for simple factual questions.</p>
+      <p><strong>What appears:</strong> Side-by-side lodge comparison with photos, amenities, and terrain details.</p>
+    </div>
+  </div>
+
+  <div class="exit-card">
+    <div class="exit-icon">&#9728;</div>
+    <div class="exit-info">
+      <h4>Live Conditions Report</h4>
+      <p><strong>When:</strong> Guest asks about current snow or weather conditions. The agent shares seasonal context first, then offers the live report.</p>
+      <p><strong>What appears:</strong> Embedded conditions page with recent snow data and weather reports.</p>
+    </div>
+  </div>
+
+  <div class="exit-card">
+    <div class="exit-icon">&#127909;</div>
+    <div class="exit-info">
+      <h4>Video Browser &amp; FAQ</h4>
+      <p><strong>When:</strong> Guest is casually exploring or has low intent, typically after a couple of exchanges. Never on the first message.</p>
+      <p><strong>What appears:</strong> Quick video starter series and FAQ browser for self-service exploration.</p>
+    </div>
+  </div>
+
+  <div class="exit-card">
+    <div class="exit-icon">&#128077;</div>
+    <div class="exit-info">
+      <h4>Feedback Widget</h4>
+      <p><strong>When:</strong> After the agent gives a substantive answer or at natural conversation endpoints.</p>
+      <p><strong>What appears:</strong> Simple thumbs up/down to let us know the answer was helpful.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- OTHER FEEDBACK -->
+<!-- ============================================================ -->
+<div class="section" id="other-feedback">
+  <h2 class="section-title">Any Other Feedback</h2>
+  <p class="section-subtitle">For anything not covered above — new topics, general thoughts, or broader suggestions</p>
+
+  <div class="general-feedback-box">
+    <textarea id="general-feedback-text" placeholder="E.g. &quot;Please add a section about cat skiing alternatives&quot; or &quot;The overall tone feels too formal&quot;"></textarea>
+    <button class="general-feedback-submit" id="general-feedback-btn" onclick="submitGeneralFeedback(this)">Add Feedback</button>
+    <div class="general-feedback-status" id="general-feedback-status"></div>
+    <div id="general-feedback-list" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SIGN-OFF -->
+<!-- ============================================================ -->
+<div class="section" id="signoff">
+  <h2 class="section-title">Sign Off</h2>
+  <p class="section-subtitle">Ready to approve? Or leave feedback above first.</p>
+
+  <div class="signoff-box">
+    <h3>Content Approval</h3>
+    <p>By signing off, you confirm that the knowledge base content, agent instructions, and 2027 pricing are accurate and approved for production deployment.</p>
+    <div class="signoff-checkbox">
+      <input type="checkbox" id="signoff-check" onchange="document.getElementById('signoff-btn').disabled = !this.checked">
+      <label for="signoff-check">I've reviewed the content and approve it for production</label>
+    </div>
+    <button class="signoff-btn" id="signoff-btn" disabled onclick="submitSignoff(this)">Approve for Production</button>
+    <div class="signoff-status" id="signoff-status"></div>
+  </div>
+</div>
+
+<!-- SEND FEEDBACK REPORT (sticky footer) -->
+<div class="feedback-report-bar" id="feedback-report-bar">
+  <div class="feedback-report-bar-inner">
+    <span class="feedback-report-summary" id="feedback-report-summary"></span>
+    <div>
+      <button class="feedback-pdf-btn" onclick="downloadReportPDF()">Download PDF</button>
+      <button class="feedback-report-btn" id="feedback-report-btn" onclick="sendFeedbackReport(this)">Send Feedback Report</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+// ============================================================
+// LOGIN GATE
+// ============================================================
+const AUTH_KEY = 'lfh-review-auth';
+const AUTH_PASS = 'lastfrontier_feedback_2026';
+
+(function initAuth() {
+  const overlay = document.getElementById('login-overlay');
+  if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+    overlay.classList.add('hidden');
+    return;
+  }
+
+  const input = document.getElementById('login-password');
+  const btn = document.getElementById('login-btn');
+  const field = document.getElementById('login-field');
+  const error = document.getElementById('login-error');
+  const eye = document.getElementById('toggle-eye');
+
+  function attemptLogin() {
+    if (input.value === AUTH_PASS) {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      overlay.classList.add('hidden');
+    } else {
+      field.classList.remove('shake');
+      void field.offsetWidth; // reflow to restart animation
+      field.classList.add('shake');
+      error.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', attemptLogin);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') attemptLogin();
+  });
+
+  eye.addEventListener('click', function() {
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    document.getElementById('eye-open').style.display = isPassword ? 'none' : 'block';
+    document.getElementById('eye-closed').style.display = isPassword ? 'block' : 'none';
+  });
+
+  input.focus();
+})();
+
+// ============================================================
+// CONFIG
+// ============================================================
+const WEBHOOK_URL = 'https://n8n.romaix-n8n.xyz/webhook/lfh-review-feedback';
+const STORAGE_KEY = 'lfh-review-comments';
+const GF_STORAGE_KEY = 'lfh-review-general-feedback';
+const SIGNOFF_STORAGE_KEY = 'lfh-review-signoff';
+
+// ============================================================
+// SIDEBAR NAV (unchanged)
+// ============================================================
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.sidebar a');
+
+function updateActiveNav() {
+  let current = '';
+  const scrollPos = window.scrollY + 180;
+  sections.forEach(section => {
+    if (section.offsetTop <= scrollPos) {
+      current = section.id;
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+window.addEventListener('scroll', updateActiveNav);
+window.addEventListener('load', updateActiveNav);
+
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// ============================================================
+// SIGN-OFF (unchanged)
+// ============================================================
+function submitSignoff(btn) {
+  const status = document.getElementById('signoff-status');
+  const signoff = { approved: true, timestamp: new Date().toISOString() };
+  localStorage.setItem(SIGNOFF_STORAGE_KEY, JSON.stringify(signoff));
+  status.textContent = 'Approved! Click "Send Feedback Report" when you\'re ready to send everything to the team.';
+  status.className = 'signoff-status success';
+  status.style.display = 'block';
+  btn.textContent = 'Approved ✓';
+  btn.disabled = true;
+  updateFeedbackBar();
+}
+
+// Restore signoff state on load
+(function restoreSignoff() {
+  try {
+    const raw = localStorage.getItem(SIGNOFF_STORAGE_KEY);
+    if (raw) {
+      const signoff = JSON.parse(raw);
+      if (signoff && signoff.approved) {
+        const btn = document.getElementById('signoff-btn');
+        const check = document.getElementById('signoff-check');
+        const status = document.getElementById('signoff-status');
+        if (btn) { btn.textContent = 'Approved ✓'; btn.disabled = true; }
+        if (check) check.checked = true;
+        if (status) {
+          status.textContent = 'Approved! Click "Send Feedback Report" when you\'re ready to send everything to the team.';
+          status.className = 'signoff-status success';
+          status.style.display = 'block';
+        }
+      }
+    }
+  } catch (e) {}
+})();
+
+// ============================================================
+// INLINE COMMENTING SYSTEM
+// ============================================================
+const CommentSystem = (() => {
+  let comments = [];
+  let pendingSelection = null;
+
+  const popover = document.getElementById('comment-popover');
+  const gutter = document.getElementById('comments-gutter');
+  const commentsList = document.getElementById('comments-list');
+  const emptyMsg = document.getElementById('comments-empty');
+  const mainEl = document.querySelector('.main');
+
+  // --- UUID ---
+  function uuid() {
+    return 'c-' + crypto.randomUUID();
+  }
+
+  // --- Storage ---
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) comments = JSON.parse(raw);
+    } catch (e) {
+      comments = [];
+    }
+  }
+
+  // --- Find closest section ---
+  function findSection(node) {
+    let el = node.nodeType === 3 ? node.parentElement : node;
+    const section = el.closest('.section');
+    return section ? section.id : 'unknown';
+  }
+
+  function sectionLabel(sectionId) {
+    const labels = {
+      'overview': 'Welcome',
+      'changes': 'Changes Summary',
+      'kb-lodges': 'Lodges',
+      'kb-tours': 'Tours & Packages',
+      'kb-safety': 'Safety & Operations',
+      'kb-booking': 'Booking',
+      'kb-faq': 'FAQ',
+      'kb-preparation': 'Trip Preparation',
+      'kb-location': 'Location & Terrain',
+      'kb-seasonal': 'Seasonal',
+      'kb-company': 'Company',
+      'kb-miscellaneous': 'Philosophy & History',
+      'agent-instructions': 'Agent Instructions',
+      'pricing': '2027 Pricing',
+      'exits': 'Interactive Features',
+      'other-feedback': 'Other Feedback',
+      'signoff': 'Sign Off'
+    };
+    return labels[sectionId] || sectionId;
+  }
+
+  // --- Surrounding context for re-anchoring ---
+  function getAnchorContext(range, sectionEl) {
+    const text = sectionEl.textContent;
+    const selected = range.toString();
+    const idx = text.indexOf(selected);
+    if (idx === -1) return selected;
+    const start = Math.max(0, idx - 30);
+    const end = Math.min(text.length, idx + selected.length + 30);
+    return text.substring(start, end);
+  }
+
+  // --- Text offset within section ---
+  function getTextOffset(range, sectionEl) {
+    const preRange = document.createRange();
+    preRange.setStart(sectionEl, 0);
+    preRange.setEnd(range.startContainer, range.startOffset);
+    return preRange.toString().length;
+  }
+
+  // --- Highlight wrapping ---
+  function wrapRange(range, commentId) {
+    // Handle simple case (single text node)
+    try {
+      const mark = document.createElement('mark');
+      mark.className = 'comment-highlight';
+      mark.dataset.commentId = commentId;
+      range.surroundContents(mark);
+      return mark;
+    } catch (e) {
+      // Cross-element selection: wrap each text node individually
+      return wrapRangeComplex(range, commentId);
+    }
+  }
+
+  function wrapRangeComplex(range, commentId) {
+    const treeWalker = document.createTreeWalker(
+      range.commonAncestorContainer,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+    const textNodes = [];
+    let node;
+    while ((node = treeWalker.nextNode())) {
+      if (range.intersectsNode(node)) {
+        textNodes.push(node);
+      }
+    }
+
+    let firstMark = null;
+    textNodes.forEach(textNode => {
+      let startOffset = 0;
+      let endOffset = textNode.length;
+      if (textNode === range.startContainer) startOffset = range.startOffset;
+      if (textNode === range.endContainer) endOffset = range.endOffset;
+      if (startOffset >= endOffset) return;
+
+      const subRange = document.createRange();
+      subRange.setStart(textNode, startOffset);
+      subRange.setEnd(textNode, endOffset);
+
+      const mark = document.createElement('mark');
+      mark.className = 'comment-highlight';
+      mark.dataset.commentId = commentId;
+      subRange.surroundContents(mark);
+      if (!firstMark) firstMark = mark;
+    });
+    return firstMark;
+  }
+
+  // --- Re-anchor saved comments on load ---
+  function reanchor(comment) {
+    const section = document.getElementById(comment.sectionId);
+    if (!section) return null;
+
+    const text = section.textContent;
+    let idx = -1;
+
+    // Try exact match at saved offset
+    if (typeof comment.textOffset === 'number') {
+      const candidate = text.substring(comment.textOffset, comment.textOffset + comment.selectedText.length);
+      if (candidate === comment.selectedText) {
+        idx = comment.textOffset;
+      }
+    }
+
+    // Fallback: search for exact text anywhere in section
+    if (idx === -1) {
+      idx = text.indexOf(comment.selectedText);
+    }
+
+    if (idx === -1) return null; // orphaned
+
+    // Walk text nodes to find the right position
+    const treeWalker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null);
+    let charCount = 0;
+    let startNode = null, startOffset = 0;
+    let endNode = null, endOffset = 0;
+    let node;
+
+    while ((node = treeWalker.nextNode())) {
+      const nodeLen = node.length;
+      if (!startNode && charCount + nodeLen > idx) {
+        startNode = node;
+        startOffset = idx - charCount;
+      }
+      if (startNode && charCount + nodeLen >= idx + comment.selectedText.length) {
+        endNode = node;
+        endOffset = idx + comment.selectedText.length - charCount;
+        break;
+      }
+      charCount += nodeLen;
+    }
+
+    if (!startNode || !endNode) return null;
+
+    const range = document.createRange();
+    range.setStart(startNode, startOffset);
+    range.setEnd(endNode, endOffset);
+    return wrapRange(range, comment.id);
+  }
+
+  // --- Render a comment card ---
+  function renderCard(comment) {
+    const card = document.createElement('div');
+    card.className = 'comment-card' + (comment.resolved ? ' resolved' : '');
+    card.dataset.commentId = comment.id;
+
+    const ts = new Date(comment.timestamp);
+    const timeStr = ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) +
+      ' at ' + ts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    const quoteText = comment.selectedText.length > 80
+      ? comment.selectedText.substring(0, 80) + '...'
+      : comment.selectedText;
+
+    card.innerHTML =
+      '<div class="comment-actions">' +
+        '<button class="comment-action-btn edit" title="Edit">&#9998;</button>' +
+        '<button class="comment-action-btn resolve" title="' + (comment.resolved ? 'Unresolve' : 'Resolve') + '">' +
+          (comment.resolved ? '&#8617;' : '&#10003;') +
+        '</button>' +
+        '<button class="comment-action-btn delete" title="Delete">&times;</button>' +
+      '</div>' +
+      '<div class="comment-meta">Steve &middot; ' + timeStr + '</div>' +
+      '<div class="comment-quote">"' + escapeHtml(quoteText) + '"</div>' +
+      '<div class="comment-text">' + escapeHtml(comment.comment) + '</div>' +
+      '<div class="comment-section-badge">' + sectionLabel(comment.sectionId) + '</div>';
+
+    // Click card → scroll to highlight
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.comment-actions')) return;
+      scrollToHighlight(comment.id);
+    });
+
+    // Hover interactions
+    card.addEventListener('mouseenter', () => {
+      highlightMarks(comment.id, true);
+    });
+    card.addEventListener('mouseleave', () => {
+      highlightMarks(comment.id, false);
+    });
+
+    // Resolve button
+    card.querySelector('.comment-action-btn.resolve').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleResolve(comment.id);
+    });
+
+    // Edit button
+    card.querySelector('.comment-action-btn.edit').addEventListener('click', (e) => {
+      e.stopPropagation();
+      startEdit(comment.id, card);
+    });
+
+    // Delete button
+    card.querySelector('.comment-action-btn.delete').addEventListener('click', (e) => {
+      e.stopPropagation();
+      deleteComment(comment.id);
+    });
+
+    return card;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // --- Cross-reference interactions ---
+  function scrollToHighlight(commentId) {
+    const marks = document.querySelectorAll('.comment-highlight[data-comment-id="' + commentId + '"]');
+    if (marks.length === 0) return;
+    const mark = marks[0];
+    mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Flash animation
+    marks.forEach(m => {
+      m.style.animation = 'flash-highlight 0.6s ease 2';
+      setTimeout(() => { m.style.animation = ''; }, 1200);
+    });
+  }
+
+  function scrollToCard(commentId) {
+    const card = commentsList.querySelector('.comment-card[data-comment-id="' + commentId + '"]');
+    if (!card) return;
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.style.animation = 'flash-card 0.6s ease 2';
+    setTimeout(() => { card.style.animation = ''; }, 1200);
+  }
+
+  function highlightMarks(commentId, active) {
+    const marks = document.querySelectorAll('.comment-highlight[data-comment-id="' + commentId + '"]');
+    marks.forEach(m => m.classList.toggle('active', active));
+  }
+
+  function highlightCard(commentId, active) {
+    const card = commentsList.querySelector('.comment-card[data-comment-id="' + commentId + '"]');
+    if (card) card.classList.toggle('active', active);
+  }
+
+  // --- Toggle resolve ---
+  function toggleResolve(commentId) {
+    const c = comments.find(x => x.id === commentId);
+    if (!c) return;
+    c.resolved = !c.resolved;
+    save();
+    renderAll();
+    updateFeedbackBar();
+  }
+
+  // --- Edit comment ---
+  function startEdit(commentId, card) {
+    const c = comments.find(x => x.id === commentId);
+    if (!c) return;
+
+    const textEl = card.querySelector('.comment-text');
+    const originalText = c.comment;
+
+    textEl.innerHTML =
+      '<textarea class="comment-edit-area">' + escapeHtml(originalText) + '</textarea>' +
+      '<div class="comment-edit-actions">' +
+        '<button class="btn-edit-cancel">Cancel</button>' +
+        '<button class="btn-save">Save</button>' +
+      '</div>';
+
+    const textarea = textEl.querySelector('.comment-edit-area');
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+    textEl.querySelector('.btn-edit-cancel').addEventListener('click', (e) => {
+      e.stopPropagation();
+      renderAll();
+    });
+
+    textEl.querySelector('.btn-save').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const newText = textarea.value.trim();
+      if (!newText) { textarea.style.borderColor = '#e62b1e'; return; }
+      c.comment = newText;
+      save();
+      renderAll();
+    });
+
+    textarea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        textEl.querySelector('.btn-save').click();
+      }
+      if (e.key === 'Escape') {
+        renderAll();
+      }
+    });
+  }
+
+  // --- Delete comment ---
+  function deleteComment(commentId) {
+    const c = comments.find(x => x.id === commentId);
+    if (!c) return;
+    if (!confirm('Delete this comment?\n\n"' + c.comment.substring(0, 80) + '"')) return;
+    comments = comments.filter(x => x.id !== commentId);
+    save();
+    renderAll();
+    updateFeedbackBar();
+  }
+
+  // --- Render all comments ---
+  function renderAll() {
+    commentsList.innerHTML = '';
+    // Remove existing highlights
+    document.querySelectorAll('.comment-highlight').forEach(m => {
+      const parent = m.parentNode;
+      while (m.firstChild) parent.insertBefore(m.firstChild, m);
+      parent.removeChild(m);
+      parent.normalize();
+    });
+
+    const active = comments.filter(c => !c.resolved);
+    const resolved = comments.filter(c => c.resolved);
+    const sorted = [...active, ...resolved];
+
+    sorted.forEach(comment => {
+      const mark = reanchor(comment);
+      const card = renderCard(comment);
+
+      if (!mark) {
+        // Orphaned comment — still show card with warning
+        const badge = card.querySelector('.comment-section-badge');
+        badge.textContent += ' (text changed — could not locate)';
+        badge.style.background = '#f8d7da';
+        badge.style.color = '#721c24';
+      }
+
+      commentsList.appendChild(card);
+    });
+
+    emptyMsg.style.display = sorted.length === 0 ? 'block' : 'none';
+    updateCount();
+
+    // Re-bind highlight click/hover events
+    document.querySelectorAll('.comment-highlight').forEach(mark => {
+      const id = mark.dataset.commentId;
+      mark.addEventListener('click', (e) => {
+        e.preventDefault();
+        scrollToCard(id);
+      });
+      mark.addEventListener('mouseenter', () => highlightCard(id, true));
+      mark.addEventListener('mouseleave', () => highlightCard(id, false));
+    });
+  }
+
+  // --- Selection detection ---
+  function handleMouseUp(e) {
+    // Don't trigger in gutter or signoff
+    if (e.target.closest('.comments-gutter') || e.target.closest('.signoff-box') || e.target.closest('.comment-popover')) return;
+
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) {
+      hidePopover();
+      return;
+    }
+
+    const text = sel.toString().trim();
+    if (text.length < 3) {
+      hidePopover();
+      return;
+    }
+
+    // Must be inside .main
+    const range = sel.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    const inMain = (container.nodeType === 3 ? container.parentElement : container).closest('.main');
+    if (!inMain) {
+      hidePopover();
+      return;
+    }
+
+    // Position popover above selection, but below fixed header
+    const rect = range.getBoundingClientRect();
+    const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 72;
+    popover.style.display = 'block';
+    popover.style.left = Math.max(8, rect.left + rect.width / 2 - 55) + 'px';
+
+    if (rect.top - 40 > headerH) {
+      popover.style.top = (rect.top - 40) + 'px';
+    } else {
+      // Show below selection when there's no room above
+      popover.style.top = (rect.bottom + 8) + 'px';
+    }
+
+    pendingSelection = {
+      text: text,
+      range: range.cloneRange(),
+      sectionId: findSection(range.startContainer)
+    };
+  }
+
+  function hidePopover() {
+    popover.style.display = 'none';
+    pendingSelection = null;
+  }
+
+  // --- Start comment (called from popover button) ---
+  function startComment() {
+    if (!pendingSelection) return;
+    popover.style.display = 'none';
+
+    const sel = pendingSelection;
+    const quoteText = sel.text.length > 80 ? sel.text.substring(0, 80) + '...' : sel.text;
+
+    // Create input card in gutter
+    const inputCard = document.createElement('div');
+    inputCard.className = 'comment-input-card';
+    inputCard.innerHTML =
+      '<div class="comment-input-quote">"' + escapeHtml(quoteText) + '"</div>' +
+      '<textarea placeholder="Add your comment..." autofocus></textarea>' +
+      '<div class="comment-input-actions">' +
+        '<button class="btn-cancel">Cancel</button>' +
+        '<button class="btn-submit">Submit</button>' +
+      '</div>';
+
+    // Insert at top of comments list
+    commentsList.insertBefore(inputCard, commentsList.firstChild);
+    emptyMsg.style.display = 'none';
+
+    const textarea = inputCard.querySelector('textarea');
+    textarea.focus();
+
+    // Scroll gutter to top
+    gutter.scrollTop = 0;
+
+    // Cancel
+    inputCard.querySelector('.btn-cancel').addEventListener('click', () => {
+      inputCard.remove();
+      if (comments.length === 0) emptyMsg.style.display = 'block';
+      window.getSelection().removeAllRanges();
+    });
+
+    // Submit
+    inputCard.querySelector('.btn-submit').addEventListener('click', () => {
+      const commentText = textarea.value.trim();
+      if (!commentText) {
+        textarea.style.borderColor = '#e62b1e';
+        textarea.focus();
+        return;
+      }
+      submitComment(sel, commentText);
+      inputCard.remove();
+      window.getSelection().removeAllRanges();
+    });
+
+    // Submit on Ctrl/Cmd+Enter
+    textarea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        inputCard.querySelector('.btn-submit').click();
+      }
+      if (e.key === 'Escape') {
+        inputCard.querySelector('.btn-cancel').click();
+      }
+    });
+  }
+
+  // --- Submit comment ---
+  function submitComment(sel, commentText) {
+    const section = document.getElementById(sel.sectionId);
+    const comment = {
+      id: uuid(),
+      selectedText: sel.text,
+      comment: commentText,
+      sectionId: sel.sectionId,
+      anchorText: section ? getAnchorContext(sel.range, section) : sel.text,
+      textOffset: section ? getTextOffset(sel.range, section) : 0,
+      textLength: sel.text.length,
+      timestamp: new Date().toISOString(),
+      resolved: false
+    };
+
+    comments.push(comment);
+    save();
+    renderAll();
+    updateFeedbackBar();
+
+    // Scroll to the new card
+    setTimeout(() => scrollToCard(comment.id), 100);
+  }
+
+  // --- Init ---
+  function init() {
+    load();
+
+    // Listen for text selection (on document so drag-ending outside .main still works)
+    document.addEventListener('mouseup', handleMouseUp);
+
+    // Hide popover on click elsewhere
+    document.addEventListener('mousedown', (e) => {
+      if (!e.target.closest('.comment-popover')) {
+        hidePopover();
+      }
+    });
+
+    // Hide popover on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hidePopover();
+    });
+
+    // Render saved comments
+    if (comments.length > 0) {
+      renderAll();
+    }
+    updateCount();
+
+    // Mobile: show email fallback, hide gutter
+    if (window.innerWidth <= 768) {
+      const mobileHint = document.querySelector('.mobile-feedback-hint');
+      if (mobileHint) mobileHint.style.display = 'flex';
+    }
+  }
+
+  // --- Update comment count badge ---
+  function updateCount() {
+    const badge = document.getElementById('comment-count-badge');
+    const footer = document.getElementById('comments-footer');
+    const active = comments.filter(c => !c.resolved).length;
+    if (active > 0) {
+      badge.textContent = active;
+      badge.style.display = 'inline';
+      footer.style.display = 'block';
+    } else {
+      badge.style.display = 'none';
+      footer.style.display = comments.length > 0 ? 'block' : 'none';
+    }
+  }
+
+  // --- Get comments for export ---
+  function getComments() {
+    return comments.slice();
+  }
+
+  init();
+
+  // Public API
+  return { startComment, getComments };
+})();
+
+// ============================================================
+// GENERAL FEEDBACK (localStorage only)
+// ============================================================
+function loadGeneralFeedback() {
+  try {
+    const raw = localStorage.getItem(GF_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function saveGeneralFeedback(items) {
+  localStorage.setItem(GF_STORAGE_KEY, JSON.stringify(items));
+}
+
+function renderGeneralFeedback() {
+  const list = document.getElementById('general-feedback-list');
+  const items = loadGeneralFeedback();
+  if (!items.length) { list.innerHTML = ''; return; }
+
+  list.innerHTML = items.map((item, i) => {
+    const time = new Date(item.timestamp).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return '<div class="general-feedback-item" data-idx="' + i + '">' +
+      '<div class="gf-text">' + escapeHtml(item.text) + '</div>' +
+      '<span class="gf-time">' + time + '</span>' +
+      '<div class="gf-actions">' +
+        '<button title="Edit" onclick="editGeneralFeedback(' + i + ')">&#9998;</button>' +
+        '<button title="Delete" onclick="deleteGeneralFeedback(' + i + ')">&#10005;</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function submitGeneralFeedback(btn) {
+  const textarea = document.getElementById('general-feedback-text');
+  const status = document.getElementById('general-feedback-status');
+  const text = textarea.value.trim();
+
+  if (!text) {
+    textarea.style.borderColor = '#e62b1e';
+    textarea.focus();
+    return;
+  }
+
+  const items = loadGeneralFeedback();
+  items.push({ text: text, timestamp: new Date().toISOString() });
+  saveGeneralFeedback(items);
+
+  textarea.value = '';
+  textarea.style.borderColor = '';
+  status.textContent = 'Saved! Click "Send Feedback Report" when you\'re ready to send everything.';
+  status.className = 'general-feedback-status success';
+  status.style.display = 'block';
+  setTimeout(() => { status.style.display = 'none'; }, 4000);
+
+  renderGeneralFeedback();
+  updateFeedbackBar();
+}
+
+function editGeneralFeedback(idx) {
+  const items = loadGeneralFeedback();
+  const newText = prompt('Edit feedback:', items[idx].text);
+  if (newText !== null && newText.trim()) {
+    items[idx].text = newText.trim();
+    items[idx].timestamp = new Date().toISOString();
+    saveGeneralFeedback(items);
+    renderGeneralFeedback();
+  }
+}
+
+function deleteGeneralFeedback(idx) {
+  if (!confirm('Delete this feedback?')) return;
+  const items = loadGeneralFeedback();
+  items.splice(idx, 1);
+  saveGeneralFeedback(items);
+  renderGeneralFeedback();
+  updateFeedbackBar();
+}
+
+// Render on load
+renderGeneralFeedback();
+
+// ============================================================
+// SEND FEEDBACK REPORT (single POST)
+// ============================================================
+async function sendFeedbackReport(btn) {
+  const inlineComments = CommentSystem.getComments();
+  const generalFeedback = loadGeneralFeedback();
+  const signoffRaw = localStorage.getItem(SIGNOFF_STORAGE_KEY);
+  const signoff = signoffRaw ? JSON.parse(signoffRaw) : null;
+
+  const active = inlineComments.filter(c => !c.resolved);
+  const resolved = inlineComments.filter(c => c.resolved);
+
+  if (!inlineComments.length && !generalFeedback.length && !signoff) {
+    alert('No feedback to send yet. Add some comments or general feedback first.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  // Also disable the other send button if it exists
+  const btns = document.querySelectorAll('.comment-export-btn, .feedback-report-btn');
+  btns.forEach(b => { b.disabled = true; b.textContent = 'Sending...'; });
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'feedback_report',
+        inlineComments: inlineComments,
+        generalFeedback: generalFeedback,
+        signoff: signoff,
+        summary: {
+          totalInlineComments: inlineComments.length,
+          activeComments: active.length,
+          resolvedComments: resolved.length,
+          generalFeedbackCount: generalFeedback.length,
+          signedOff: !!(signoff && signoff.approved)
+        },
+        timestamp: new Date().toISOString(),
+        reviewer: 'Steve'
+      })
+    });
+    if (res.ok) {
+      btns.forEach(b => {
+        b.textContent = 'Sent \u2713';
+        b.classList.add('sent');
+        setTimeout(() => {
+          b.textContent = 'Send Feedback Report';
+          b.classList.remove('sent');
+          b.disabled = false;
+        }, 4000);
+      });
+    } else {
+      throw new Error('Server returned ' + res.status);
+    }
+  } catch (e) {
+    btns.forEach(b => {
+      b.textContent = 'Failed \u2014 try again';
+      b.disabled = false;
+      setTimeout(() => { b.textContent = 'Send Feedback Report'; }, 3000);
+    });
+  }
+}
+
+// ============================================================
+// DOWNLOAD REPORT PDF (client-side print)
+// ============================================================
+function downloadReportPDF() {
+  const inlineComments = CommentSystem.getComments();
+  const generalFeedback = loadGeneralFeedback();
+  const signoffRaw = localStorage.getItem(SIGNOFF_STORAGE_KEY);
+  const signoff = signoffRaw ? JSON.parse(signoffRaw) : null;
+
+  if (!inlineComments.length && !generalFeedback.length && !signoff) {
+    alert('No feedback to export yet.');
+    return;
+  }
+
+  const labels = {
+    'overview': 'Welcome', 'changes': 'Changes Summary',
+    'kb-lodges': 'Lodges', 'kb-tours': 'Tours & Packages',
+    'kb-safety': 'Safety & Operations', 'kb-booking': 'Booking',
+    'kb-faq': 'FAQ', 'kb-preparation': 'Trip Preparation',
+    'kb-location': 'Location & Terrain', 'kb-seasonal': 'Seasonal',
+    'kb-company': 'Company', 'kb-miscellaneous': 'Philosophy & History',
+    'agent-instructions': 'Agent Instructions', 'pricing': '2027 Pricing',
+    'exits': 'Interactive Features'
+  };
+
+  function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ' ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const signedOff = signoff && signoff.approved ? 'Yes' : 'No';
+  const active = inlineComments.filter(c => !c.resolved);
+  const resolved = inlineComments.filter(c => c.resolved);
+
+  let body = '';
+
+  // Header
+  body += '<h1>KB Review Feedback — Steve</h1>';
+  body += '<p class="meta"><strong>Date:</strong> ' + esc(dateStr) + ' &nbsp;|&nbsp; <strong>Signed off:</strong> ' + signedOff + '</p><hr>';
+
+  // Inline comments grouped by section
+  if (inlineComments.length) {
+    body += '<h2>Inline Comments (' + inlineComments.length + ' total — ' + active.length + ' active, ' + resolved.length + ' resolved)</h2>';
+
+    const grouped = {};
+    for (const c of inlineComments) {
+      const key = c.sectionId || 'unknown';
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(c);
+    }
+
+    for (const [sectionId, comments] of Object.entries(grouped)) {
+      body += '<h3>' + esc(labels[sectionId] || sectionId) + '</h3>';
+      for (const c of comments) {
+        const statusColor = c.resolved ? '#155724' : '#e62b1e';
+        const statusLabel = c.resolved ? '✅ Resolved' : '🔴 Active';
+        body += '<div class="comment-block" style="border-left-color:' + statusColor + '">';
+        body += '<blockquote>&ldquo;' + esc(c.selectedText) + '&rdquo;</blockquote>';
+        body += '<p><strong>Steve:</strong> ' + esc(c.comment) + '</p>';
+        body += '<span class="status" style="color:' + statusColor + '">' + statusLabel + '</span>';
+        body += '</div>';
+      }
+    }
+    body += '<hr>';
+  }
+
+  // General feedback
+  if (generalFeedback.length) {
+    body += '<h2>General Feedback (' + generalFeedback.length + ' item' + (generalFeedback.length !== 1 ? 's' : '') + ')</h2><ol>';
+    for (const item of generalFeedback) {
+      const ts = new Date(item.timestamp);
+      const timeStr = ts.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + ts.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      body += '<li>' + esc(item.text) + ' <em>(' + esc(timeStr) + ')</em></li>';
+    }
+    body += '</ol>';
+  }
+
+  const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>KB Review Feedback — Steve</title><style>'
+    + '@page { margin: 2cm; }'
+    + 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #42494e; max-width: 700px; margin: 0 auto; padding: 40px 20px; }'
+    + 'h1 { color: #e62b1e; border-bottom: 2px solid #e62b1e; padding-bottom: 12px; font-size: 24px; }'
+    + 'h2 { color: #42494e; font-size: 18px; margin-top: 28px; }'
+    + 'h3 { color: #42494e; font-size: 15px; margin-top: 20px; }'
+    + '.meta { color: #666; font-size: 14px; }'
+    + 'hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }'
+    + '.comment-block { margin-bottom: 16px; padding: 12px; background: #f9f9f9; border-left: 3px solid; border-radius: 4px; page-break-inside: avoid; }'
+    + 'blockquote { margin: 0 0 8px 0; padding: 8px 12px; background: #fff; border-left: 3px solid #ddd; color: #555; font-style: italic; }'
+    + '.status { font-size: 12px; }'
+    + 'ol li { margin-bottom: 8px; }'
+    + 'em { color: #999; }'
+    + '</style></head' + '><body>' + body + '</body' + '></html>';
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => win.print(), 300);
+}
+
+// ============================================================
+// FEEDBACK BAR (sticky footer)
+// ============================================================
+function updateFeedbackBar() {
+  const bar = document.getElementById('feedback-report-bar');
+  const summary = document.getElementById('feedback-report-summary');
+  const inlineComments = CommentSystem.getComments();
+  const generalFeedback = loadGeneralFeedback();
+  const signoffRaw = localStorage.getItem(SIGNOFF_STORAGE_KEY);
+  const signoff = signoffRaw ? JSON.parse(signoffRaw) : null;
+
+  const total = inlineComments.length + generalFeedback.length + (signoff ? 1 : 0);
+  if (total > 0) {
+    bar.style.display = 'block';
+    const parts = [];
+    if (inlineComments.length) parts.push(inlineComments.length + ' comment' + (inlineComments.length !== 1 ? 's' : ''));
+    if (generalFeedback.length) parts.push(generalFeedback.length + ' general item' + (generalFeedback.length !== 1 ? 's' : ''));
+    if (signoff) parts.push('approved');
+    summary.textContent = 'Ready to send: ' + parts.join(', ');
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+// Init feedback bar
+updateFeedbackBar();
+</script>
+</body>
+</html>

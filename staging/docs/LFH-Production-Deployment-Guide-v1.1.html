@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LFH AI Agent — Production Deployment Guide v1.1</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Mermaid -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#e8f5f3',
+      primaryBorderColor: '#0d9488',
+      primaryTextColor: '#134e4a',
+      secondaryColor: '#fef3e0',
+      secondaryBorderColor: '#b8860b',
+      tertiaryColor: '#fff5f5',
+      tertiaryBorderColor: '#be123c',
+      lineColor: '#94a3b8',
+      fontSize: '14px',
+      fontFamily: "'IBM Plex Sans', sans-serif",
+    }
+  });
+</script>
+
+<style>
+  /* ============================================
+     THEME: Teal + Terracotta (LFH Outdoor)
+     Inspired by nicobailon/visual-explainer
+     ============================================ */
+  :root {
+    --bg: #f0f9f7;
+    --bg-gradient: radial-gradient(ellipse at 15% 0%, rgba(13,148,136,0.06) 0%, transparent 50%),
+                   radial-gradient(ellipse at 85% 100%, rgba(194,65,12,0.04) 0%, transparent 40%);
+    --surface: #ffffff;
+    --surface2: #f0f4f3;
+    --surface-elevated: #ffffff;
+    --text: #1a2e2b;
+    --text-dim: rgba(26,46,43,0.6);
+    --text-muted: rgba(26,46,43,0.4);
+    --accent: #0d9488;
+    --accent-dim: rgba(13,148,136,0.08);
+    --accent-bright: #0f766e;
+    --terracotta: #c2410c;
+    --terracotta-dim: rgba(194,65,12,0.08);
+    --gold: #b8860b;
+    --gold-dim: rgba(184,134,11,0.08);
+    --green: #4d7c0f;
+    --green-dim: rgba(77,124,15,0.08);
+    --red: #be123c;
+    --red-dim: rgba(190,18,60,0.08);
+    --orange: #c2410c;
+    --orange-dim: rgba(194,65,12,0.08);
+    --blue: #1d4ed8;
+    --blue-dim: rgba(29,78,216,0.08);
+    --border: rgba(0,0,0,0.07);
+    --border-bright: rgba(0,0,0,0.14);
+    --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Menlo', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 4px;
+  }
+
+  @media print {
+    :root { --bg: #ffffff; --surface: #ffffff; --surface2: #f5f5f5; }
+    body { padding: 20px; }
+    .page-break { page-break-before: always; }
+    .no-print { display: none !important; }
+    .section { break-inside: avoid; }
+    .mermaid-wrap { overflow: visible; min-height: auto; }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    background-image: var(--bg-gradient);
+    line-height: 1.65;
+    padding: 40px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ============================================
+     HERO
+     ============================================ */
+  .hero {
+    background: linear-gradient(135deg, #134e4a 0%, #0f766e 40%, #0d9488 100%);
+    color: #ffffff;
+    padding: 60px 48px;
+    border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 60%; height: 200%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .hero .subtitle {
+    font-size: clamp(14px, 2vw, 18px);
+    opacity: 0.85;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+  .hero .meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    opacity: 0.7;
+  }
+  .hero .meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ============================================
+     SECTIONS
+     ============================================ */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.04s);
+  }
+  .section--accent { border-left: 3px solid var(--accent); }
+  .section--terracotta { border-left: 3px solid var(--terracotta); }
+  .section--gold { border-left: 3px solid var(--gold); }
+  .section--red { border-left: 3px solid var(--red); }
+  .section--blue { border-left: 3px solid var(--blue); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .section-label .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .section-label .dot--terracotta { background: var(--terracotta); }
+  .section-label .dot--gold { background: var(--gold); }
+  .section-label .dot--red { background: var(--red); }
+  .section-label .dot--blue { background: var(--blue); }
+
+  .section h2 {
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 20px 0 10px;
+    color: var(--text);
+  }
+  .section p {
+    color: var(--text);
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .section p.dim { color: var(--text-dim); font-size: 14px; }
+
+  /* ============================================
+     KPI CARDS
+     ============================================ */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .kpi-card {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    text-align: center;
+  }
+  .kpi-card__value {
+    font-size: 28px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+  }
+  .kpi-card__value--accent { color: var(--accent); }
+  .kpi-card__value--terracotta { color: var(--terracotta); }
+  .kpi-card__value--green { color: var(--green); }
+  .kpi-card__label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+
+  /* ============================================
+     TABLES
+     ============================================ */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    background: var(--surface2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-dim);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-bright);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: var(--accent-dim); }
+
+  td code, p code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--accent-dim);
+    color: var(--accent-bright);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* ============================================
+     CODE BLOCKS
+     ============================================ */
+  pre {
+    background: #1a2e2b;
+    color: #e2e8f0;
+    padding: 20px 24px;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 12px 0;
+  }
+  pre .comment { color: #6b8a85; }
+  pre .string { color: #86efac; }
+  pre .keyword { color: #7dd3fc; }
+
+  /* ============================================
+     STATUS BADGES
+     ============================================ */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .status::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .status--fixed { background: var(--green-dim); color: var(--green); }
+  .status--new { background: var(--blue-dim); color: var(--blue); }
+  .status--changed { background: var(--orange-dim); color: var(--orange); }
+  .status--critical { background: var(--red-dim); color: var(--red); }
+
+  /* ============================================
+     PIPELINE (Horizontal Flow)
+     ============================================ */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 16px 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .pipeline-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    min-width: 130px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .pipeline-step__title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .pipeline-step__desc {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .pipeline-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--accent);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     INNER GRID (Cards inside sections)
+     ============================================ */
+  .inner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .inner-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .inner-card .title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .inner-card .desc {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* ============================================
+     MERMAID
+     ============================================ */
+  .mermaid-wrap {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 16px;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    margin: 16px 0;
+  }
+  .mermaid-wrap .mermaid {
+    font-family: var(--font-body);
+  }
+  .mermaid .nodeLabel { color: var(--text) !important; }
+  .mermaid .edgeLabel {
+    color: var(--text-dim) !important;
+    background-color: var(--surface) !important;
+    font-size: 12px !important;
+  }
+
+  /* ============================================
+     CHECKLISTS
+     ============================================ */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist .checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border-bright);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ============================================
+     STEP NUMBERS
+     ============================================ */
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-right: 8px;
+  }
+  .step-num--terracotta { background: var(--terracotta); }
+
+  /* ============================================
+     CALLOUT
+     ============================================ */
+  .callout {
+    background: var(--accent-dim);
+    border: 1px solid rgba(13,148,136,0.2);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .callout--warning {
+    background: var(--orange-dim);
+    border-color: rgba(194,65,12,0.2);
+  }
+  .callout--danger {
+    background: var(--red-dim);
+    border-color: rgba(190,18,60,0.2);
+  }
+  .callout strong { font-weight: 600; }
+
+  /* ============================================
+     TOC
+     ============================================ */
+  .toc {
+    columns: 2;
+    column-gap: 32px;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+  .toc li {
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px dotted var(--border);
+    break-inside: avoid;
+  }
+  .toc a {
+    color: var(--accent-bright);
+    text-decoration: none;
+  }
+  .toc a:hover { text-decoration: underline; }
+  .toc .part-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 8px;
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 768px) {
+    body { padding: 16px; }
+    .hero { padding: 32px 24px; }
+    .section { padding: 20px; }
+    .inner-grid { grid-template-columns: 1fr; }
+    .toc { columns: 1; }
+    .pipeline { flex-wrap: wrap; gap: 8px; }
+    .pipeline-arrow { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============================================
+       HERO
+       ============================================ -->
+  <div class="hero">
+    <h1>LFH AI Agent</h1>
+    <div class="subtitle">Production Deployment Guide &mdash; v1.1.0</div>
+    <div class="meta">
+      <span>Updated: March 10, 2026</span>
+      <span>CDN: yannicksegaar.github.io/lfh-cdn</span>
+      <span>Branch: staging &rarr; main</span>
+    </div>
+  </div>
+
+  <!-- ============================================
+       WHAT CHANGED IN v1.1.0
+       ============================================ -->
+  <div class="section section--terracotta" style="--i:1">
+    <div class="section-label"><span class="dot dot--terracotta"></span> What Changed in v1.1.0</div>
+    <h2>Release Summary</h2>
+    <p>Critical bug fixes, production naming convention, documentation, and branch safety.</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-card__value kpi-card__value--terracotta">2</div>
+        <div class="kpi-card__label">Bugs Fixed</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__value kpi-card__value--accent">15</div>
+        <div class="kpi-card__label">Files Renamed</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__value kpi-card__value--accent">20</div>
+        <div class="kpi-card__label">Headers Added</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__value kpi-card__value--green">3</div>
+        <div class="kpi-card__label">Docs Created</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Change</th><th>Type</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>4 extensions imported from non-existent modal file</td>
+            <td><span class="status status--critical">Bug Fix</span></td>
+            <td>Cross-navigation between modals would crash</td>
+          </tr>
+          <tr>
+            <td>Hub tours tab imported non-existent booking form</td>
+            <td><span class="status status--critical">Bug Fix</span></td>
+            <td>Hub booking button would crash</td>
+          </tr>
+          <tr>
+            <td>All 15 extensions renamed to <code>lfh-{feature}.js</code></td>
+            <td><span class="status status--changed">Changed</span></td>
+            <td>Clean, scannable filenames without version noise</td>
+          </tr>
+          <tr>
+            <td>EXTENSIONS.md registry created</td>
+            <td><span class="status status--new">New</span></td>
+            <td>Single source of truth for all extensions</td>
+          </tr>
+          <tr>
+            <td>CLAUDE.md handoff doc created</td>
+            <td><span class="status status--new">New</span></td>
+            <td>AI agent can understand the repo instantly</td>
+          </tr>
+          <tr>
+            <td>Branch protection on <code>main</code></td>
+            <td><span class="status status--new">New</span></td>
+            <td>Prevents accidental direct pushes to production</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================
+       TABLE OF CONTENTS
+       ============================================ -->
+  <div class="section" style="--i:2">
+    <div class="section-label"><span class="dot"></span> Contents</div>
+    <ul class="toc">
+      <li><span class="part-label">Part 1</span> <a href="#arch">How It Works &mdash; Architecture Overview</a></li>
+      <li><span class="part-label">Part 2</span> <a href="#extensions">Extension Registry &mdash; All 20 Files</a></li>
+      <li><span class="part-label">Part 3</span> <a href="#deps">Extension Dependency Graph</a></li>
+      <li><span class="part-label">Part 4</span> <a href="#preflight">Pre-Flight Verification Checklist</a></li>
+      <li><span class="part-label">Part 5</span> <a href="#gwyn">Gwyn Meeting &mdash; Step by Step</a></li>
+      <li><span class="part-label">Part 6</span> <a href="#branch">Branch Strategy &amp; Safe Updates</a></li>
+      <li><span class="part-label">Part 7</span> <a href="#updates">How to Make Updates After Launch</a></li>
+      <li><span class="part-label">Part 8</span> <a href="#emergency">Emergency Procedures</a></li>
+      <li><span class="part-label">Part 9</span> <a href="#reference">Technical Reference</a></li>
+    </ul>
+  </div>
+
+  <!-- ============================================
+       PART 1: ARCHITECTURE
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--accent" id="arch" style="--i:3">
+    <div class="section-label"><span class="dot"></span> Part 1 &mdash; Architecture Overview</div>
+    <h2>How It Works</h2>
+    <p>WordPress loads one script tag. That script bootstraps the entire AI agent: context detection, VoiceFlow widget, 20 custom extensions, styling, and cross-page awareness.</p>
+
+    <div class="callout">
+      <strong>Key insight:</strong> WordPress only needs one line of code. Everything else lives on YOUR GitHub repo. When you update something, push to GitHub &mdash; no WordPress access needed.
+    </div>
+
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart TB
+  WP["lastfrontierheli.com<br/><b>WordPress</b>"]
+  SCRIPT["&lt;script&gt; tag in footer"]
+  CDN["yannicksegaar.github.io/lfh-cdn<br/><b>GitHub Pages CDN</b>"]
+  LOADER["loader.js<br/><i>Entry point</i>"]
+
+  subgraph BOOT ["Bootstrap Sequence"]
+    direction TB
+    CTX["1. Page Context Capture<br/><small>device, language, timezone, page type</small>"]
+    VF["2. Load VoiceFlow Widget<br/><small>cdn.voiceflow.com/widget-next/bundle.mjs</small>"]
+    EXT["3. Load Extensions<br/><small>20 files from CDN (or 2 in fallback)</small>"]
+    INIT["4. Initialize Chat<br/><small>project ID, session data, stylesheet</small>"]
+    POST["5. Post-Load<br/><small>proactive messages, shadow DOM, sound</small>"]
+    XPAGE["6. Cross-Page Awareness<br/><small>silent context updates on navigation</small>"]
+  end
+
+  WIDGET["Chat Widget<br/>appears on every page"]
+
+  WP --> SCRIPT --> CDN --> LOADER --> BOOT --> WIDGET
+
+  style WP fill:#e8f5f3,stroke:#0d9488,stroke-width:2px
+  style CDN fill:#fef3e0,stroke:#b8860b,stroke-width:2px
+  style WIDGET fill:#e8f5f3,stroke:#0d9488,stroke-width:2px
+  style BOOT fill:#f8fafc,stroke:#94a3b8
+      </pre>
+    </div>
+
+    <h3>The Embed Snippet</h3>
+    <pre>&lt;!-- Last Frontier AI Chat Agent — Managed by Yannick/RomAIx --&gt;
+&lt;script type="module"
+  src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"
+  crossorigin&gt;&lt;/script&gt;</pre>
+    <p class="dim">This goes in the site-wide footer, before <code>&lt;/body&gt;</code>. Use a WordPress plugin like "WPCode" so it survives theme updates.</p>
+  </div>
+
+  <!-- ============================================
+       LOADER PIPELINE
+       ============================================ -->
+  <div class="section" style="--i:4">
+    <div class="section-label"><span class="dot"></span> Loader Pipeline</div>
+    <h2>What loader.js Does (Step by Step)</h2>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-step__title">Context</div>
+        <div class="pipeline-step__desc">Device, language, timezone, page type, UTMs</div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step__title">VoiceFlow</div>
+        <div class="pipeline-step__desc">Load widget bundle from voiceflow.com</div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step__title">Extensions</div>
+        <div class="pipeline-step__desc">Load 20 JS files (or 2 in fallback)</div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step__title">Initialize</div>
+        <div class="pipeline-step__desc">Start chat with session data + extensions</div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step__title">Post-Load</div>
+        <div class="pipeline-step__desc">Proactive messages, styling, sound</div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step__title">Cross-Page</div>
+        <div class="pipeline-step__desc">Track navigation between pages</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       CDN CONTENTS
+       ============================================ -->
+  <div class="section" style="--i:5">
+    <div class="section-label"><span class="dot"></span> CDN Repository Contents</div>
+    <h2>What's Inside lfh-cdn</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Folder</th><th>Contents</th><th>Size</th></tr></thead>
+        <tbody>
+          <tr><td><code>extensions/</code></td><td>20 JavaScript extension files</td><td>~600 KB</td></tr>
+          <tr><td><code>images/</code></td><td>Tour photos, lodge photos, logos, backgrounds</td><td>~130 MB</td></tr>
+          <tr><td><code>fonts/</code></td><td>Nexa Rust Sans Black (brand font)</td><td>~300 KB</td></tr>
+          <tr><td><code>css/</code></td><td>LFH_styles.css (widget theme)</td><td>~8 KB</td></tr>
+          <tr><td><code>styles/</code></td><td>Shadow DOM inject + notification sound scripts</td><td>~16 KB</td></tr>
+          <tr><td><code>audio/</code></td><td>Notification beep sound</td><td>~68 KB</td></tr>
+          <tr><td><code>loader.js</code></td><td>Main loader script (what WordPress loads)</td><td>~12 KB</td></tr>
+          <tr><td><code>EXTENSIONS.md</code></td><td>Extension registry (source of truth)</td><td>~4 KB</td></tr>
+          <tr><td><code>CLAUDE.md</code></td><td>AI agent handoff document</td><td>~3 KB</td></tr>
+          <tr><td><code>CHANGELOG.md</code></td><td>Version history</td><td>~1 KB</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================
+       PART 2: EXTENSION REGISTRY
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--accent" id="extensions" style="--i:6">
+    <div class="section-label"><span class="dot"></span> Part 2 &mdash; Extension Registry</div>
+    <h2>All 20 Extension Files</h2>
+    <p>Extensions follow the VoiceFlow pattern: <code>{ name, type: 'response', match, render }</code>. The AI agent fires trace types; extensions match and render UI.</p>
+
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart LR
+  AI["AI Agent<br/><i>fires trace type</i>"]
+  MATCH["Extension<br/>match() checks type"]
+  RENDER["Extension<br/>render() builds UI"]
+  DOM["Chat Widget DOM<br/><i>user sees the result</i>"]
+
+  AI -->|"trace: ext_tourExplorer"| MATCH -->|"matched!"| RENDER --> DOM
+
+  style AI fill:#fef3e0,stroke:#b8860b,stroke-width:2px
+  style MATCH fill:#e8f5f3,stroke:#0d9488,stroke-width:2px
+  style RENDER fill:#e8f5f3,stroke:#0d9488,stroke-width:2px
+  style DOM fill:#f0fdf4,stroke:#4d7c0f,stroke-width:2px
+      </pre>
+    </div>
+
+    <h3>Exit-Triggered Extensions (fired by AI agent exit conditions)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Trace Types</th><th>Opens Modal</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>lfh-lead-form.js</code></td><td><code>ext_lastFrontierLeadForm_v4</code>, <code>_unified</code></td><td>&mdash;</td><td>Contact / booking inquiry form</td></tr>
+          <tr><td><code>lfh-tours-grid.js</code></td><td><code>ext_tourExplorer</code>, <code>_booking_unified</code></td><td>lfh-tours-modal</td><td>Tour card grid (in-chat)</td></tr>
+          <tr><td><code>lfh-lodges-widget.js</code></td><td><code>ext_lodgeCompare_v2</code>, <code>_unified</code></td><td>lfh-lodges-modal</td><td>Lodge comparison cards (in-chat)</td></tr>
+          <tr><td><code>lfh-weather-widget.js</code></td><td><code>ext_weather_conditions_v2</code>, <code>_unified</code></td><td>lfh-weather-modal</td><td>Weather hero card (in-chat)</td></tr>
+          <tr><td><code>lfh-selfservice-widget.js</code></td><td><code>ext_browserSelfService_v4</code>, <code>_unified</code></td><td>lfh-selfservice-modal</td><td>FAQ + video browser (in-chat)</td></tr>
+          <tr><td><code>lfh-feedback.js</code></td><td><code>ext_feedback10</code></td><td>&mdash;</td><td>Thumbs up/down after responses</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Canvas-Triggered Extensions (fired by VoiceFlow canvas directly)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Trace Type</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>lfh-welcome.js</code></td><td><code>ext_welcomeGrid_v2</code></td><td>Welcome screen with quick-start options</td></tr>
+          <tr><td><code>lfh-snowfall.js</code></td><td><code>ext_snowfall1</code></td><td>Decorative snowfall animation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Extension-Triggered (opened by other extensions)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Opened By</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>lfh-hub.js</code></td><td>ext_hubModal trace or other extensions</td><td>Tabbed navigation hub</td></tr>
+          <tr><td><code>lfh-tours-modal.js</code></td><td>tours-grid, hub, lodges, weather, selfservice</td><td>Tour detail + booking</td></tr>
+          <tr><td><code>lfh-lodges-modal.js</code></td><td>lodges-widget, hub, weather, selfservice</td><td>Lodge detail view</td></tr>
+          <tr><td><code>lfh-weather-modal.js</code></td><td>weather-widget, hub, lodges</td><td>Weather detail</td></tr>
+          <tr><td><code>lfh-selfservice-modal.js</code></td><td>selfservice-widget</td><td>FAQ full view</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Data / Utility Files (imported, not registered as extensions)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Exports</th><th>Used By</th></tr></thead>
+        <tbody>
+          <tr><td><code>lfh-tours-data.js</code></td><td>LFH_TOURS, LFH_COLORS, LFH_ASSETS, LFH_VIDEOS</td><td>Almost everything</td></tr>
+          <tr><td><code>lfh-tours-booking.js</code></td><td>renderBookingForm, TOUR_DATES</td><td>lfh-tours-modal</td></tr>
+          <tr><td><code>lfh-tours-booking-hub.js</code></td><td>renderBookingForm, TOUR_DATES</td><td>lfh-hub-tab-tours</td></tr>
+          <tr><td><code>lfh-hub-shared.js</code></td><td>Colors, utilities, activity tracking</td><td>Hub tab files</td></tr>
+          <tr><td><code>lfh-hub-tab-tours.js</code></td><td>renderToursTab</td><td>lfh-hub</td></tr>
+          <tr><td><code>lfh-hub-tab-lodges.js</code></td><td>renderLodgesTab</td><td>lfh-hub</td></tr>
+          <tr><td><code>lfh-hub-tab-weather.js</code></td><td>renderWeatherTab</td><td>lfh-hub</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================
+       PART 3: DEPENDENCY GRAPH
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--accent" id="deps" style="--i:7">
+    <div class="section-label"><span class="dot"></span> Part 3 &mdash; Extension Dependency Graph</div>
+    <h2>How Extensions Import Each Other</h2>
+    <p>Arrows mean "imports from". The core data file <code>lfh-tours-data.js</code> is the foundation &mdash; almost everything depends on it.</p>
+
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart TB
+  DATA["lfh-tours-data.js<br/><small>LFH_TOURS, COLORS, ASSETS, VIDEOS</small>"]
+
+  BOOKING["lfh-tours-booking.js<br/><small>renderBookingForm</small>"]
+  BOOKING_HUB["lfh-tours-booking-hub.js<br/><small>renderBookingForm (v1)</small>"]
+  MODAL["lfh-tours-modal.js<br/><small>Tour detail modal</small>"]
+  GRID["lfh-tours-grid.js<br/><small>Tour card grid</small>"]
+
+  LODGE_M["lfh-lodges-modal.js<br/><small>Lodge detail modal</small>"]
+  LODGE_W["lfh-lodges-widget.js<br/><small>Lodge compare cards</small>"]
+
+  WEATHER_M["lfh-weather-modal.js<br/><small>Weather detail</small>"]
+  WEATHER_W["lfh-weather-widget.js<br/><small>Weather hero card</small>"]
+
+  SS_M["lfh-selfservice-modal.js<br/><small>FAQ full view</small>"]
+  SS_W["lfh-selfservice-widget.js<br/><small>FAQ browser</small>"]
+
+  HUB_S["lfh-hub-shared.js<br/><small>Shared utilities</small>"]
+  HUB["lfh-hub.js<br/><small>Hub modal</small>"]
+  HUB_T["lfh-hub-tab-tours.js"]
+  HUB_L["lfh-hub-tab-lodges.js"]
+  HUB_WX["lfh-hub-tab-weather.js"]
+
+  DATA --> BOOKING
+  DATA --> BOOKING_HUB
+  DATA --> MODAL
+  DATA --> GRID
+  DATA --> LODGE_M
+  DATA --> WEATHER_M
+  DATA --> WEATHER_W
+  DATA --> SS_M
+
+  BOOKING --> MODAL
+  MODAL --> GRID
+  MODAL --> LODGE_M
+  MODAL --> WEATHER_M
+  MODAL --> SS_M
+
+  LODGE_M --> LODGE_W
+  LODGE_M --> WEATHER_M
+  WEATHER_M --> LODGE_M
+
+  SS_M --> SS_W
+  SS_M --> LODGE_M
+
+  DATA --> HUB_S
+  LODGE_M --> HUB_S
+  HUB_S --> HUB_T
+  HUB_S --> HUB_L
+  HUB_S --> HUB_WX
+  BOOKING_HUB --> HUB_T
+  HUB_T --> HUB
+  HUB_L --> HUB
+  HUB_WX --> HUB
+
+  style DATA fill:#fef3e0,stroke:#b8860b,stroke-width:2px
+  style HUB_S fill:#fef3e0,stroke:#b8860b,stroke-width:2px
+  style GRID fill:#e8f5f3,stroke:#0d9488
+  style LODGE_W fill:#e8f5f3,stroke:#0d9488
+  style WEATHER_W fill:#e8f5f3,stroke:#0d9488
+  style SS_W fill:#e8f5f3,stroke:#0d9488
+  style HUB fill:#e8f5f3,stroke:#0d9488
+      </pre>
+    </div>
+
+    <div class="callout--warning callout">
+      <strong>Rule:</strong> Never delete a file without checking this graph. If another file imports from it, deletion will cause a runtime crash.
+    </div>
+  </div>
+
+  <!-- ============================================
+       PART 4: PRE-FLIGHT CHECKLIST
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--gold" id="preflight" style="--i:8">
+    <div class="section-label"><span class="dot dot--gold"></span> Part 4 &mdash; Pre-Flight Verification</div>
+    <h2>Before the Meeting with Gwyn</h2>
+
+    <h3><span class="step-num">1</span> Verify the CDN is live</h3>
+    <p>Open each URL in your browser. Each should load (not 404):</p>
+    <ul class="checklist">
+      <li><div class="checkbox"></div> <code>https://yannicksegaar.github.io/lfh-cdn/loader.js</code></li>
+      <li><div class="checkbox"></div> <code>https://yannicksegaar.github.io/lfh-cdn/css/LFH_styles.css</code></li>
+      <li><div class="checkbox"></div> <code>https://yannicksegaar.github.io/lfh-cdn/extensions/lfh-lead-form.js</code></li>
+      <li><div class="checkbox"></div> <code>https://yannicksegaar.github.io/lfh-cdn/images/LFH_Logo_FullName_White.svg</code></li>
+      <li><div class="checkbox"></div> <code>https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2</code></li>
+    </ul>
+
+    <h3><span class="step-num">2</span> Test on a local page</h3>
+    <pre><span class="comment"># Create a quick test page</span>
+cat > /tmp/lfh-cdn-test.html &lt;&lt; 'EOF'
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;LFH CDN Test&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;LFH CDN Test Page&lt;/h1&gt;
+&lt;script type="module"
+  src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"
+  crossorigin&gt;&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+EOF
+
+<span class="comment"># Serve it (ES modules need a server, not file://)</span>
+cd /tmp && python3 -m http.server 8080
+
+<span class="comment"># Open: http://localhost:8080/lfh-cdn-test.html</span></pre>
+
+    <h3><span class="step-num">3</span> Verify each extension works</h3>
+    <ul class="checklist">
+      <li><div class="checkbox"></div> Chat widget bubble appears in bottom-right (give it 5-10 seconds)</li>
+      <li><div class="checkbox"></div> Proactive message: "Curious about heliskiing in Northern BC?"</li>
+      <li><div class="checkbox"></div> Welcome grid with quick-start options appears on open</li>
+      <li><div class="checkbox"></div> "Show me your tours" &rarr; tour grid appears</li>
+      <li><div class="checkbox"></div> "Compare the lodges" &rarr; lodge cards appear</li>
+      <li><div class="checkbox"></div> "What are the snow conditions?" &rarr; weather widget appears</li>
+      <li><div class="checkbox"></div> "I want to book a trip" &rarr; lead form eventually appears</li>
+      <li><div class="checkbox"></div> Thumbs up/down appears after agent responses</li>
+    </ul>
+
+    <h3><span class="step-num">4</span> Check browser console</h3>
+    <div class="inner-grid">
+      <div class="inner-card" style="border-left: 3px solid var(--green);">
+        <div class="title" style="color: var(--green);">Green Flags</div>
+        <div class="desc"><code>[LFH] Extensions loaded: 9</code> &mdash; all extensions loaded successfully. No red errors from <code>lfh-cdn</code>.</div>
+      </div>
+      <div class="inner-card" style="border-left: 3px solid var(--red);">
+        <div class="title" style="color: var(--red);">Red Flags</div>
+        <div class="desc"><code>Failed to load module script</code>, <code>CORS error</code>, or <code>net::ERR_ABORTED 404</code> &mdash; a file is missing or misconfigured.</div>
+      </div>
+    </div>
+
+    <h3><span class="step-num">5</span> Test fallback mode</h3>
+    <p>Change URL to <code>loader.js?v=1.1.0&amp;fallback=true</code>. Only lead form + feedback should work. Tour explorer, lodges, weather, hub &mdash; these should NOT appear.</p>
+
+    <h3><span class="step-num">6</span> Test on mobile</h3>
+    <ul class="checklist">
+      <li><div class="checkbox"></div> Widget bubble appears and is tappable</li>
+      <li><div class="checkbox"></div> Chat opens full-screen on mobile</li>
+      <li><div class="checkbox"></div> Extensions render correctly on small screens</li>
+      <li><div class="checkbox"></div> Can scroll within modals</li>
+    </ul>
+  </div>
+
+  <!-- ============================================
+       PART 5: GWYN MEETING
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--gold" id="gwyn" style="--i:9">
+    <div class="section-label"><span class="dot dot--gold"></span> Part 5 &mdash; Gwyn Meeting Script</div>
+    <h2>Step by Step During the Meeting</h2>
+
+    <h3><span class="step-num">1</span> Demo first (2 minutes)</h3>
+    <p>Show Gwyn the agent working on your test page. Open the chat, ask a few questions, show tour explorer, lodge comparison. Builds confidence that it works.</p>
+
+    <h3><span class="step-num">2</span> Ask these 5 questions (write down answers)</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:50%">Question</th><th>Answer (fill in)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>URL paths:</strong> "What are the exact URL slugs for tours, Bell 2, Ripley Creek, booking, safety, FAQ, contact, gallery, about?"</td><td style="padding: 24px 16px;"></td></tr>
+          <tr><td><strong>Staging site:</strong> "Is there a staging/dev version we can test first?"</td><td style="padding: 24px 16px;"></td></tr>
+          <tr><td><strong>Existing chat tools:</strong> "Are there any existing chatbots installed?"</td><td style="padding: 24px 16px;"></td></tr>
+          <tr><td><strong>Caching:</strong> "Do you use WP Rocket, W3 Total Cache, or similar?"</td><td style="padding: 24px 16px;"></td></tr>
+          <tr><td><strong>Theme setup:</strong> "Is this a child theme? Will the script survive updates?"</td><td style="padding: 24px 16px;"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="step-num">3</span> Deploy together</h3>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart TD
+  START["Meeting starts"]
+  DEMO["Demo on test page"]
+  ASK["Ask 5 questions"]
+  STAGING{"Staging site<br/>available?"}
+  DEPLOY_S["Deploy to staging"]
+  TEST_S["Test on staging together"]
+  WORKS_S{"Everything<br/>works?"}
+  DEPLOY_P["Deploy to production"]
+  TEST_P["Test on production together"]
+  WORKS_P{"Everything<br/>works?"}
+  DONE["Share emergency plan<br/>with Gwyn"]
+  FIX["Debug &amp; fix issues"]
+  FALLBACK["Switch to<br/>fallback mode"]
+
+  START --> DEMO --> ASK --> STAGING
+  STAGING -->|"Yes"| DEPLOY_S --> TEST_S --> WORKS_S
+  STAGING -->|"No"| DEPLOY_P --> TEST_P --> WORKS_P
+  WORKS_S -->|"Yes"| DEPLOY_P
+  WORKS_S -->|"No"| FIX --> TEST_S
+  WORKS_P -->|"Yes"| DONE
+  WORKS_P -->|"No"| FALLBACK
+
+  style DONE fill:#f0fdf4,stroke:#4d7c0f,stroke-width:2px
+  style FALLBACK fill:#fff5f5,stroke:#be123c,stroke-width:2px
+      </pre>
+    </div>
+
+    <h3><span class="step-num">4</span> Test on production together</h3>
+    <p>Visit each page and verify the widget appears:</p>
+    <ul class="checklist">
+      <li><div class="checkbox"></div> Home page</li>
+      <li><div class="checkbox"></div> Tours page</li>
+      <li><div class="checkbox"></div> Bell 2 Lodge page</li>
+      <li><div class="checkbox"></div> Ripley Creek page</li>
+      <li><div class="checkbox"></div> Booking / reservations page</li>
+      <li><div class="checkbox"></div> Contact page</li>
+    </ul>
+
+    <h3><span class="step-num">5</span> Share the emergency plan with Gwyn</h3>
+    <div class="callout">
+      <strong>Quick fix (30 sec):</strong> Add <code>&amp;fallback=true</code> to the script URL &rarr; simple text-only chat.<br>
+      <strong>Remove entirely (10 sec):</strong> Delete the script tag &rarr; chat disappears, no side effects.<br>
+      <strong>Code fixes:</strong> I handle these by pushing to GitHub. No WordPress access needed.
+    </div>
+  </div>
+
+  <!-- ============================================
+       PART 6: BRANCH STRATEGY
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--blue" id="branch" style="--i:10">
+    <div class="section-label"><span class="dot dot--blue"></span> Part 6 &mdash; Branch Strategy &amp; Safe Updates</div>
+    <h2>Never Push Directly to Main</h2>
+    <p>The <code>main</code> branch is production &mdash; what the live website loads. It's branch-protected: direct pushes are blocked. All changes go through <code>staging</code> first.</p>
+
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart LR
+  EDIT["Edit files<br/>locally"]
+  TEST_L["Test locally<br/><small>python3 -m http.server</small>"]
+  PUSH_S["Push to<br/>staging branch"]
+  TEST_S["Test on<br/>staging URL"]
+  PR["Create PR<br/><small>staging → main</small>"]
+  MERGE["Merge PR"]
+  TAG["Tag release<br/><small>git tag v1.x.0</small>"]
+  LIVE["Live on<br/>production"]
+
+  EDIT --> TEST_L --> PUSH_S --> TEST_S --> PR --> MERGE --> TAG --> LIVE
+
+  style EDIT fill:#e8f5f3,stroke:#0d9488
+  style LIVE fill:#f0fdf4,stroke:#4d7c0f,stroke-width:2px
+  style PR fill:#fef3e0,stroke:#b8860b,stroke-width:2px
+      </pre>
+    </div>
+
+    <h3>Step-by-Step Update Workflow</h3>
+    <pre><span class="comment"># 1. Switch to staging branch</span>
+cd ~/my_projects/lfh-cdn
+git checkout staging
+git pull origin staging
+
+<span class="comment"># 2. Make your changes</span>
+<span class="comment">#    (edit extension files, loader.js, CSS, etc.)</span>
+
+<span class="comment"># 3. Test locally</span>
+python3 -m http.server 8080
+<span class="comment">#    Open http://localhost:8080 and verify</span>
+
+<span class="comment"># 4. Commit and push to staging</span>
+git add extensions/lfh-tours-grid.js  <span class="comment"># (specific files, not -A)</span>
+git commit -m <span class="string">"Description of what changed"</span>
+git push origin staging
+
+<span class="comment"># 5. Test on staging URL (if configured)</span>
+
+<span class="comment"># 6. Create PR to main</span>
+gh pr create --base main --head staging \
+  --title <span class="string">"v1.x.0: Description"</span>
+
+<span class="comment"># 7. Merge PR on GitHub</span>
+gh pr merge --merge
+
+<span class="comment"># 8. Tag the release</span>
+git checkout main && git pull
+git tag v1.x.0 && git push --tags
+
+<span class="comment"># 9. Update CHANGELOG.md</span></pre>
+
+    <div class="callout--warning callout">
+      <strong>Why this matters:</strong> Before v1.1.0, pushing to <code>main</code> went live instantly. One typo = broken widget for all visitors. The staging branch gives you a safety net to test before going live.
+    </div>
+  </div>
+
+  <!-- ============================================
+       PART 7: HOW TO MAKE UPDATES
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section" id="updates" style="--i:11">
+    <div class="section-label"><span class="dot"></span> Part 7 &mdash; How to Make Updates After Launch</div>
+    <h2>Common Changes &amp; Where to Edit</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What to Change</th><th>Where to Edit</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Proactive greeting messages</td><td><code>loader.js</code> lines 202-213</td><td>Change the text strings</td></tr>
+          <tr><td>Chat widget title</td><td><code>loader.js</code> line 189</td><td>Currently "Last Frontier"</td></tr>
+          <tr><td>Page type detection</td><td><code>loader.js</code> lines 63-75</td><td>Update if WordPress URLs change</td></tr>
+          <tr><td>Widget styling</td><td><code>css/LFH_styles.css</code></td><td>Colors, fonts, layout</td></tr>
+          <tr><td>Extension behavior</td><td><code>extensions/*.js</code></td><td>The interactive components</td></tr>
+          <tr><td>Background image</td><td><code>images/</code></td><td>Replace file, keep the name</td></tr>
+          <tr><td>Shadow DOM styling</td><td><code>styles/lastfrontier-shadow-inject.js</code></td><td>Chat BG, header, font</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>After the Meeting: Update Page Type Detection</h3>
+    <p>Using the URL paths Gwyn gave you, update <code>detectPageType()</code> in <code>loader.js</code> (around line 63). Example:</p>
+    <pre><span class="comment">// If Gwyn says tours is at /heliskiing-tours/</span>
+<span class="keyword">if</span> (p.includes(<span class="string">'/tour'</span>) || p.includes(<span class="string">'/heli-ski'</span>) || p.includes(<span class="string">'/heliskiing'</span>))
+  <span class="keyword">return</span> <span class="string">'tours'</span>;</pre>
+
+    <h3>VoiceFlow Cross-Page Awareness (optional, can do later)</h3>
+    <p>Already built into loader.js. To enable in VoiceFlow:</p>
+    <ol style="margin: 12px 0; padding-left: 20px; font-size: 14px;">
+      <li>Go to the main Listen/Conversation node in VoiceFlow</li>
+      <li>Add an Event Trigger: <code>page_context_update</code></li>
+      <li>Connect to a Code Step with this code:</li>
+    </ol>
+    <pre><span class="keyword">var</span> data = (last_event && last_event.payload)
+  ? last_event.payload : last_event;
+<span class="keyword">if</span> (data) {
+  <span class="keyword">if</span> (data.page_type) page_type = data.page_type;
+  <span class="keyword">if</span> (data.page_path) page_path = data.page_path;
+}</pre>
+  </div>
+
+  <!-- ============================================
+       PART 8: EMERGENCY PROCEDURES
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--red" id="emergency" style="--i:12">
+    <div class="section-label"><span class="dot dot--red"></span> Part 8 &mdash; Emergency Procedures</div>
+    <h2>When Something Goes Wrong</h2>
+
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart TD
+  PROBLEM["Something broke"]
+  WIDGET{"Widget<br/>appears?"}
+  EXT{"Extensions<br/>work?"}
+  STYLE{"Looks<br/>correct?"}
+
+  CHECK_CDN["Check GitHub Pages status<br/><small>githubstatus.com</small>"]
+  FALLBACK["Switch to fallback mode<br/><small>add &amp;fallback=true to URL</small>"]
+  HARD_REFRESH["Hard refresh<br/><small>Ctrl+Shift+R</small>"]
+  REVERT["Revert last commit<br/><small>git revert HEAD</small>"]
+  NUCLEAR["Remove script tag<br/><small>Chat disappears entirely</small>"]
+
+  PROBLEM --> WIDGET
+  WIDGET -->|"No"| CHECK_CDN
+  WIDGET -->|"Yes"| EXT
+  EXT -->|"No"| FALLBACK
+  EXT -->|"Yes"| STYLE
+  STYLE -->|"No"| HARD_REFRESH
+  CHECK_CDN -->|"CDN is down"| NUCLEAR
+  CHECK_CDN -->|"CDN is up"| REVERT
+
+  style PROBLEM fill:#fff5f5,stroke:#be123c,stroke-width:2px
+  style NUCLEAR fill:#fff5f5,stroke:#be123c,stroke-width:2px
+  style FALLBACK fill:#fef3e0,stroke:#b8860b,stroke-width:2px
+      </pre>
+    </div>
+
+    <h3>Response Options (fastest first)</h3>
+    <div class="inner-grid">
+      <div class="inner-card" style="border-left: 3px solid var(--green);">
+        <div class="title">Fallback Mode (30 sec)</div>
+        <div class="desc">Tell Gwyn: "Add <code>&amp;fallback=true</code> to the script URL." Result: simple text chat + lead form only.</div>
+      </div>
+      <div class="inner-card" style="border-left: 3px solid var(--orange);">
+        <div class="title">Roll Back Code (2 min)</div>
+        <div class="desc"><code>git revert HEAD && git push origin main</code> &mdash; undoes the last commit. Wait 2-3 min for GitHub Pages.</div>
+      </div>
+      <div class="inner-card" style="border-left: 3px solid var(--red);">
+        <div class="title">Remove Entirely (10 sec)</div>
+        <div class="desc">Tell Gwyn: "Delete the script tag from the footer." Chat disappears. No side effects on the website.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       PART 9: TECHNICAL REFERENCE
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section" id="reference" style="--i:13">
+    <div class="section-label"><span class="dot"></span> Part 9 &mdash; Technical Reference</div>
+    <h2>Key URLs</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What</th><th>URL</th></tr></thead>
+        <tbody>
+          <tr><td>CDN root</td><td><code>https://yannicksegaar.github.io/lfh-cdn/</code></td></tr>
+          <tr><td>Loader script</td><td><code>https://yannicksegaar.github.io/lfh-cdn/loader.js</code></td></tr>
+          <tr><td>GitHub repo</td><td><code>https://github.com/YannickSegaar/lfh-cdn</code></td></tr>
+          <tr><td>VoiceFlow project</td><td>Dashboard &rarr; Project ID: <code>69b13dffb59c7feeb0e8e2dd</code></td></tr>
+          <tr><td>GitHub Pages settings</td><td><code>github.com/YannickSegaar/lfh-cdn/settings/pages</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Naming Convention</h2>
+    <p><strong>Format:</strong> <code>lfh-{feature}.js</code> &mdash; no version numbers, no "unified" suffixes.</p>
+    <p>Version tracked in git tags (<code>v1.1.0</code>) and file header comments. Each file has a header documenting its origin, trace types, and dependencies.</p>
+
+    <h2>Origin Map (dev &rarr; prod)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Production Name</th><th>Dev Origin</th></tr></thead>
+        <tbody>
+          <tr><td><code>lfh-lead-form.js</code></td><td><code>lead-capture-form-v5-unified.js</code></td></tr>
+          <tr><td><code>lfh-feedback.js</code></td><td><code>lfh-feedback-v10.js</code></td></tr>
+          <tr><td><code>lfh-welcome.js</code></td><td><code>welcome-grid-v2-unified.js</code></td></tr>
+          <tr><td><code>lfh-snowfall.js</code></td><td><code>snowfall.js</code></td></tr>
+          <tr><td><code>lfh-tours-grid.js</code></td><td><code>lfh-tour-explorer-grid-booking-unified.js</code></td></tr>
+          <tr><td><code>lfh-tours-modal.js</code></td><td><code>lfh-tour-explorer-modal-booking-unified-v2.js</code></td></tr>
+          <tr><td><code>lfh-tours-data.js</code></td><td><code>lfh-tour-explorer-modal.js</code></td></tr>
+          <tr><td><code>lfh-tours-booking.js</code></td><td><code>lfh-tour-booking-form-v2.js</code></td></tr>
+          <tr><td><code>lfh-tours-booking-hub.js</code></td><td><code>lfh-tour-booking-form.js</code> (v1)</td></tr>
+          <tr><td><code>lfh-lodges-widget.js</code></td><td><code>lfh-lodge-compare-widget-v2-unified.js</code></td></tr>
+          <tr><td><code>lfh-lodges-modal.js</code></td><td><code>lfh-lodge-compare-modal-v2-unified.js</code></td></tr>
+          <tr><td><code>lfh-weather-widget.js</code></td><td><code>lfh-weather-conditions-widget-v2-unified.js</code></td></tr>
+          <tr><td><code>lfh-weather-modal.js</code></td><td><code>lfh-weather-conditions-modal-unified.js</code></td></tr>
+          <tr><td><code>lfh-selfservice-widget.js</code></td><td><code>browser-self-service-v4-widget-unified.js</code></td></tr>
+          <tr><td><code>lfh-selfservice-modal.js</code></td><td><code>browser-self-service-v4-modal-unified.js</code></td></tr>
+          <tr><td><code>lfh-hub.js</code></td><td><code>lfh-hub-modal.js</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Fallback Mode Comparison</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Full Mode</th><th>Fallback Mode</th></tr></thead>
+        <tbody>
+          <tr><td>Text chat + KB answers</td><td style="color:var(--green)">Yes</td><td style="color:var(--green)">Yes</td></tr>
+          <tr><td>Lead capture form</td><td style="color:var(--green)">Yes</td><td style="color:var(--green)">Yes</td></tr>
+          <tr><td>Feedback (thumbs)</td><td style="color:var(--green)">Yes</td><td style="color:var(--green)">Yes</td></tr>
+          <tr><td>Tour explorer</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Lodge comparison</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Weather conditions</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Self-service browser</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Hub modal</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Welcome grid</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Snowfall</td><td style="color:var(--green)">Yes</td><td style="color:var(--red)">No</td></tr>
+          <tr><td>Cross-page awareness</td><td style="color:var(--green)">Yes</td><td style="color:var(--green)">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================
+       QUICK REFERENCE CARD
+       ============================================ -->
+  <div class="page-break"></div>
+  <div class="section section--accent" style="--i:14">
+    <div class="section-label"><span class="dot"></span> Quick Reference Card</div>
+    <h2>Copy-Paste Commands</h2>
+
+    <h3>The WordPress Embed Line</h3>
+    <pre>&lt;script type="module"
+  src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"
+  crossorigin&gt;&lt;/script&gt;</pre>
+
+    <h3>Switch to Fallback</h3>
+    <pre>&lt;script type="module"
+  src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0<span class="string">&amp;fallback=true</span>"
+  crossorigin&gt;&lt;/script&gt;</pre>
+
+    <h3>Push an Update (safe workflow)</h3>
+    <pre>cd ~/my_projects/lfh-cdn
+git checkout staging
+<span class="comment"># make changes, test locally</span>
+git add &lt;files&gt; && git commit -m <span class="string">"what changed"</span>
+git push origin staging
+gh pr create --base main --head staging --title <span class="string">"v1.x.0: what changed"</span>
+<span class="comment"># merge PR on GitHub, then:</span>
+git checkout main && git pull
+git tag v1.x.0 && git push --tags</pre>
+
+    <h3>Roll Back</h3>
+    <pre>cd ~/my_projects/lfh-cdn
+git checkout main
+git revert HEAD
+git push origin main  <span class="comment"># wait 2-3 min for GitHub Pages</span></pre>
+  </div>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 12px; font-family: var(--font-mono);">
+    LFH AI Agent &mdash; Production Deployment Guide v1.1.0 &mdash; Generated March 10, 2026
+    <br>Prepared by RomAIx for Last Frontier Heliskiing
+  </div>
+
+</div>
+</body>
+</html>
