@@ -752,7 +752,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 .lfh-v3-progress,
 .lfh-v3-content,
 .lfh-v3-btn-container {
-  transition: max-height 0.3s ease, opacity 0.2s ease;
+  transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
   overflow: hidden;
 }
 
@@ -765,6 +765,13 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 .lfh-v3-collapsed .lfh-v3-header-description {
   display: none;
+}
+.lfh-v3-collapsed .lfh-v3-progress,
+.lfh-v3-collapsed .lfh-v3-content,
+.lfh-v3-collapsed .lfh-v3-btn-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
 }
 </style>
 
