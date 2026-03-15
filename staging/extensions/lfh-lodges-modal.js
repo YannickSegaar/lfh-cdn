@@ -196,7 +196,7 @@ const COMPARISON_CATEGORIES = [
   },
   {
     label: 'Terrain Level',
-    bell2: 'Intermediate to Expert',
+    bell2: 'Strong Intermediate',
     ripley: 'Advanced to Expert',
     icon: '⛰',
   },
