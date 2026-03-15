@@ -91,7 +91,7 @@ export const LFH_LODGES = {
       helipad: 'On-site, depart directly from lodge.',
     },
     terrain: {
-      skillLevel: 'Strong Intermediate to Expert.',
+      skillLevel: 'Strong Intermediate.',
       type: 'Coast and Skeena Mountains.',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Close to lodge. Natural and man-made gladed skiing.',

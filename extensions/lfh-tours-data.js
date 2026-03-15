@@ -29,11 +29,11 @@ export const LFH_TOURS = [
     id: '4day',
     name: '4-Day Tour',
     subtitle: 'The Quick Getaway',
-    description: 'Perfect for a focused heliski experience when time is at a premium. Four days of skiing with a guaranteed 17,500 vertical meters of skiing. Available in March only.',
+    description: 'Perfect for a focused heliski experience when time is at a premium. Four days of skiing available in March only.',
     lodges: ['bell2', 'ripley'],
     duration: '4 days',
     durationDays: 4,
-    verticalGuarantee: '17,500m',
+    verticalGuarantee: '',
     months: ['mar'],
     pricing: {
       bell2: { peak: '$13,220' },
@@ -682,8 +682,8 @@ export function openTourExplorerModal(focusTourId = null) {
           <h3 class="lfhte-card-title">${tour.name}</h3>
           <div class="lfhte-card-stats">
             <span>${tour.duration}</span>
-            <span class="lfhte-stat-divider">|</span>
-            <span>${tour.verticalGuarantee}</span>
+            ${tour.verticalGuarantee ? `<span class="lfhte-stat-divider">|</span>
+            <span>${tour.verticalGuarantee}</span>` : ''}
             <span class="lfhte-stat-divider">|</span>
             <span>4 guests/guide</span>
           </div>
@@ -857,10 +857,10 @@ export function openTourExplorerModal(focusTourId = null) {
             <div class="lfhte-stat-value">${tour.duration}</div>
             <div class="lfhte-stat-label">Duration</div>
           </div>
-          <div class="lfhte-stat-box">
+          ${tour.verticalGuarantee ? `<div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' && tour.id !== '4day' ? '*' : ''}</div>
             <div class="lfhte-stat-label">Vertical Guarantee</div>
-          </div>
+          </div>` : ''}
           <div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.skillLevel.replace(' / Expert', '')}</div>
             <div class="lfhte-stat-label">Skill Level</div>
@@ -984,7 +984,7 @@ export function openTourExplorerModal(focusTourId = null) {
 
     const rows = [
       { label: 'Duration', fn: (t) => t.duration },
-      { label: 'Vertical Guarantee', fn: (t) => t.verticalGuarantee },
+      { label: 'Vertical Guarantee', fn: (t) => t.verticalGuarantee || '—' },
       { label: 'Lodges', fn: (t) => t.lodges.map(lodgeName).join(' & ') },
       { label: 'Skill Level', fn: (t) => t.skillLevel },
       { label: 'Starting Price', fn: (t) => `$${t.priceFrom.toLocaleString()} CAD` },
