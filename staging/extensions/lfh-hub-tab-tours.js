@@ -387,16 +387,7 @@ export function renderToursTab(container, config, savedState) {
           <img class="lfhte-hero-img" src="${tour.heroImage}" alt="${tour.name}">
         </div>
 
-        ${isMobile ? `
-          <button class="lfhte-collapse-toggle lfhte-gallery-toggle" id="lfhte-gallery-toggle">
-            Gallery (${galleryCount} photos)
-            <span class="lfhte-toggle-hint">Tap to expand</span>
-            <span class="lfhte-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="lfhte-gallery-strip lfhte-gallery-collapsed">${galleryHTML}</div>
-        ` : `
-          <div class="lfhte-gallery-strip">${galleryHTML}</div>
-        `}
+        <div class="lfhte-gallery-strip">${galleryHTML}</div>
 
         <div class="lfhte-detail-section">
           <p class="lfhte-full-desc">${tour.description}</p>
@@ -512,19 +503,6 @@ export function renderToursTab(container, config, savedState) {
 
     // Mobile: gallery toggle
     if (isMobile) {
-      detail.querySelector('#lfhte-gallery-toggle')?.addEventListener('click', () => {
-        const strip = detail.querySelector('.lfhte-gallery-strip');
-        const arrow = detail.querySelector('#lfhte-gallery-toggle .lfhte-toggle-arrow');
-        const hint = detail.querySelector('#lfhte-gallery-toggle .lfhte-toggle-hint');
-        strip.classList.toggle('lfhte-gallery-collapsed');
-        strip.classList.toggle('lfhte-gallery-expanded');
-        const collapsed = strip.classList.contains('lfhte-gallery-collapsed');
-        arrow.innerHTML = collapsed
-          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
-          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
-        if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
-      });
-
       // Mobile: included toggle
       detail.querySelector('#lfhte-included-toggle')?.addEventListener('click', () => {
         const grid = detail.querySelector('.lfhte-included-grid');
@@ -1297,8 +1275,6 @@ export function buildToursStyles() {
   background: ${LFH_COLORS.primaryRed}; color: #fff;
 }
 
-.lfhte-gallery-collapsed { display: none !important; }
-.lfhte-gallery-expanded { display: flex !important; }
 
 .lfhte-included-toggle {
   cursor: pointer; display: flex; align-items: center; gap: 6px;

@@ -182,7 +182,9 @@ export function renderLodgesTab(container, config, savedState) {
         <div class="lfhlc-comparison-section">
           ${isMobile ? `
             <h3 class="lfhlc-section-title lfhlc-comparison-toggle" id="lfhlc-comparison-toggle">
-              Side-by-Side Comparison <span class="lfhlc-toggle-arrow">&#9656;</span>
+              Side-by-Side Comparison
+              <span class="lfhlc-toggle-hint">Tap to expand</span>
+              <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
             </h3>
             <div class="lfhlc-comparison-table lfhlc-comparison-collapsed" id="lfhlc-comparison-content">
           ` : `
@@ -253,9 +255,14 @@ export function renderLodgesTab(container, config, savedState) {
       content.querySelector('#lfhlc-comparison-toggle')?.addEventListener('click', () => {
         const table = content.querySelector('#lfhlc-comparison-content');
         const arrow = content.querySelector('#lfhlc-comparison-toggle .lfhlc-toggle-arrow');
+        const hint = content.querySelector('#lfhlc-comparison-toggle .lfhlc-toggle-hint');
         table.classList.toggle('lfhlc-comparison-collapsed');
         table.classList.toggle('lfhlc-comparison-expanded');
-        arrow.innerHTML = table.classList.contains('lfhlc-comparison-collapsed') ? '&#9656;' : '&#9662;';
+        const collapsed = table.classList.contains('lfhlc-comparison-collapsed');
+        if (arrow) arrow.innerHTML = collapsed
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
+        if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
       });
     }
 
@@ -420,14 +427,7 @@ export function renderLodgesTab(container, config, savedState) {
             </div>
           </div>
 
-          ${isMobile ? `
-            <button class="lfhlc-collapse-toggle lfhlc-gallery-toggle" id="lfhlc-gallery-toggle">
-              Gallery (${galleryCount} photos) <span class="lfhlc-toggle-arrow">&#9662;</span>
-            </button>
-            <div class="lfhlc-gallery-strip lfhlc-gallery-collapsed">${galleryHTML}</div>
-          ` : `
-            <div class="lfhlc-gallery-strip">${galleryHTML}</div>
-          `}
+          <div class="lfhlc-gallery-strip">${galleryHTML}</div>
 
           <div class="lfhlc-detail-section">
             <p class="lfhlc-full-desc">${lodge.fullDescription}</p>
@@ -483,7 +483,9 @@ export function renderLodgesTab(container, config, savedState) {
 
           ${isMobile ? `
             <button class="lfhlc-collapse-toggle lfhlc-features-more-toggle" id="lfhlc-features-more-toggle">
-              Show 4 more features <span class="lfhlc-toggle-arrow">&#9662;</span>
+              Show 4 more features
+              <span class="lfhlc-toggle-hint">Tap to expand</span>
+              <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
             </button>
             <div class="lfhlc-features-grid lfhlc-features-hidden" id="lfhlc-features-hidden">
               <div class="lfhlc-feature-section">
@@ -512,7 +514,8 @@ export function renderLodgesTab(container, config, savedState) {
               <button class="lfhlc-map-toggle" id="lfhlc-layout-toggle">
                 <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
                 Lodge Layout
-                <span class="lfhlc-terrain-arrow lfhlc-layout-arrow" style="transform: rotate(180deg)">▾</span>
+                ${isMobile ? '<span class="lfhlc-toggle-hint">Tap to expand</span>' : ''}
+                <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
               </button>
               <div class="lfhlc-map-content open" id="lfhlc-layout-content">
                 <img src="${lodge.terrain.locationLayoutImage}" alt="${lodge.name} property layout"
@@ -525,7 +528,8 @@ export function renderLodgesTab(container, config, savedState) {
               <button class="lfhlc-map-toggle" id="lfhlc-terrain-toggle">
                 <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-10 4 10"/><path d="M2 21l6-14 3 7"/><path d="M15 7l5 14"/></svg></span>
                 Terrain Overview
-                <span class="lfhlc-terrain-arrow" style="transform: rotate(180deg)">▾</span>
+                ${isMobile ? '<span class="lfhlc-toggle-hint">Tap to expand</span>' : ''}
+                <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
               </button>
               <div class="lfhlc-map-content open" id="lfhlc-terrain-content">
                 <img src="${lodge.terrain.aerialImage}" alt="${lodge.name} terrain"
@@ -540,7 +544,8 @@ export function renderLodgesTab(container, config, savedState) {
             <button class="lfhlc-terrain-toggle" id="lfhlc-terrain-details-toggle">
               <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
               Terrain Details
-              <span class="lfhlc-terrain-arrow" style="transform: ${isMobile ? 'rotate(0deg)' : 'rotate(180deg)'}">▾</span>
+              ${isMobile ? '<span class="lfhlc-toggle-hint">Tap to expand</span>' : ''}
+              <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="${isMobile ? '6 9 12 15 18 9' : '6 15 12 9 18 15'}"/></svg></span>
             </button>
             <div class="lfhlc-terrain-content ${isMobile ? '' : 'open'}" id="lfhlc-terrain-details-content">
               <div class="lfhlc-terrain-details">
@@ -599,14 +604,17 @@ export function renderLodgesTab(container, config, savedState) {
     function bindToggle(toggleId, contentId) {
       content.querySelector(`#${toggleId}`)?.addEventListener('click', () => {
         const panel = content.querySelector(`#${contentId}`);
-        const arrow = content.querySelector(`#${toggleId} .lfhlc-terrain-arrow`);
+        const arrow = content.querySelector(`#${toggleId} .lfhlc-toggle-arrow`);
+        const hint = content.querySelector(`#${toggleId} .lfhlc-toggle-hint`);
         const isOpen = panel.classList.contains('open');
         if (isOpen) {
           panel.classList.remove('open');
-          if (arrow) arrow.style.transform = 'rotate(0deg)';
+          if (arrow) arrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+          if (hint) hint.textContent = 'Tap to expand';
         } else {
           panel.classList.add('open');
-          if (arrow) arrow.style.transform = 'rotate(180deg)';
+          if (arrow) arrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
+          if (hint) hint.textContent = 'Tap to collapse';
         }
       });
     }
@@ -622,26 +630,22 @@ export function renderLodgesTab(container, config, savedState) {
       img.addEventListener('click', () => showTerrainLightbox(img.dataset.lodge));
     });
 
-    // Mobile: gallery toggle
+    // Mobile: features more toggle
     if (isMobile) {
-      content.querySelector('#lfhlc-gallery-toggle')?.addEventListener('click', () => {
-        const strip = content.querySelector('.lfhlc-gallery-strip');
-        const arrow = content.querySelector('#lfhlc-gallery-toggle .lfhlc-toggle-arrow');
-        strip.classList.toggle('lfhlc-gallery-collapsed');
-        strip.classList.toggle('lfhlc-gallery-expanded');
-        arrow.innerHTML = strip.classList.contains('lfhlc-gallery-collapsed') ? '&#9662;' : '&#9652;';
-      });
-
       // Mobile: features more toggle
       content.querySelector('#lfhlc-features-more-toggle')?.addEventListener('click', () => {
         const grid = content.querySelector('#lfhlc-features-hidden');
         const btn = content.querySelector('#lfhlc-features-more-toggle');
         const arrow = btn.querySelector('.lfhlc-toggle-arrow');
+        const hint = btn.querySelector('.lfhlc-toggle-hint');
         grid.classList.toggle('lfhlc-features-hidden');
         grid.classList.toggle('lfhlc-features-shown');
         const isHidden = grid.classList.contains('lfhlc-features-hidden');
         btn.childNodes[0].textContent = isHidden ? 'Show 4 more features ' : 'Hide extra features ';
-        arrow.innerHTML = isHidden ? '&#9662;' : '&#9652;';
+        if (arrow) arrow.innerHTML = isHidden
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
+        if (hint) hint.textContent = isHidden ? 'Tap to expand' : 'Tap to collapse';
       });
     }
 
@@ -1148,9 +1152,23 @@ export function buildLodgesStyles() {
   font-weight: 700; color: ${LFH_COLORS.textPrimary};
   cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
 }
-.lfhlc-terrain-toggle:hover { background: rgba(0,0,0,0.03); }
+.lfhlc-terrain-toggle:hover { background: rgba(0,0,0,0.03); color: ${LFH_COLORS.primaryRed}; }
 .lfhlc-terrain-toggle-icon { display: flex; align-items: center; }
-.lfhlc-terrain-arrow { margin-left: auto; font-size: 12px; transition: transform 0.2s; }
+.lfhlc-toggle-arrow {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: ${LFH_COLORS.border}; color: ${LFH_COLORS.textPrimary};
+  flex-shrink: 0; transition: all 0.2s; margin-left: auto;
+}
+.lfhlc-terrain-toggle:hover .lfhlc-toggle-arrow,
+.lfhlc-map-toggle:hover .lfhlc-toggle-arrow {
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
+}
+.lfhlc-toggle-hint {
+  margin-left: auto; font-size: 10px; font-weight: 400;
+  color: ${LFH_COLORS.primaryRed}; opacity: 0.8;
+  font-style: italic; letter-spacing: 0.2px;
+}
 .lfhlc-terrain-content {
   max-height: 0; overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
@@ -1276,15 +1294,22 @@ export function buildLodgesStyles() {
   cursor: pointer; transition: all 0.2s;
 }
 .lfhlc-collapse-toggle:hover { border-color: ${LFH_COLORS.primaryRed}; color: ${LFH_COLORS.textPrimary}; }
-.lfhlc-toggle-arrow { font-size: 10px; margin-left: auto; }
-
-.lfhlc-gallery-collapsed { display: none !important; }
-.lfhlc-gallery-expanded { display: flex !important; }
+.lfhlc-collapse-toggle:hover .lfhlc-toggle-arrow {
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
+}
 
 .lfhlc-comparison-toggle {
   cursor: pointer; display: flex; align-items: center; gap: 6px;
+  padding: 10px 12px; margin: 0 -12px 10px;
+  background: ${LFH_COLORS.infoBox}; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; transition: all 0.2s;
 }
-.lfhlc-comparison-toggle:hover { color: ${LFH_COLORS.primaryRed}; }
+.lfhlc-comparison-toggle:hover {
+  color: ${LFH_COLORS.primaryRed}; border-color: ${LFH_COLORS.primaryRed};
+}
+.lfhlc-comparison-toggle:hover .lfhlc-toggle-arrow {
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
+}
 .lfhlc-comparison-collapsed { display: none !important; }
 .lfhlc-comparison-expanded { display: block !important; }
 
