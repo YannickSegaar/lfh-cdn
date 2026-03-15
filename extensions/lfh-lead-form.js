@@ -709,6 +709,11 @@ export const LastFrontierLeadForm_v4_Unified = {
   letter-spacing: 2px;
 }
 
+.lfh-mobile .lfh-v3-collapse-btn {
+  right: 8px;
+  top: 8px;
+}
+
 /* Mobile card overrides removed — all converted to <select> dropdowns */
 
 /* ===== COLLAPSIBLE FORM ===== */
@@ -716,26 +721,40 @@ export const LastFrontierLeadForm_v4_Unified = {
   position: absolute;
   right: 12px;
   top: 12px;
-  background: rgba(255,255,255,0.15);
-  border: none;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: transform 0.2s, background 0.2s;
   line-height: 1;
+  z-index: 3;
+  -webkit-tap-highlight-color: transparent;
 }
 .lfh-v3-collapse-btn:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.3);
 }
+.lfh-v3-collapse-btn:active {
+  background: rgba(255,255,255,0.4);
+}
+
+/* Transition support for collapsible sections */
+.lfh-v3-progress,
+.lfh-v3-content,
+.lfh-v3-btn-container {
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+  overflow: hidden;
+}
+
+/* Collapsed state */
 .lfh-v3-collapsed .lfh-v3-collapse-btn {
   transform: rotate(-90deg);
-}
-.lfh-v3-collapsed .lfh-v3-progress,
-.lfh-v3-collapsed .lfh-v3-content,
-.lfh-v3-collapsed .lfh-v3-btn-container {
-  display: none;
 }
 .lfh-v3-collapsed .lfh-v3-header {
   padding: 16px 20px;
@@ -1020,11 +1039,31 @@ export const LastFrontierLeadForm_v4_Unified = {
     // COLLAPSE / EXPAND TOGGLE
     // ========================================================================
     const collapseBtn = container.querySelector('.lfh-v3-collapse-btn');
+    const collapsibleSections = container.querySelectorAll(
+      '.lfh-v3-progress, .lfh-v3-content, .lfh-v3-btn-container'
+    );
+
     collapseBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isCollapsed = container.classList.toggle('lfh-v3-collapsed');
       collapseBtn.setAttribute('aria-expanded', !isCollapsed);
       collapseBtn.textContent = isCollapsed ? '▸' : '▾';
+
+      collapsibleSections.forEach(section => {
+        if (isCollapsed) {
+          section.style.maxHeight = section.scrollHeight + 'px';
+          section.offsetHeight; // force reflow
+          section.style.maxHeight = '0';
+          section.style.opacity = '0';
+        } else {
+          section.style.maxHeight = section.scrollHeight + 'px';
+          section.style.opacity = '1';
+          section.addEventListener('transitionend', function handler() {
+            section.style.maxHeight = '';
+            section.removeEventListener('transitionend', handler);
+          });
+        }
+      });
     });
 
     // ========================================================================
