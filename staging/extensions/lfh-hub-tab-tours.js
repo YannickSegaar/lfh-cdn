@@ -459,12 +459,6 @@ export function renderToursTab(container, config, savedState) {
         </div>
       </div>
 
-      ${isMobile ? `
-        <div class="lfhte-sticky-cta">
-          <button class="lfhte-btn-primary lfhte-sticky-book" data-tour-id="${tour.id}">Check Availability</button>
-          <button class="lfhte-btn-outline lfhte-sticky-ask" data-tour-id="${tour.id}">Ask</button>
-        </div>
-      ` : ''}
     `;
 
     content.innerHTML = '';
@@ -545,22 +539,6 @@ export function renderToursTab(container, config, savedState) {
         if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
       });
 
-      // Mobile: sticky CTA buttons
-      detail.querySelector('.lfhte-sticky-book')?.addEventListener('click', () => {
-        openReplaceBooking(tour);
-      });
-
-      detail.querySelector('.lfhte-sticky-ask')?.addEventListener('click', () => {
-        trackHubHighIntent('ask:' + tour.name);
-        requestCloseWithAction({
-          action: 'tour_inquiry',
-          source: 'tour_explorer',
-          tourId: tour.id,
-          tourName: tour.name,
-          lodge: tour.lodges.join(', '),
-          duration: tour.duration,
-        });
-      });
     }
 
     // Lodge name links in pricing table → switch to lodges tab (stays in modal)
@@ -1334,16 +1312,6 @@ export function buildToursStyles() {
 .lfhte-included-collapsed { display: none !important; }
 .lfhte-included-expanded { display: grid !important; }
 
-.lfhte-sticky-cta {
-  display: flex; gap: 8px; padding: 10px 16px;
-  background: #fff; border-top: 1px solid ${LFH_COLORS.border};
-  flex-shrink: 0; box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-}
-.lfhte-sticky-cta .lfhte-btn-primary,
-.lfhte-sticky-cta .lfhte-btn-outline {
-  flex: 1; padding: 12px 16px; font-size: 13px; font-weight: 700;
-  min-height: 44px;
-}
 
 @media (max-width: 500px) {
   .lfhte-stats-bar { grid-template-columns: repeat(2, 1fr); }
