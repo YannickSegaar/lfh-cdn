@@ -710,8 +710,8 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 
 .lfh-mobile .lfh-v3-collapse-btn {
-  right: 8px;
-  top: 8px;
+  right: 2px;
+  top: 2px;
 }
 
 /* Mobile card overrides removed — all converted to <select> dropdowns */
@@ -719,29 +719,33 @@ export const LastFrontierLeadForm_v4_Unified = {
 /* ===== COLLAPSIBLE FORM ===== */
 .lfh-v3-collapse-btn {
   position: absolute;
-  right: 12px;
-  top: 12px;
-  min-width: 44px;
-  min-height: 44px;
+  right: 4px;
+  top: 4px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white;
-  font-size: 18px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.8);
   cursor: pointer;
-  border-radius: 6px;
-  transition: transform 0.2s, background 0.2s;
-  line-height: 1;
+  padding: 0;
   z-index: 3;
   -webkit-tap-highlight-color: transparent;
 }
+.lfh-v3-collapse-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
 .lfh-v3-collapse-btn:hover {
-  background: rgba(255,255,255,0.3);
+  color: white;
 }
 .lfh-v3-collapse-btn:active {
-  background: rgba(255,255,255,0.4);
+  color: white;
+  transform: scale(0.9);
 }
 
 /* Transition support for collapsible sections */
@@ -753,7 +757,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 
 /* Collapsed state */
-.lfh-v3-collapsed .lfh-v3-collapse-btn {
+.lfh-v3-collapsed .lfh-v3-collapse-btn svg {
   transform: rotate(-90deg);
 }
 .lfh-v3-collapsed .lfh-v3-header {
@@ -775,7 +779,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   </div>
   <p class="lfh-v3-header-label">${displayTitle}</p>
   <p class="lfh-v3-header-description">${displaySubtitle}</p>
-  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form">▾</button>
+  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
 </div>
 
 <!-- PROGRESS -->
@@ -1047,7 +1051,6 @@ export const LastFrontierLeadForm_v4_Unified = {
       e.stopPropagation();
       const isCollapsed = container.classList.toggle('lfh-v3-collapsed');
       collapseBtn.setAttribute('aria-expanded', !isCollapsed);
-      collapseBtn.textContent = isCollapsed ? '▸' : '▾';
 
       collapsibleSections.forEach(section => {
         if (isCollapsed) {
