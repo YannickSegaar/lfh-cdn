@@ -94,7 +94,8 @@
 <body>
 <div class="container">
   <h1>LFH CDN Test Page</h1>
-  <div class="subtitle">v1.1.0 &mdash; Verifies the chat widget loads correctly from GitHub Pages CDN</div>
+  <div class="subtitle" id="env-label">v1.1.0 &mdash; Verifies the chat widget loads correctly from GitHub Pages CDN</div>
+  <script>if(location.pathname.indexOf('/staging/')===0)document.getElementById('env-label').innerHTML='<strong style="color:#f59e0b">STAGING</strong> &mdash; Preview of staging branch changes';</script>
 
   <!-- Status Summary -->
   <div class="card">
@@ -197,7 +198,8 @@
 <!-- CDN Asset Checks -->
 <script>
 (function() {
-  var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
+  var isStaging = location.pathname.indexOf('/staging/') === 0;
+  var CDN = 'https://yannicksegaar.github.io/lfh-cdn' + (isStaging ? '/staging' : '');
   var checks = [
     { id: 'loader', path: '/loader.js' },
     { id: 'css', path: '/css/LFH_styles.css' },
@@ -250,10 +252,13 @@
 (function() {
   var s = document.createElement('script');
   s.type = 'module';
-  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+  var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || /^192\./.test(location.hostname) || /^10\./.test(location.hostname);
+  var isStaging = location.pathname.indexOf('/staging/') === 0;
+  if (isLocal) {
     s.src = '/loader.js?v=local&t=' + Date.now();
   } else {
-    s.src = 'https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.3.1';
+    var base = 'https://yannicksegaar.github.io/lfh-cdn' + (isStaging ? '/staging' : '');
+    s.src = base + '/loader.js?v=1.3.1&t=' + Date.now();
   }
   document.body.appendChild(s);
 })();
