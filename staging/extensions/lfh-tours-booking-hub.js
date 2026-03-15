@@ -653,8 +653,8 @@ export function renderBookingForm(container, options = {}) {
         <!-- Experience -->
         <div class="lfhte-bf-section-title">Your Experience</div>
 
-        <div class="lfhte-bf-field">
-          <label>Skiing days per year</label>
+        <div class="lfhte-bf-field" style="margin-bottom:12px">
+          <label>Skiing days per year.</label>
           <select id="lfhte-bf-ski-days" class="lfhte-bf-select">
             <option value="">Select...</option>
             <option value="0-10">0\u201310 days per year</option>
