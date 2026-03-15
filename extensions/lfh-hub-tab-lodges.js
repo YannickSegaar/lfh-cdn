@@ -967,6 +967,7 @@ export function buildLodgesStyles() {
 .lfhlc-comp-label {
   background: ${LFH_COLORS.infoBox}; font-weight: 600;
   display: flex; align-items: center; gap: 8px;
+  overflow-wrap: break-word; word-break: break-word;
 }
 .lfhlc-comp-icon { font-size: 14px; color: ${LFH_COLORS.textSecondary}; font-family: sans-serif; }
 .lfhlc-comp-lodge { text-align: center; }
@@ -1325,7 +1326,7 @@ export function buildLodgesStyles() {
 .lfhlc-run-photos-toggle { margin-bottom: 12px; }
 
 @media (max-width: 500px) {
-  .lfhlc-comparison-header, .lfhlc-comparison-row { grid-template-columns: 80px 1fr 1fr; }
+  .lfhlc-comparison-header, .lfhlc-comparison-row { grid-template-columns: 100px 1fr 1fr; }
   .lfhlc-comp-cell { padding: 8px 6px; font-size: 10px; }
   .lfhlc-detail-actions { flex-direction: column; }
   .lfhlc-btn-primary, .lfhlc-btn-outline { width: 100%; min-height: 48px; }
