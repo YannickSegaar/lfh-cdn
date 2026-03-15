@@ -27,6 +27,31 @@
 
 @media (max-width: 768px) {
 
+  /* --- DEBUG: Visual indicator — red outline on all boosted elements --- */
+  /* Remove this block once verified working */
+  .lfhte-card-stats, .lfhte-card-price, .lfhte-card-desc,
+  .lfhte-stat-label, .lfhte-stat-value,
+  .lfhte-full-desc, .lfhte-pricing-note,
+  .lfhte-best-for-badge, .lfhte-card-title,
+  .lfhte-btn-primary, .lfhte-btn-outline,
+  .lfhte-included-item, .lfhte-tray-thumb,
+  .lfhte-filter-bar, .lfhte-filter-btn,
+  .lfhte-gw-badge, .lfhte-gw-card-price,
+  .lfhlc-comp-cell, .lfhlc-comp-label, .lfhlc-tab,
+  .lfhlc-detail-stat-val, .lfhlc-detail-stat-lbl,
+  .lfhub-tab-label,
+  .lfhbss-tab, .lfhbss-tab-label, .lfhbss-resource-desc,
+  .lfhbss-faq-question, .lfhbss-faq-answer, .lfhbss-faq-answer-inner,
+  .lfh-v3-label, .lfh-v3-input, .lfh-v3-select,
+  .lfh-v3-intent-title, .lfh-v3-intent-desc,
+  .lfh-v3-checkbox-label, .lfh-v3-progress-label,
+  .lfh-v3-progress-optional, .lfh-v3-season-dates, .lfh-v3-season-terrain,
+  .lfhww2-subtitle,
+  .lfhwc-stat-value, .lfhwc-stat-label,
+  .lfh-grid-card-subtitle, .lfh-grid-footer {
+    outline: 2px solid red !important;
+  }
+
   /* --- Hub: Tours Tab (lfhte- prefix) --- */
   .lfhte-card-stats,
   .lfhte-card-price,
