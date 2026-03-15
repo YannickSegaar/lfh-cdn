@@ -264,11 +264,45 @@
 })();
 </script>
 
-<!-- Reload debugger — logs real page reloads to console -->
+<!-- Reload & widget restart debugger -->
 <script>
-window.addEventListener('beforeunload', function() {
-  console.log('[LFH] PAGE RELOAD DETECTED at ' + new Date().toISOString());
-});
+(function() {
+  // 1. Detect REAL page reloads (survives across reload via sessionStorage)
+  window.addEventListener('beforeunload', function() {
+    sessionStorage.setItem('lfh_reload_ts', Date.now());
+  });
+  var lastReload = sessionStorage.getItem('lfh_reload_ts');
+  if (lastReload && (Date.now() - parseInt(lastReload, 10)) < 10000) {
+    console.warn('[LFH] PAGE RELOAD detected — page was reloaded at ' + new Date(parseInt(lastReload, 10)).toISOString());
+    sessionStorage.removeItem('lfh_reload_ts');
+  }
+
+  // 2. Detect VoiceFlow WIDGET restarts (no page reload, but widget re-renders)
+  var widgetLoadCount = 0;
+  var origLog = console.log;
+  var patchedLog = console.log; // capture current (already patched by console interceptor above)
+  var checkWidgetRestart = setInterval(function() {
+    if (!window.voiceflow || !window.voiceflow.chat) return;
+    // Watch for the #voiceflow-chat shadow root being recreated
+    var vfEl = document.getElementById('voiceflow-chat');
+    if (!vfEl) return;
+    var sr = vfEl.shadowRoot;
+    if (!sr) return;
+
+    // Check if VF widget container has been rebuilt
+    var chatContainer = sr.querySelector('.vfrc-chat');
+    if (chatContainer) {
+      var stamp = chatContainer.getAttribute('data-lfh-tracked');
+      if (!stamp) {
+        widgetLoadCount++;
+        chatContainer.setAttribute('data-lfh-tracked', String(Date.now()));
+        if (widgetLoadCount > 1) {
+          console.warn('[LFH] WIDGET RESTART #' + widgetLoadCount + ' detected at ' + new Date().toISOString() + ' — VoiceFlow re-rendered without a page reload');
+        }
+      }
+    }
+  }, 2000);
+})();
 </script>
 
 <!-- Widget detection -->
