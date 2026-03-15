@@ -362,14 +362,6 @@ export const LastFrontierLeadForm_v4_Unified = {
   line-height: 1.4;
 }
 
-/* ===== SECTION TITLES ===== */
-.lfh-v3-section-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: ${colors.textPrimary};
-  margin-bottom: 10px;
-}
-
 /* ===== TOUR DATE SELECT ===== */
 .lfh-v3-select optgroup {
   font-weight: 600;
@@ -718,6 +710,39 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 
 /* Mobile card overrides removed — all converted to <select> dropdowns */
+
+/* ===== COLLAPSIBLE FORM ===== */
+.lfh-v3-collapse-btn {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: transform 0.2s, background 0.2s;
+  line-height: 1;
+}
+.lfh-v3-collapse-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+.lfh-v3-collapsed .lfh-v3-collapse-btn {
+  transform: rotate(-90deg);
+}
+.lfh-v3-collapsed .lfh-v3-progress,
+.lfh-v3-collapsed .lfh-v3-content,
+.lfh-v3-collapsed .lfh-v3-btn-container {
+  display: none;
+}
+.lfh-v3-collapsed .lfh-v3-header {
+  padding: 16px 20px;
+}
+.lfh-v3-collapsed .lfh-v3-header-description {
+  display: none;
+}
 </style>
 
 <!-- HEADER - Full dark wood background with logo overlay -->
@@ -731,6 +756,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   </div>
   <p class="lfh-v3-header-label">${displayTitle}</p>
   <p class="lfh-v3-header-description">${displaySubtitle}</p>
+  <button class="lfh-v3-collapse-btn" aria-expanded="true" aria-label="Collapse form">▾</button>
 </div>
 
 <!-- PROGRESS -->
@@ -755,7 +781,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   <div id="lfh-v3-step-1" class="lfh-v3-step active">
     <form id="lfh-v3-contact-form">
       <div class="lfh-v3-form-group">
-        <div class="lfh-v3-section-title">Is this about... <span class="lfh-v3-required">*</span></div>
+        <label class="lfh-v3-label">Is this about... <span class="lfh-v3-required">*</span></label>
         <select id="lfh-v3-inquiryType" name="inquiryType" class="lfh-v3-select" required>
           <option value="">Select...</option>
           <option value="new_inquiry">A new inquiry</option>
@@ -816,7 +842,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 
       <!-- INTENT QUALIFIER -->
       <div class="lfh-v3-form-group">
-        <div class="lfh-v3-section-title">What brings you here today? <span class="lfh-v3-required">*</span></div>
+        <label class="lfh-v3-label">What brings you here today? <span class="lfh-v3-required">*</span></label>
         <select id="lfh-v3-intent" name="intent" class="lfh-v3-select" required>
           <option value="">Select...</option>
           <option value="learning">Learning about heliskiing</option>
@@ -989,6 +1015,17 @@ export const LastFrontierLeadForm_v4_Unified = {
 `;
 
     element.appendChild(container);
+
+    // ========================================================================
+    // COLLAPSE / EXPAND TOGGLE
+    // ========================================================================
+    const collapseBtn = container.querySelector('.lfh-v3-collapse-btn');
+    collapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isCollapsed = container.classList.toggle('lfh-v3-collapsed');
+      collapseBtn.setAttribute('aria-expanded', !isCollapsed);
+      collapseBtn.textContent = isCollapsed ? '▸' : '▾';
+    });
 
     // ========================================================================
     // DISABLE CHAT INPUT while form is visible in the DOM
