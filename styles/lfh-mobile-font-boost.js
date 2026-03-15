@@ -30,18 +30,6 @@
 
 @media (max-width: 768px) {
 
-  /* --- DEBUG: red outline on boosted elements (remove after verification) --- */
-  [class^="lfhte-"], [class*=" lfhte-"],
-  [class^="lfhlc-"], [class*=" lfhlc-"],
-  [class^="lfhub-"], [class*=" lfhub-"],
-  [class^="lfhbss-"], [class*=" lfhbss-"],
-  [class^="lfh-v3-"], [class*=" lfh-v3-"],
-  [class^="lfhwc-"], [class*=" lfhwc-"],
-  [class^="lfhww2-"], [class*=" lfhww2-"],
-  [class^="lfh-grid-"], [class*=" lfh-grid-"] {
-    outline: 2px solid red !important;
-  }
-
   /* --- Hub: Tours Tab (lfhte- prefix) --- */
   .lfhte-card-stats,
   .lfhte-card-price,
@@ -66,6 +54,17 @@
   }
   .lfhte-included-item {
     font-size: 13px !important;
+  }
+  .lfhte-pricing-table,
+  .lfhte-pricing-table th,
+  .lfhte-pricing-table td {
+    font-size: 13px !important;
+  }
+  .lfhte-vertical-note {
+    font-size: 12px !important;
+  }
+  .lfhte-section-title {
+    font-size: 15px !important;
   }
   .lfhte-tray-thumb {
     font-size: 12px !important;

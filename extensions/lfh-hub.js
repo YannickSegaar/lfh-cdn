@@ -107,13 +107,23 @@ export function openHubModal(config = {}) {
       overflow: hidden; display: flex; flex-direction: column;
     `;
   } else {
-    modal.style.cssText = `
-      width: 94%; max-width: 1100px; height: 90%; max-height: 850px;
-      background: ${LFH_COLORS.background}; border-radius: 12px;
-      overflow: hidden; display: flex; flex-direction: column;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      animation: lfhub-slideUp 0.4s ease;
-    `;
+    if (isMobile) {
+      modal.style.cssText = `
+        width: 100%; height: 100%;
+        background: ${LFH_COLORS.background}; border-radius: 0;
+        overflow: hidden; display: flex; flex-direction: column;
+        box-shadow: none;
+        animation: lfhub-slideUp 0.4s ease;
+      `;
+    } else {
+      modal.style.cssText = `
+        width: 94%; max-width: 1100px; height: 90%; max-height: 850px;
+        background: ${LFH_COLORS.background}; border-radius: 12px;
+        overflow: hidden; display: flex; flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: lfhub-slideUp 0.4s ease;
+      `;
+    }
   }
 
   // --- Inject Styles ---

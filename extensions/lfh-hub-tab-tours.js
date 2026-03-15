@@ -461,7 +461,7 @@ export function renderToursTab(container, config, savedState) {
 
       ${isMobile ? `
         <div class="lfhte-sticky-cta">
-          <button class="lfhte-btn-primary lfhte-sticky-book" data-tour-id="${tour.id}">Book</button>
+          <button class="lfhte-btn-primary lfhte-sticky-book" data-tour-id="${tour.id}">Check Availability</button>
           <button class="lfhte-btn-outline lfhte-sticky-ask" data-tour-id="${tour.id}">Ask</button>
         </div>
       ` : ''}
@@ -1145,7 +1145,7 @@ export function buildToursStyles() {
 }
 .lfhte-vertical-note {
   font-size: 11px; color: ${LFH_COLORS.textSecondary};
-  font-style: italic; margin: 4px 0 0 0; text-align: center;
+  font-style: italic; margin: 4px 0 16px 0; text-align: center;
 }
 
 .lfhte-included-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -1350,7 +1350,10 @@ export function buildToursStyles() {
   .lfhte-stat-box { padding: 8px 6px; }
   .lfhte-stat-value { font-size: 12px; }
   .lfhte-stat-label { font-size: 9px; }
-  .lfhte-pricing-table { display: block; overflow-x: auto; }
+  .lfhte-pricing-table { display: block; overflow-x: auto; min-width: 100%; }
+  .lfhte-pricing-table thead,
+  .lfhte-pricing-table tbody,
+  .lfhte-pricing-table tr { display: table; width: 100%; table-layout: fixed; }
   .lfhte-hero-image { height: 200px; }
   .lfhte-hero-img { max-height: 250px; }
   .lfhte-filter-bar { padding: 10px 12px; }
@@ -1358,7 +1361,9 @@ export function buildToursStyles() {
   .lfhte-filter-group select { padding: 6px 8px; }
   .lfhte-results-count { display: none; }
   .lfhte-included-grid { grid-template-columns: 1fr; }
-  .lfhte-detail-actions-bottom .lfhte-actions-row:first-child { display: none; }
+  .lfhte-detail-actions-bottom .lfhte-actions-row { flex-wrap: wrap; }
+  .lfhte-detail-actions-bottom .lfhte-btn-primary,
+  .lfhte-detail-actions-bottom .lfhte-btn-outline { flex: 1 1 45%; min-height: 44px; }
 }
 `;
 }

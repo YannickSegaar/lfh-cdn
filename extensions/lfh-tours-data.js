@@ -890,7 +890,7 @@ export function openTourExplorerModal(focusTourId = null) {
 
         <!-- Action Buttons -->
         <div class="lfhte-detail-actions">
-          <button class="lfhte-btn-primary lfhte-action-book" data-tour-id="${tour.id}">I Want to Book</button>
+          <button class="lfhte-btn-primary lfhte-action-book" data-tour-id="${tour.id}">Check Availability</button>
           <button class="lfhte-btn-outline lfhte-action-ask" data-tour-id="${tour.id}">Ask About This Tour</button>
           <button class="lfhte-btn-text lfhte-back-link" id="lfhte-back-link">Back to All Tours</button>
         </div>
