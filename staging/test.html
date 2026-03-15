@@ -95,7 +95,7 @@
 <div class="container">
   <h1>LFH CDN Test Page</h1>
   <div class="subtitle" id="env-label">v1.1.0 &mdash; Verifies the chat widget loads correctly from GitHub Pages CDN</div>
-  <script>if(location.pathname.indexOf('/staging/')===0)document.getElementById('env-label').innerHTML='<strong style="color:#f59e0b">STAGING</strong> &mdash; Preview of staging branch changes';</script>
+  <script>if(location.pathname.includes('/staging/'))document.getElementById('env-label').innerHTML='<strong style="color:#f59e0b">STAGING</strong> &mdash; Preview of staging branch changes';</script>
 
   <!-- Status Summary -->
   <div class="card">
@@ -198,7 +198,7 @@
 <!-- CDN Asset Checks -->
 <script>
 (function() {
-  var isStaging = location.pathname.indexOf('/staging/') === 0;
+  var isStaging = location.pathname.includes('/staging/');
   var CDN = 'https://yannicksegaar.github.io/lfh-cdn' + (isStaging ? '/staging' : '');
   var checks = [
     { id: 'loader', path: '/loader.js' },
@@ -253,7 +253,7 @@
   var s = document.createElement('script');
   s.type = 'module';
   var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || /^192\./.test(location.hostname) || /^10\./.test(location.hostname);
-  var isStaging = location.pathname.indexOf('/staging/') === 0;
+  var isStaging = location.pathname.includes('/staging/');
   if (isLocal) {
     s.src = '/loader.js?v=local&t=' + Date.now();
   } else {
