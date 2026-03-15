@@ -117,8 +117,14 @@ export const LastFrontierLeadForm_v4_Unified = {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
-/* Nexa Rust Sans Black 2 — loaded at document level by loader.js */
-/* No @font-face here: shadow DOM inherits document-level fonts */
+/* Nexa Rust Sans Black 2 — must be declared in shadow DOM too */
+@font-face {
+  font-family: 'Nexa Rust Sans Black 2';
+  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 .lfh-lead-form-v3 {
   width: 100%;
