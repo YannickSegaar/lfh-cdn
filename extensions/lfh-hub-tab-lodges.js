@@ -447,8 +447,8 @@ export function renderLodgesTab(container, config, savedState) {
               <div class="lfhlc-stat-label">Skill Level</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">${lodge.id === 'ripley' ? 'Stewart, BC' : '4:1'}</div>
-              <div class="lfhlc-stat-label">${lodge.id === 'ripley' ? 'Frontier Town' : 'Guest:Guide'}</div>
+              <div class="lfhlc-stat-value">${lodge.id === 'ripley' ? 'Stewart, BC' : 'Skeena Mountains'}</div>
+              <div class="lfhlc-stat-label">${lodge.id === 'ripley' ? 'Frontier Town' : 'Remote Location'}</div>
             </div>
           </div>
 
