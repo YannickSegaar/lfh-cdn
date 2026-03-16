@@ -568,7 +568,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-overview-quick-stats">
                 <span class="lfhlc-quick-stat">${bell2.capacity} guests</span>
                 <span class="lfhlc-quick-stat">${bell2.style}</span>
-                <span class="lfhlc-quick-stat">${bell2.terrain.skillLevel.replace(/\.$/, '')}+</span>
+                <span class="lfhlc-quick-stat">${bell2.terrain.skillLevel.split(' to ')[0]}+</span>
               </div>
               <div class="lfhlc-card-actions">
                 <button class="lfhlc-btn-primary lfhlc-view-lodge-btn" data-lodge="bell2">Explore Bell 2</button>
@@ -588,7 +588,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-overview-quick-stats">
                 <span class="lfhlc-quick-stat">${ripley.capacity} guests</span>
                 <span class="lfhlc-quick-stat">${ripley.style}</span>
-                <span class="lfhlc-quick-stat">${ripley.terrain.skillLevel.replace(/\.$/, '')}+</span>
+                <span class="lfhlc-quick-stat">${ripley.terrain.skillLevel.split(' to ')[0]}+</span>
               </div>
               <div class="lfhlc-card-actions">
                 <button class="lfhlc-btn-primary lfhlc-view-lodge-btn" data-lodge="ripley">Explore Ripley Creek</button>
@@ -896,12 +896,12 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-stat-label">Accommodation</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">${lodge.terrain.skillLevel.replace(/\.$/, '')}</div>
+              <div class="lfhlc-stat-value">${lodge.terrain.skillLevel.split(' to ')[0]}</div>
               <div class="lfhlc-stat-label">Skill Level</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">${lodge.id === 'ripley' ? 'Stewart, BC' : '4:1'}</div>
-              <div class="lfhlc-stat-label">${lodge.id === 'ripley' ? 'Frontier Town' : 'Guest:Guide'}</div>
+              <div class="lfhlc-stat-value">4:1</div>
+              <div class="lfhlc-stat-label">Guest:Guide</div>
             </div>
           </div>
 
@@ -1357,7 +1357,6 @@ function buildModalStyles() {
 .lfhlc-comp-label {
   background: ${LFH_COLORS.infoBox}; font-weight: 600;
   display: flex; align-items: center; gap: 8px;
-  overflow-wrap: break-word; word-break: break-word;
 }
 .lfhlc-comp-icon {
   font-size: 14px;
@@ -1764,10 +1763,9 @@ function buildModalStyles() {
 
   .lfhlc-comparison-header,
   .lfhlc-comparison-row {
-    grid-template-columns: 110px 1fr 1fr;
+    grid-template-columns: 100px 1fr 1fr;
   }
   .lfhlc-comp-cell { padding: 10px 8px; font-size: 11px; }
-  .lfhlc-comp-label { font-size: 10px; }
   .lfhlc-comp-icon { display: none; }
 
   .lfhlc-stats-bar { grid-template-columns: repeat(2, 1fr); }
