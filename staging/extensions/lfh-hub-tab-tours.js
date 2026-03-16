@@ -404,6 +404,9 @@ export function renderToursTab(container, config, savedState) {
           ${tour.verticalGuarantee ? `<div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' ? '*' : ''}</div>
             <div class="lfhte-stat-label">Vertical Guarantee</div>
+          </div>` : tour.id === '4day' ? `<div class="lfhte-stat-box">
+            <div class="lfhte-stat-value">March Only</div>
+            <div class="lfhte-stat-label">Availability</div>
           </div>` : ''}
           <div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.skillLevel.replace(' / Expert', '')}</div>
