@@ -46,8 +46,8 @@ export const LastFrontierLeadForm_v4_Unified = {
   render: ({ trace, element }) => {
     // --- Configuration from VoiceFlow Payload ---
     const {
-      formTitle = 'Plan Your Heliski Adventure',
-      formSubtitle = 'Experience world-class heliskiing in British Columbia',
+      formTitle = 'Contact Us',
+      formSubtitle = '',
       webhookUrl = 'https://n8n.romaix-n8n.xyz/webhook/9d6eaed8-9595-473f-9173-9d7b184a06df',
       alertWebhookUrl = '',           // n8n force_handoff alert endpoint
       isForceHandoff = false,         // triggers disable-input + alert webhook
@@ -374,6 +374,51 @@ export const LastFrontierLeadForm_v4_Unified = {
   color: ${colors.textPrimary};
   padding: 4px 0;
 }
+
+/* ===== TOUR DATE MULTI-SELECT ===== */
+.lfh-v3-multiselect { position: relative; }
+.lfh-v3-multiselect-btn {
+  width: 100%; text-align: left; padding: 10px 12px;
+  border: 1px solid ${colors.border}; border-radius: 6px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  color: ${colors.textPrimary}; background: #fff; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 30px;
+}
+.lfh-v3-multiselect-btn:hover { border-color: ${colors.primaryRed}; }
+.lfh-v3-multiselect-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+  background: #fff; border: 1px solid ${colors.border};
+  border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  margin-top: 4px; max-height: 260px; overflow-y: auto;
+  padding: 4px 0;
+}
+.lfh-v3-multiselect-group-label {
+  padding: 8px 12px 4px; font-size: 11px; font-weight: 700;
+  color: ${colors.primaryRed}; text-transform: uppercase;
+  letter-spacing: 0.3px; border-top: 1px solid ${colors.border};
+}
+.lfh-v3-multiselect-group-label:first-child { border-top: none; }
+.lfh-v3-multiselect-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; font-size: 13px; color: ${colors.textPrimary};
+  cursor: pointer; margin: 0;
+}
+.lfh-v3-multiselect-item:hover { background: ${colors.infoBox}; }
+.lfh-v3-multiselect-item input { accent-color: ${colors.primaryRed}; margin: 0; }
+.lfh-v3-multiselect-done {
+  padding: 8px 12px; border-top: 1px solid ${colors.border};
+  text-align: center; position: sticky; bottom: 0; background: #fff;
+}
+.lfh-v3-multiselect-done-btn {
+  padding: 6px 20px; border: none; border-radius: 4px;
+  background: ${colors.primaryRed}; color: #fff;
+  font-family: 'Inter', sans-serif; font-size: 12px;
+  font-weight: 600; cursor: pointer;
+}
+.lfh-v3-multiselect-done-btn:hover { background: #cc2419; }
 
 /* ===== SEARCHABLE COUNTRY DROPDOWN ===== */
 .lfh-v3-country-wrapper {
@@ -745,7 +790,7 @@ export const LastFrontierLeadForm_v4_Unified = {
     />
   </div>
   <p class="lfh-v3-header-label">${displayTitle}</p>
-  <p class="lfh-v3-header-description">${displaySubtitle}</p>
+  ${displaySubtitle ? `<p class="lfh-v3-header-description">${displaySubtitle}</p>` : ''}
 
 </div>
 
@@ -770,14 +815,14 @@ export const LastFrontierLeadForm_v4_Unified = {
   <!-- STEP 1: Contact & Intent -->
   <div id="lfh-v3-step-1" class="lfh-v3-step active">
     <form id="lfh-v3-contact-form">
-      <div class="lfh-v3-form-group">
-        <label class="lfh-v3-label">Is this about... <span class="lfh-v3-required">*</span></label>
-        <select id="lfh-v3-inquiryType" name="inquiryType" class="lfh-v3-select" required>
+      ${isMobile ? `<div class="lfh-v3-form-group">
+        <label class="lfh-v3-label">Is this about...</label>
+        <select id="lfh-v3-inquiryType" name="inquiryType" class="lfh-v3-select">
           <option value="">Select...</option>
           <option value="new_inquiry">A new inquiry</option>
           <option value="existing_booking">An existing booking</option>
         </select>
-      </div>
+      </div>` : '<input type="hidden" id="lfh-v3-inquiryType" name="inquiryType" value="new_inquiry">'}
 
       <div class="lfh-v3-form-row">
         <div class="lfh-v3-form-group">
@@ -898,47 +943,42 @@ export const LastFrontierLeadForm_v4_Unified = {
         </select>
       </div>
 
-      <!-- TOUR DATE SELECTION -->
+      <!-- TOUR DATE SELECTION (multi-select) -->
       <div class="lfh-v3-form-group">
-        <label class="lfh-v3-label">Select Your Tour</label>
-        <select id="lfh-v3-tourDate" name="tourDate" class="lfh-v3-select">
-          <option value="">Select a tour date</option>
-          <optgroup label="7 Day Tours">
-            <option value="2027-04: Dec 30 - Jan 6">2027-04: Dec 30 - Jan 6</option>
-            <option value="2027-05: Jan 6 - 13">2027-05: Jan 6 - 13</option>
-            <option value="2027-07: Jan 23 - 30">2027-07: Jan 23 - 30</option>
-            <option value="2027-09: Feb 4 - 11">2027-09: Feb 4 - 11</option>
-            <option value="2027-11: Feb 21 - 28">2027-11: Feb 21 - 28</option>
-            <option value="2027-13: Mar 5 - 12">2027-13: Mar 5 - 12</option>
-            <option value="2027-15: Mar 21 - 28">2027-15: Mar 21 - 28</option>
-          </optgroup>
-          <optgroup label="5 Day Tours">
-            <option value="2027-05-5: Jan 13 - 18">2027-05-5: Jan 13 - 18</option>
-            <option value="2027-06-5: Jan 18 - 23">2027-06-5: Jan 18 - 23</option>
-            <option value="2027-08-5: Jan 30 - Feb 4">2027-08-5: Jan 30 - Feb 4</option>
-            <option value="2027-09-5: Feb 11 - 16">2027-09-5: Feb 11 - 16</option>
-            <option value="2027-10-5: Feb 16 - 21">2027-10-5: Feb 16 - 21</option>
-            <option value="2027-12-5: Feb 28 - Mar 5">2027-12-5: Feb 28 - Mar 5</option>
-            <option value="2027-14-5: Mar 16 - 21">2027-14-5: Mar 16 - 21</option>
-            <option value="2027-16-5: Mar 28 - Apr 2">2027-16-5: Mar 28 - Apr 2</option>
-            <option value="2027-17-5: Apr 2 - 7">2027-17-5: Apr 2 - 7</option>
-            <option value="2027-18-5: Apr 7 - 12">2027-18-5: Apr 7 - 12</option>
-          </optgroup>
-          <optgroup label="4 Day Tours">
-            <option value="2027-14-4: Mar 12 - 16">2027-14-4: Mar 12 - 16</option>
-          </optgroup>
-          <optgroup label="10 Day Safari">
-            <option value="2027-05-10: Jan 13 - 23">2027-05-10: Jan 13 - 23</option>
-            <option value="2027-09-10: Feb 11 - 21">2027-09-10: Feb 11 - 21</option>
-            <option value="2027-16-10: Mar 28 - Apr 7">2027-16-10: Mar 28 - Apr 7</option>
-          </optgroup>
-          <optgroup label="9 Day Safari">
-            <option value="2027-14-9: Mar 12 - 21">2027-14-9: Mar 12 - 21</option>
-          </optgroup>
-          <optgroup label="7 Day Safari">
-            <option value="2027-09: Feb 4 - 11">2027-09: Feb 4 - 11</option>
-          </optgroup>
-        </select>
+        <label class="lfh-v3-label">Select Tour Dates</label>
+        <div class="lfh-v3-multiselect" id="lfh-v3-tourDateMulti">
+          <button type="button" class="lfh-v3-multiselect-btn" id="lfh-v3-tourDateBtn">Select tour dates</button>
+          <div class="lfh-v3-multiselect-dropdown" id="lfh-v3-tourDateDropdown" style="display:none;">
+            <div class="lfh-v3-multiselect-group-label">7 Day Tours</div>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-04: Dec 30 - Jan 6"><span>Dec 30 - Jan 6</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-05: Jan 6 - 13"><span>Jan 6 - 13</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-07: Jan 23 - 30"><span>Jan 23 - 30</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-09: Feb 4 - 11"><span>Feb 4 - 11</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-11: Feb 21 - 28"><span>Feb 21 - 28</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-13: Mar 5 - 12"><span>Mar 5 - 12</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-15: Mar 21 - 28"><span>Mar 21 - 28</span></label>
+            <div class="lfh-v3-multiselect-group-label">5 Day Tours</div>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-05-5: Jan 13 - 18"><span>Jan 13 - 18</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-06-5: Jan 18 - 23"><span>Jan 18 - 23</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-08-5: Jan 30 - Feb 4"><span>Jan 30 - Feb 4</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-09-5: Feb 11 - 16"><span>Feb 11 - 16</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-10-5: Feb 16 - 21"><span>Feb 16 - 21</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-12-5: Feb 28 - Mar 5"><span>Feb 28 - Mar 5</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-14-5: Mar 16 - 21"><span>Mar 16 - 21</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-16-5: Mar 28 - Apr 2"><span>Mar 28 - Apr 2</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-17-5: Apr 2 - 7"><span>Apr 2 - 7</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-18-5: Apr 7 - 12"><span>Apr 7 - 12</span></label>
+            <div class="lfh-v3-multiselect-group-label">4 Day Tours</div>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-14-4: Mar 12 - 16"><span>Mar 12 - 16</span></label>
+            <div class="lfh-v3-multiselect-group-label">Safari Tours</div>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-05-10: Jan 13 - 23"><span>10-Day: Jan 13 - 23</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-09-10: Feb 11 - 21"><span>10-Day: Feb 11 - 21</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-16-10: Mar 28 - Apr 7"><span>10-Day: Mar 28 - Apr 7</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-14-9: Mar 12 - 21"><span>9-Day: Mar 12 - 21</span></label>
+            <label class="lfh-v3-multiselect-item"><input type="checkbox" value="2027-09-7s: Feb 4 - 11"><span>7-Day: Feb 4 - 11</span></label>
+            <div class="lfh-v3-multiselect-done"><button type="button" class="lfh-v3-multiselect-done-btn">Done</button></div>
+          </div>
+        </div>
       </div>
 
       <!-- LODGE PREFERENCE -->
@@ -1317,6 +1357,43 @@ export const LastFrontierLeadForm_v4_Unified = {
     });
 
     // ========================================================================
+    // TOUR DATE MULTI-SELECT
+    // ========================================================================
+    const tourDateBtn = container.querySelector('#lfh-v3-tourDateBtn');
+    const tourDateDropdown = container.querySelector('#lfh-v3-tourDateDropdown');
+    const tourDateMulti = container.querySelector('#lfh-v3-tourDateMulti');
+    let selectedTourDates = [];
+
+    if (tourDateBtn && tourDateDropdown) {
+      tourDateBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = tourDateDropdown.style.display !== 'none';
+        tourDateDropdown.style.display = isOpen ? 'none' : 'block';
+      });
+
+      tourDateDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          selectedTourDates = Array.from(tourDateDropdown.querySelectorAll('input:checked')).map(c => c.value);
+          tourDateBtn.textContent = selectedTourDates.length === 0
+            ? 'Select tour dates'
+            : selectedTourDates.length === 1
+              ? '1 tour date selected'
+              : selectedTourDates.length + ' tour dates selected';
+        });
+      });
+
+      tourDateDropdown.querySelector('.lfh-v3-multiselect-done-btn')?.addEventListener('click', () => {
+        tourDateDropdown.style.display = 'none';
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#lfh-v3-tourDateMulti')) {
+          tourDateDropdown.style.display = 'none';
+        }
+      });
+    }
+
+    // ========================================================================
     // GROUP SIZE SLIDER
     // ========================================================================
     const groupSlider = container.querySelector('#lfh-v3-groupSize');
@@ -1512,7 +1589,7 @@ export const LastFrontierLeadForm_v4_Unified = {
           catSkied: getSelect('catSkied'),
           heliSkied: getSelect('heliSkied'),
           seasonPreference: getSelect('seasonPreference'),
-          tourDate: getVal('#lfh-v3-tourDate'),
+          tourDate: selectedTourDates.length > 0 ? selectedTourDates.join(', ') : '',
           lodge: getSelect('lodge'),
           groupSize: getVal('#lfh-v3-groupSize') === '12' ? '12+' : getVal('#lfh-v3-groupSize'),
           additionalQuestions: getVal('#lfh-v3-additionalQuestions'),

@@ -116,7 +116,7 @@ export const LFH_LODGES = {
     location: 'Stewart, BC (Alaska Border)',
     style: 'Heritage Hotel',
     description:
-      'Nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests stay in the Ripley Creek Inn, funky heritage buildings with hot tub, sauna, and soulful food at the Bitter Creek Cafe.',
+      'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn — funky heritage buildings with hot tub, sauna, and soulful food at the Bitter Creek Cafe.',
     fullDescription:
       'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn, which is made up of funky heritage buildings. This lodge is about the bare essentials: hot tub and sauna for the muscles, and soulful food served across the street at the Bitter Creek Cafe, which conveniently doubles up as our Bar.',
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
@@ -178,26 +178,26 @@ export const LFH_LODGES = {
 const COMPARISON_CATEGORIES = [
   {
     label: 'Capacity',
-    bell2: '36 guests',
-    ripley: '24 guests',
+    bell2: '36 guests.',
+    ripley: '24 guests.',
     icon: '●●',
   },
   {
     label: 'Location',
-    bell2: 'Skeena Mountains',
-    ripley: 'Stewart, BC',
+    bell2: 'Skeena Mountains.',
+    ripley: 'Stewart, BC.',
     icon: '◉',
   },
   {
     label: 'Accommodation Style',
-    bell2: 'Log cabin chalets',
-    ripley: 'Heritage hotel rooms',
+    bell2: 'Log cabin chalets.',
+    ripley: 'Heritage hotel rooms.',
     icon: '⌂',
   },
   {
     label: 'Terrain Level',
-    bell2: 'Strong Intermediate',
-    ripley: 'Advanced to Expert',
+    bell2: 'Strong Intermediate.',
+    ripley: 'Advanced to Expert.',
     icon: '⛰',
   },
   {
@@ -214,14 +214,14 @@ const COMPARISON_CATEGORIES = [
   },
   {
     label: 'Connectivity',
-    bell2: 'Off-grid (WiFi available)',
-    ripley: 'Cell service + WiFi',
+    bell2: 'Off-grid (WiFi available).',
+    ripley: 'Cell service + WiFi.',
     icon: '◎',
   },
   {
     label: 'Vibe',
-    bell2: 'Wilderness immersion',
-    ripley: 'Town character & culture',
+    bell2: 'Wilderness immersion.',
+    ripley: 'Town character & culture.',
     icon: '★',
   },
 ];

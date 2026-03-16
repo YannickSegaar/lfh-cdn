@@ -222,6 +222,8 @@ export const LFHDisclaimerModal = {
       if (!shadowRoot) return;
       var inputContainer = shadowRoot.querySelector('.vfrc-input-container');
       if (inputContainer) inputContainer.style.display = 'none';
+      var menuBar = shadowRoot.querySelector('.lf-menu-bar');
+      if (menuBar) menuBar.style.display = 'none';
     }
 
     function reEnableChatInput() {
@@ -229,6 +231,8 @@ export const LFHDisclaimerModal = {
       if (!shadowRoot) return;
       var inputContainer = shadowRoot.querySelector('.vfrc-input-container');
       if (inputContainer) inputContainer.style.display = '';
+      var menuBar = shadowRoot.querySelector('.lf-menu-bar');
+      if (menuBar) menuBar.style.display = '';
     }
 
     // Accept handler

@@ -149,7 +149,7 @@ export function renderLodgesTab(container, config, savedState) {
               <div class="lfhlc-overview-quick-stats">
                 <span class="lfhlc-quick-stat">${bell2.capacity} guests</span>
                 <span class="lfhlc-quick-stat">${bell2.style}</span>
-                <span class="lfhlc-quick-stat">${bell2.terrain.skillLevel.split(' to ')[0]}+</span>
+                <span class="lfhlc-quick-stat">${bell2.terrain.skillLevel.replace(/\.$/, '')}+</span>
               </div>
               <div class="lfhlc-card-actions">
                 <button class="lfhlc-btn-primary lfhlc-view-lodge-btn" data-lodge="bell2">Explore Bell 2</button>
@@ -169,7 +169,7 @@ export function renderLodgesTab(container, config, savedState) {
               <div class="lfhlc-overview-quick-stats">
                 <span class="lfhlc-quick-stat">${ripley.capacity} guests</span>
                 <span class="lfhlc-quick-stat">${ripley.style}</span>
-                <span class="lfhlc-quick-stat">${ripley.terrain.skillLevel.split(' to ')[0]}+</span>
+                <span class="lfhlc-quick-stat">${ripley.terrain.skillLevel.replace(/\.$/, '')}+</span>
               </div>
               <div class="lfhlc-card-actions">
                 <button class="lfhlc-btn-primary lfhlc-view-lodge-btn" data-lodge="ripley">Explore Ripley Creek</button>
@@ -182,7 +182,7 @@ export function renderLodgesTab(container, config, savedState) {
         <div class="lfhlc-comparison-section">
           ${isMobile ? `
             <h3 class="lfhlc-section-title lfhlc-comparison-toggle" id="lfhlc-comparison-toggle">
-              Side-by-Side Comparison
+              View Side-by-Side Comparison
               <span class="lfhlc-toggle-hint">Tap to expand</span>
               <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
             </h3>
@@ -443,12 +443,12 @@ export function renderLodgesTab(container, config, savedState) {
               <div class="lfhlc-stat-label">Accommodation</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">${lodge.terrain.skillLevel.split(' to ')[0]}</div>
+              <div class="lfhlc-stat-value">${lodge.terrain.skillLevel.replace(/\.$/, '')}</div>
               <div class="lfhlc-stat-label">Skill Level</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">4:1</div>
-              <div class="lfhlc-stat-label">Guest:Guide</div>
+              <div class="lfhlc-stat-value">${lodge.id === 'ripley' ? 'Stewart, BC' : '4:1'}</div>
+              <div class="lfhlc-stat-label">${lodge.id === 'ripley' ? 'Frontier Town' : 'Guest:Guide'}</div>
             </div>
           </div>
 
@@ -1157,8 +1157,8 @@ export function buildLodgesStyles() {
 .lfhlc-terrain-toggle-icon { display: flex; align-items: center; }
 .lfhlc-toggle-arrow {
   display: flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border-radius: 50%;
-  background: ${LFH_COLORS.border}; color: ${LFH_COLORS.textPrimary};
+  width: 28px; height: 28px; border-radius: 50%;
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
   flex-shrink: 0; transition: all 0.2s; margin-left: auto;
 }
 .lfhlc-terrain-toggle:hover .lfhlc-toggle-arrow,
@@ -1287,26 +1287,27 @@ export function buildLodgesStyles() {
 
 /* Mobile Progressive Disclosure */
 .lfhlc-collapse-toggle {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%; padding: 8px 12px; margin-bottom: 8px;
-  background: ${LFH_COLORS.infoBox}; border: 1px solid ${LFH_COLORS.border};
-  border-radius: 6px; font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 600; color: ${LFH_COLORS.textSecondary};
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 12px 14px; margin-bottom: 10px;
+  background: #fff; border: 2px solid ${LFH_COLORS.primaryRed};
+  border-radius: 8px; font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 700; color: ${LFH_COLORS.primaryRed};
   cursor: pointer; transition: all 0.2s;
 }
-.lfhlc-collapse-toggle:hover { border-color: ${LFH_COLORS.primaryRed}; color: ${LFH_COLORS.textPrimary}; }
+.lfhlc-collapse-toggle:hover { background: ${LFH_COLORS.selectedTint}; }
 .lfhlc-collapse-toggle:hover .lfhlc-toggle-arrow {
   background: ${LFH_COLORS.primaryRed}; color: #fff;
 }
 
 .lfhlc-comparison-toggle {
-  cursor: pointer; display: flex; align-items: center; gap: 6px;
-  padding: 10px 12px; margin: 0 -12px 10px;
-  background: ${LFH_COLORS.infoBox}; border: 1px solid ${LFH_COLORS.border};
-  border-radius: 6px; transition: all 0.2s;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px; margin: 0 -12px 10px;
+  background: #fff; border: 2px solid ${LFH_COLORS.primaryRed};
+  border-radius: 8px; transition: all 0.2s;
+  font-size: 13px; font-weight: 700; color: ${LFH_COLORS.primaryRed};
 }
 .lfhlc-comparison-toggle:hover {
-  color: ${LFH_COLORS.primaryRed}; border-color: ${LFH_COLORS.primaryRed};
+  background: ${LFH_COLORS.selectedTint};
 }
 .lfhlc-comparison-toggle:hover .lfhlc-toggle-arrow {
   background: ${LFH_COLORS.primaryRed}; color: #fff;
@@ -1317,7 +1318,6 @@ export function buildLodgesStyles() {
 .lfhlc-features-hidden { display: none !important; }
 .lfhlc-features-shown { display: grid !important; }
 .lfhlc-features-more-toggle {
-  border-style: dashed;
   margin-bottom: 16px;
 }
 
@@ -1326,8 +1326,9 @@ export function buildLodgesStyles() {
 .lfhlc-run-photos-toggle { margin-bottom: 12px; }
 
 @media (max-width: 500px) {
-  .lfhlc-comparison-header, .lfhlc-comparison-row { grid-template-columns: 100px 1fr 1fr; }
+  .lfhlc-comparison-header, .lfhlc-comparison-row { grid-template-columns: 110px 1fr 1fr; }
   .lfhlc-comp-cell { padding: 8px 6px; font-size: 10px; }
+  .lfhlc-comp-label { font-size: 9px; word-break: break-word; }
   .lfhlc-detail-actions { flex-direction: column; }
   .lfhlc-btn-primary, .lfhlc-btn-outline { width: 100%; min-height: 48px; }
   .lfhlc-gallery-thumb { flex: 0 0 100px; height: 66px; }
