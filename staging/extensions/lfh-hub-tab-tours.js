@@ -236,6 +236,7 @@ export function renderToursTab(container, config, savedState) {
       card.innerHTML = `
         <div class="lfhte-card-image" style="background-image: url('${tour.heroImage}')">
           <div class="lfhte-card-badges">${lodgeBadges}</div>
+          ${tour.id === '4day' ? '<span class="lfhte-card-badge-march">Only in March</span>' : ''}
         </div>
         <div class="lfhte-card-body">
           <h3 class="lfhte-card-title">${tour.name}</h3>
@@ -413,7 +414,7 @@ export function renderToursTab(container, config, savedState) {
             <div class="lfhte-stat-label">${tour.id === 'private' ? 'of 4 (up to 8 pax)' : 'Guest:Guide'}</div>
           </div>
         </div>
-        ${tour.id !== 'private' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
+        ${tour.id !== 'private' && tour.verticalGuarantee ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
 
         <div class="lfhte-detail-section">
           <h3 class="lfhte-section-title">Pricing (CAD per person)</h3>
@@ -922,6 +923,14 @@ export function buildToursStyles() {
   padding: 4px 10px; border-radius: 20px;
   font-size: 10px; font-weight: 600; color: #fff;
   text-transform: uppercase; letter-spacing: 0.3px;
+}
+.lfhte-card-badge-march {
+  position: absolute; bottom: 10px; left: 10px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; color: #fff;
+  background: ${LFH_COLORS.primaryRed};
+  text-transform: uppercase; letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 .lfhte-card-body { padding: 14px; }
 .lfhte-card-title {
