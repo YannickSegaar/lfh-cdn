@@ -3,7 +3,7 @@
  * Production ID: lfh-selfservice-modal
  * Trace types: N/A (opened by other extensions)
  * Origin: browser-self-service-v4-modal-unified.js
- * Dependencies: lfh-tours-data, lfh-tours-modal, lfh-lodges-modal
+ * Dependencies: lfh-tours-data, lfh-hub
  * Last modified: 2026-03-10
  */
 
@@ -24,8 +24,7 @@
 
 // Import shared constants from tour explorer
 import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
-import { openTourExplorerModalWithBookingUnified } from './lfh-tours-modal.js';
-import { openLodgeCompareModal } from './lfh-lodges-modal.js';
+import { openHubModal } from './lfh-hub.js';
 
 // Re-export for widget use
 export { LFH_COLORS, LFH_ASSETS };
@@ -1001,14 +1000,14 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
             source: 'browser_self_service'
           });
           closeModal();
-          setTimeout(() => openTourExplorerModalWithBookingUnified(null, {}), 350);
+          setTimeout(() => openHubModal({ tab: 'tours' }), 350);
         } else if (handler === 'open_lodges') {
           interactWithAgent('ext_user_action', {
             action: 'ss_compare_lodges',
             source: 'browser_self_service'
           });
           closeModal();
-          setTimeout(() => openLodgeCompareModal(), 350);
+          setTimeout(() => openHubModal({ tab: 'lodges' }), 350);
         }
       });
     });
