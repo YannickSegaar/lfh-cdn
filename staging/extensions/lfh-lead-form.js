@@ -73,6 +73,7 @@ export const LastFrontierLeadForm_v4_Unified = {
     } = trace.payload || {};
 
     const isMobile = device_type === 'mobile';
+    const SHOW_VISIT_TIMING = false; // Toggle: set true to re-enable "When would you like to visit?"
 
     // Force handoff header overrides
     const displayTitle = isForceHandoff
@@ -287,13 +288,14 @@ export const LastFrontierLeadForm_v4_Unified = {
 
 /* ===== FORM GROUPS ===== */
 .lfh-v3-form-group {
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .lfh-v3-form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  margin-bottom: 18px;
 }
 
 .lfh-v3-form-row .lfh-v3-form-group {
@@ -761,7 +763,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 }
 
 .lfh-mobile .lfh-v3-form-group {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .lfh-mobile .lfh-v3-label {
@@ -815,15 +817,6 @@ export const LastFrontierLeadForm_v4_Unified = {
   <!-- STEP 1: Contact & Intent -->
   <div id="lfh-v3-step-1" class="lfh-v3-step active">
     <form id="lfh-v3-contact-form">
-      ${isMobile ? `<div class="lfh-v3-form-group">
-        <label class="lfh-v3-label">Is this about...</label>
-        <select id="lfh-v3-inquiryType" name="inquiryType" class="lfh-v3-select">
-          <option value="">Select...</option>
-          <option value="new_inquiry">A new inquiry</option>
-          <option value="existing_booking">An existing booking</option>
-        </select>
-      </div>` : '<input type="hidden" id="lfh-v3-inquiryType" name="inquiryType" value="new_inquiry">'}
-
       <div class="lfh-v3-form-row">
         <div class="lfh-v3-form-group">
           <label class="lfh-v3-label">First Name <span class="lfh-v3-required">*</span></label>
@@ -872,6 +865,15 @@ export const LastFrontierLeadForm_v4_Unified = {
           <option value="Previous Guest">Previous Guest</option>
           <option value="Ski Show/Event">Ski Show/Event</option>
           <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="lfh-v3-form-group">
+        <label class="lfh-v3-label">Inquiry Type</label>
+        <select id="lfh-v3-inquiryType" name="inquiryType" class="lfh-v3-select">
+          <option value="">Select...</option>
+          <option value="new_inquiry">New inquiry</option>
+          <option value="existing_booking">Existing booking</option>
         </select>
       </div>
 
@@ -933,7 +935,7 @@ export const LastFrontierLeadForm_v4_Unified = {
       </div>
 
       <!-- SEASON PREFERENCE -->
-      <div class="lfh-v3-form-group">
+      ${SHOW_VISIT_TIMING ? `<div class="lfh-v3-form-group">
         <label class="lfh-v3-label">When would you like to visit?</label>
         <select id="lfh-v3-seasonPreference" name="seasonPreference" class="lfh-v3-select">
           <option value="">Select...</option>
@@ -941,7 +943,7 @@ export const LastFrontierLeadForm_v4_Unified = {
           <option value="middle">Mid Season (Feb\u2013Mar)</option>
           <option value="late">Late Season (April)</option>
         </select>
-      </div>
+      </div>` : ''}
 
       <!-- TOUR DATE SELECTION (multi-select) -->
       <div class="lfh-v3-form-group">
@@ -1588,7 +1590,7 @@ export const LastFrontierLeadForm_v4_Unified = {
           skiDaysPerYear: skiDays,
           catSkied: getSelect('catSkied'),
           heliSkied: getSelect('heliSkied'),
-          seasonPreference: getSelect('seasonPreference'),
+          seasonPreference: SHOW_VISIT_TIMING ? getSelect('seasonPreference') : '',
           tourDate: selectedTourDates.length > 0 ? selectedTourDates.join(', ') : '',
           lodge: getSelect('lodge'),
           groupSize: getVal('#lfh-v3-groupSize') === '12' ? '12+' : getVal('#lfh-v3-groupSize'),
