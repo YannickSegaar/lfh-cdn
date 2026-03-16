@@ -94,7 +94,8 @@
 <body>
 <div class="container">
   <h1>LFH CDN Test Page</h1>
-  <div class="subtitle">v1.1.0 &mdash; Verifies the chat widget loads correctly from GitHub Pages CDN</div>
+  <div class="subtitle" id="env-label">v1.1.0 &mdash; Verifies the chat widget loads correctly from GitHub Pages CDN</div>
+  <script>if(location.pathname.includes('/staging/'))document.getElementById('env-label').innerHTML='<strong style="color:#f59e0b">STAGING</strong> &mdash; Preview of staging branch changes';</script>
 
   <!-- Status Summary -->
   <div class="card">
@@ -197,7 +198,8 @@
 <!-- CDN Asset Checks -->
 <script>
 (function() {
-  var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
+  var isStaging = location.pathname.includes('/staging/');
+  var CDN = 'https://yannicksegaar.github.io/lfh-cdn' + (isStaging ? '/staging' : '');
   var checks = [
     { id: 'loader', path: '/loader.js' },
     { id: 'css', path: '/css/LFH_styles.css' },
@@ -250,12 +252,56 @@
 (function() {
   var s = document.createElement('script');
   s.type = 'module';
-  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+  var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || /^192\./.test(location.hostname) || /^10\./.test(location.hostname);
+  var isStaging = location.pathname.includes('/staging/');
+  if (isLocal) {
     s.src = '/loader.js?v=local&t=' + Date.now();
   } else {
-    s.src = 'https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.3.1';
+    var base = 'https://yannicksegaar.github.io/lfh-cdn' + (isStaging ? '/staging' : '');
+    s.src = base + '/loader.js?v=1.3.1&t=' + Date.now();
   }
   document.body.appendChild(s);
+})();
+</script>
+
+<!-- Reload & widget restart debugger -->
+<script>
+(function() {
+  // 1. Detect REAL page reloads (survives across reload via sessionStorage)
+  window.addEventListener('beforeunload', function() {
+    sessionStorage.setItem('lfh_reload_ts', Date.now());
+  });
+  var lastReload = sessionStorage.getItem('lfh_reload_ts');
+  if (lastReload && (Date.now() - parseInt(lastReload, 10)) < 10000) {
+    console.warn('[LFH] PAGE RELOAD detected — page was reloaded at ' + new Date(parseInt(lastReload, 10)).toISOString());
+    sessionStorage.removeItem('lfh_reload_ts');
+  }
+
+  // 2. Detect VoiceFlow WIDGET restarts (no page reload, but widget re-renders)
+  var widgetLoadCount = 0;
+  var origLog = console.log;
+  var patchedLog = console.log; // capture current (already patched by console interceptor above)
+  var checkWidgetRestart = setInterval(function() {
+    if (!window.voiceflow || !window.voiceflow.chat) return;
+    // Watch for the #voiceflow-chat shadow root being recreated
+    var vfEl = document.getElementById('voiceflow-chat');
+    if (!vfEl) return;
+    var sr = vfEl.shadowRoot;
+    if (!sr) return;
+
+    // Check if VF widget container has been rebuilt
+    var chatContainer = sr.querySelector('.vfrc-chat');
+    if (chatContainer) {
+      var stamp = chatContainer.getAttribute('data-lfh-tracked');
+      if (!stamp) {
+        widgetLoadCount++;
+        chatContainer.setAttribute('data-lfh-tracked', String(Date.now()));
+        if (widgetLoadCount > 1) {
+          console.warn('[LFH] WIDGET RESTART #' + widgetLoadCount + ' detected at ' + new Date().toISOString() + ' — VoiceFlow re-rendered without a page reload');
+        }
+      }
+    }
+  }, 2000);
 })();
 </script>
 

@@ -80,6 +80,14 @@
   font-weight: 500 !important;
 }
 
+/* ===== LEAD FORM EXTENSION OVERRIDES ===== */
+
+/* Header title — "PLAN YOUR HELISKI ADVENTURE" */
+.vfrc-widget .lfh-v3-header-label {
+  font-family: 'Nexa Rust Sans Black 2', 'Inter', sans-serif !important;
+  font-weight: normal !important;
+}
+
 /* ===== SELF-SERVICE EXTENSION OVERRIDES ===== */
 
 /* Header title — "DISCOVER HELISKIING" */

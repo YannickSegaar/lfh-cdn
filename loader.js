@@ -8,11 +8,11 @@
   // CONFIGURATION
   // ============================================
   // Derive CDN base from this script's own URL (works on any host page)
-  var scriptEl = document.currentScript;
+  // Note: document.currentScript is null in ES modules, so we use import.meta.url
   var CDN = 'https://yannicksegaar.github.io/lfh-cdn';
   var useFallback = false;
   try {
-    var scriptUrl = new URL(scriptEl.src);
+    var scriptUrl = new URL(import.meta.url);
     CDN = scriptUrl.origin + scriptUrl.pathname.replace(/\/loader\.js$/, '');
     useFallback = scriptUrl.searchParams.get('fallback') === 'true';
   } catch (e) {}
@@ -147,6 +147,11 @@
   var fontStyle = document.createElement('style');
   fontStyle.textContent = "@font-face { font-family: 'Nexa Rust Sans Black 2'; src: url('" + CDN + "/fonts/NexaRustSansBlack2.woff2') format('woff2'); font-weight: normal; font-style: normal; font-display: swap; }";
   document.head.appendChild(fontStyle);
+
+  // Force-load the font so it's available inside Shadow DOM
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load("16px 'Nexa Rust Sans Black 2'").catch(function() {});
+  }
 
   // ============================================
   // 1c. PRELOAD INTER FONT (needed at document level for Shadow DOM extensions)
@@ -283,6 +288,13 @@
   var shadowScript = document.createElement('script');
   shadowScript.src = CDN + '/styles/lastfrontier-shadow-inject.js?v=1.3.0';
   document.head.appendChild(shadowScript);
+
+  // ============================================
+  // 6b. POST-LOAD: Mobile font readability boost
+  // ============================================
+  var fontBoost = document.createElement('script');
+  fontBoost.src = CDN + '/styles/lfh-mobile-font-boost.js?v=1.0.0';
+  document.head.appendChild(fontBoost);
 
   // ============================================
   // 7. POST-LOAD: Notification sound

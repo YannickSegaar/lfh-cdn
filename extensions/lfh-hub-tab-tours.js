@@ -236,13 +236,14 @@ export function renderToursTab(container, config, savedState) {
       card.innerHTML = `
         <div class="lfhte-card-image" style="background-image: url('${tour.heroImage}')">
           <div class="lfhte-card-badges">${lodgeBadges}</div>
+          ${tour.id === '4day' ? '<span class="lfhte-card-badge-march">Only in March</span>' : ''}
         </div>
         <div class="lfhte-card-body">
           <h3 class="lfhte-card-title">${tour.name}</h3>
           <div class="lfhte-card-stats">
             <span>${tour.duration}</span>
-            <span class="lfhte-stat-divider">|</span>
-            <span>${tour.verticalGuarantee}</span>
+            ${tour.verticalGuarantee ? `<span class="lfhte-stat-divider">|</span>
+            <span>${tour.verticalGuarantee}</span>` : ''}
             <span class="lfhte-stat-divider">|</span>
             <span>4 guests/guide</span>
           </div>
@@ -387,16 +388,7 @@ export function renderToursTab(container, config, savedState) {
           <img class="lfhte-hero-img" src="${tour.heroImage}" alt="${tour.name}">
         </div>
 
-        ${isMobile ? `
-          <button class="lfhte-collapse-toggle lfhte-gallery-toggle" id="lfhte-gallery-toggle">
-            Gallery (${galleryCount} photos)
-            <span class="lfhte-toggle-hint">Tap to expand</span>
-            <span class="lfhte-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="lfhte-gallery-strip lfhte-gallery-collapsed">${galleryHTML}</div>
-        ` : `
-          <div class="lfhte-gallery-strip">${galleryHTML}</div>
-        `}
+        <div class="lfhte-gallery-strip">${galleryHTML}</div>
 
         <div class="lfhte-detail-section">
           <p class="lfhte-full-desc">${tour.description}</p>
@@ -409,10 +401,10 @@ export function renderToursTab(container, config, savedState) {
             <div class="lfhte-stat-value">${tour.duration}</div>
             <div class="lfhte-stat-label">Duration</div>
           </div>
-          <div class="lfhte-stat-box">
+          ${tour.verticalGuarantee ? `<div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' ? '*' : ''}</div>
             <div class="lfhte-stat-label">Vertical Guarantee</div>
-          </div>
+          </div>` : ''}
           <div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.skillLevel.replace(' / Expert', '')}</div>
             <div class="lfhte-stat-label">Skill Level</div>
@@ -422,7 +414,7 @@ export function renderToursTab(container, config, savedState) {
             <div class="lfhte-stat-label">${tour.id === 'private' ? 'of 4 (up to 8 pax)' : 'Guest:Guide'}</div>
           </div>
         </div>
-        ${tour.id !== 'private' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
+        ${tour.id !== 'private' && tour.verticalGuarantee ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
 
         <div class="lfhte-detail-section">
           <h3 class="lfhte-section-title">Pricing (CAD per person)</h3>
@@ -459,12 +451,6 @@ export function renderToursTab(container, config, savedState) {
         </div>
       </div>
 
-      ${isMobile ? `
-        <div class="lfhte-sticky-cta">
-          <button class="lfhte-btn-primary lfhte-sticky-book" data-tour-id="${tour.id}">Book</button>
-          <button class="lfhte-btn-outline lfhte-sticky-ask" data-tour-id="${tour.id}">Ask</button>
-        </div>
-      ` : ''}
     `;
 
     content.innerHTML = '';
@@ -518,19 +504,6 @@ export function renderToursTab(container, config, savedState) {
 
     // Mobile: gallery toggle
     if (isMobile) {
-      detail.querySelector('#lfhte-gallery-toggle')?.addEventListener('click', () => {
-        const strip = detail.querySelector('.lfhte-gallery-strip');
-        const arrow = detail.querySelector('#lfhte-gallery-toggle .lfhte-toggle-arrow');
-        const hint = detail.querySelector('#lfhte-gallery-toggle .lfhte-toggle-hint');
-        strip.classList.toggle('lfhte-gallery-collapsed');
-        strip.classList.toggle('lfhte-gallery-expanded');
-        const collapsed = strip.classList.contains('lfhte-gallery-collapsed');
-        arrow.innerHTML = collapsed
-          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
-          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
-        if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
-      });
-
       // Mobile: included toggle
       detail.querySelector('#lfhte-included-toggle')?.addEventListener('click', () => {
         const grid = detail.querySelector('.lfhte-included-grid');
@@ -545,22 +518,6 @@ export function renderToursTab(container, config, savedState) {
         if (hint) hint.textContent = collapsed ? 'Tap to expand' : 'Tap to collapse';
       });
 
-      // Mobile: sticky CTA buttons
-      detail.querySelector('.lfhte-sticky-book')?.addEventListener('click', () => {
-        openReplaceBooking(tour);
-      });
-
-      detail.querySelector('.lfhte-sticky-ask')?.addEventListener('click', () => {
-        trackHubHighIntent('ask:' + tour.name);
-        requestCloseWithAction({
-          action: 'tour_inquiry',
-          source: 'tour_explorer',
-          tourId: tour.id,
-          tourName: tour.name,
-          lodge: tour.lodges.join(', '),
-          duration: tour.duration,
-        });
-      });
     }
 
     // Lodge name links in pricing table → switch to lodges tab (stays in modal)
@@ -668,7 +625,7 @@ export function renderToursTab(container, config, savedState) {
 
     const rows = [
       { label: 'Duration', fn: t => t.duration },
-      { label: 'Vertical Guarantee', fn: t => t.verticalGuarantee },
+      { label: 'Vertical Guarantee', fn: t => t.verticalGuarantee || '—' },
       { label: 'Lodges', fn: t => t.lodges.includes('both') ? 'Both Lodges' : t.lodges.map(lodgeName).join(' or ') },
       { label: 'Time of Season', fn: t => (t.months || []).map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ') },
       { label: 'Starting Price', fn: t => `$${t.priceFrom.toLocaleString()} CAD` },
@@ -967,6 +924,14 @@ export function buildToursStyles() {
   font-size: 10px; font-weight: 600; color: #fff;
   text-transform: uppercase; letter-spacing: 0.3px;
 }
+.lfhte-card-badge-march {
+  position: absolute; bottom: 10px; left: 10px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; color: #fff;
+  background: ${LFH_COLORS.primaryRed};
+  text-transform: uppercase; letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
 .lfhte-card-body { padding: 14px; }
 .lfhte-card-title {
   font-size: 16px; font-weight: 700;
@@ -1128,7 +1093,7 @@ export function buildToursStyles() {
   text-transform: uppercase; letter-spacing: 0.3px;
 }
 
-.lfhte-pricing-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.lfhte-pricing-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
 .lfhte-pricing-table th {
   padding: 10px 8px; background: ${LFH_COLORS.textPrimary};
   color: #fff; text-align: left; font-weight: 600;
@@ -1145,7 +1110,7 @@ export function buildToursStyles() {
 }
 .lfhte-vertical-note {
   font-size: 11px; color: ${LFH_COLORS.textSecondary};
-  font-style: italic; margin: 4px 0 0 0; text-align: center;
+  font-style: italic; margin: 8px 0 20px 0; text-align: left;
 }
 
 .lfhte-included-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -1319,8 +1284,6 @@ export function buildToursStyles() {
   background: ${LFH_COLORS.primaryRed}; color: #fff;
 }
 
-.lfhte-gallery-collapsed { display: none !important; }
-.lfhte-gallery-expanded { display: flex !important; }
 
 .lfhte-included-toggle {
   cursor: pointer; display: flex; align-items: center; gap: 6px;
@@ -1334,23 +1297,16 @@ export function buildToursStyles() {
 .lfhte-included-collapsed { display: none !important; }
 .lfhte-included-expanded { display: grid !important; }
 
-.lfhte-sticky-cta {
-  display: flex; gap: 8px; padding: 10px 16px;
-  background: #fff; border-top: 1px solid ${LFH_COLORS.border};
-  flex-shrink: 0; box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-}
-.lfhte-sticky-cta .lfhte-btn-primary,
-.lfhte-sticky-cta .lfhte-btn-outline {
-  flex: 1; padding: 12px 16px; font-size: 13px; font-weight: 700;
-  min-height: 44px;
-}
 
 @media (max-width: 500px) {
   .lfhte-stats-bar { grid-template-columns: repeat(2, 1fr); }
   .lfhte-stat-box { padding: 8px 6px; }
   .lfhte-stat-value { font-size: 12px; }
   .lfhte-stat-label { font-size: 9px; }
-  .lfhte-pricing-table { display: block; overflow-x: auto; }
+  .lfhte-pricing-table { display: block; overflow-x: auto; min-width: 100%; }
+  .lfhte-pricing-table thead,
+  .lfhte-pricing-table tbody,
+  .lfhte-pricing-table tr { display: table; width: 100%; table-layout: fixed; }
   .lfhte-hero-image { height: 200px; }
   .lfhte-hero-img { max-height: 250px; }
   .lfhte-filter-bar { padding: 10px 12px; }
@@ -1358,7 +1314,9 @@ export function buildToursStyles() {
   .lfhte-filter-group select { padding: 6px 8px; }
   .lfhte-results-count { display: none; }
   .lfhte-included-grid { grid-template-columns: 1fr; }
-  .lfhte-detail-actions-bottom .lfhte-actions-row:first-child { display: none; }
+  .lfhte-detail-actions-bottom .lfhte-actions-row { flex-wrap: wrap; }
+  .lfhte-detail-actions-bottom .lfhte-btn-primary,
+  .lfhte-detail-actions-bottom .lfhte-btn-outline { flex: 1 1 45%; min-height: 44px; }
 }
 `;
 }

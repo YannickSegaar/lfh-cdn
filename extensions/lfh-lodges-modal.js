@@ -56,9 +56,9 @@ export const LFH_LODGES = {
     location: 'Skeena Mountains',
     style: 'Log Cabins',
     description:
-      'Off-the-grid village custom-built for heli skiing. A purpose-built heliski village nestled in the heart of the Skeena Mountains, Bell 2 Lodge offers total immersion in the wilderness with no distractions.',
+      'A purpose-built heliski village nestled in the heart of the Skeena Mountains. Cozy log chalet rooms with wood-burning soapstone stoves, a main lodge with bar and dining room, plus hot tub, sauna, gym and games room.',
     fullDescription:
-      'Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. This off-the-grid sanctuary offers total immersion in the wilderness—no cell service, no distractions, just pristine powder and mountain living. The lodge features cozy log chalets with wood-burning soapstone stoves, a main lodge with world-class dining, and a true sense of adventure community.',
+      "Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. You'll stay in our cozy log chalet rooms, each equipped with wood-burning soapstone stoves and extremely comfortable beds. Social gatherings come alive in our main lodge where you'll find the bar and dining room. Other amenities include: gear room, ski tuning shop, hot tub, sauna, gym and games room.",
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
     images: {
       hero: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
@@ -84,14 +84,14 @@ export const LFH_LODGES = {
     ],
     features: {
       accommodation: 'Cozy log chalet rooms with wood-burning soapstone stoves.',
-      dining: 'Main lodge dining room with full bar and professional chefs.',
+      dining: 'Communal dining room in the main lodge with a full bar upstairs.',
       amenities: ['Hot tub', 'Sauna', 'Fitness centre', 'Games room', 'Gift shop', 'Bar', 'Boot room'],
       activities: ['Snowshoeing', 'Fat biking', 'Polar Dips', 'Skeet shooting'],
       connectivity: 'Off-grid, no cell service, high-speed internet available.',
       helipad: 'On-site, depart directly from lodge.',
     },
     terrain: {
-      skillLevel: 'Intermediate to Expert.',
+      skillLevel: 'Strong Intermediate.',
       type: 'Coast and Skeena Mountains.',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Close to lodge. Natural and man-made gladed skiing.',
@@ -116,9 +116,9 @@ export const LFH_LODGES = {
     location: 'Stewart, BC (Alaska Border)',
     style: 'Heritage Hotel',
     description:
-      'Historic mining town of Stewart, BC offers a unique character-filled experience. The Ripley Creek Inn features quirky heritage rooms in converted prospector houses and old shops, with the charming town of Stewart at your doorstep.',
+      'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn — funky heritage buildings with hot tub, sauna, and soulful food at the Bitter Creek Cafe.',
     fullDescription:
-      'Ripley Creek offers a completely different heliski experience in the historic mining town of Stewart, BC, at the Alaska border. The quirky heritage accommodations are spread across converted prospector houses and old shops, each with unique character. After skiing the massive Coast Mountain terrain, explore the charming town, visit local establishments, and experience the legendary "getting Hyderized" across the border in Hyder, Alaska.',
+      'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn, which is made up of funky heritage buildings. This lodge is about the bare essentials: hot tub and sauna for the muscles, and soulful food served across the street at the Bitter Creek Cafe, which conveniently doubles up as our Bar.',
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
     images: {
       hero: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
@@ -145,7 +145,7 @@ export const LFH_LODGES = {
     ],
     features: {
       accommodation: 'Unique heritage rooms - converted prospector houses and old shops.',
-      dining: 'Bitter Creek Cafe across the street, legendary local cuisine.',
+      dining: 'Communal dining in the Bitter Creek Cafe.',
       amenities: ['Hot tub', 'Sauna', 'Lounge areas', 'Gift shop', 'Boot room', 'Bar'],
       activities: ['Explore Stewart', 'Museum visits', 'Get Hyderized in Alaska', 'Local pubs', 'Polar Dips in Ocean', 'Snowshoeing'],
       connectivity: 'Cell service and medium-speed internet.',
@@ -178,26 +178,26 @@ export const LFH_LODGES = {
 const COMPARISON_CATEGORIES = [
   {
     label: 'Capacity',
-    bell2: '36 guests',
-    ripley: '24 guests',
+    bell2: '36 guests.',
+    ripley: '24 guests.',
     icon: '●●',
   },
   {
     label: 'Location',
-    bell2: 'Skeena Mountains',
-    ripley: 'Stewart, BC',
+    bell2: 'Skeena Mountains.',
+    ripley: 'Stewart, BC.',
     icon: '◉',
   },
   {
     label: 'Accommodation Style',
-    bell2: 'Log cabin chalets',
-    ripley: 'Heritage hotel rooms',
+    bell2: 'Log cabin chalets.',
+    ripley: 'Heritage hotel rooms.',
     icon: '⌂',
   },
   {
     label: 'Terrain Level',
-    bell2: 'Intermediate to Expert',
-    ripley: 'Advanced to Expert',
+    bell2: 'Strong Intermediate.',
+    ripley: 'Advanced to Expert.',
     icon: '⛰',
   },
   {
@@ -214,14 +214,14 @@ const COMPARISON_CATEGORIES = [
   },
   {
     label: 'Connectivity',
-    bell2: 'Off-grid (WiFi available)',
-    ripley: 'Cell service + WiFi',
+    bell2: 'Off-grid (WiFi available).',
+    ripley: 'Cell service + WiFi.',
     icon: '◎',
   },
   {
     label: 'Vibe',
-    bell2: 'Wilderness immersion',
-    ripley: 'Town character & culture',
+    bell2: 'Wilderness immersion.',
+    ripley: 'Town character & culture.',
     icon: '★',
   },
 ];
@@ -945,7 +945,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <button class="lfhlc-map-toggle" id="lfhlc-layout-toggle">
                 <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
                 Lodge Layout
-                <span class="lfhlc-terrain-arrow lfhlc-layout-arrow" style="transform: rotate(180deg)">▾</span>
+                <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
               </button>
               <div class="lfhlc-map-content open" id="lfhlc-layout-content">
                 <img src="${lodge.terrain.locationLayoutImage}" alt="${lodge.name} property layout"
@@ -958,7 +958,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <button class="lfhlc-map-toggle" id="lfhlc-terrain-toggle">
                 <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-10 4 10"/><path d="M2 21l6-14 3 7"/><path d="M15 7l5 14"/></svg></span>
                 Terrain Overview
-                <span class="lfhlc-terrain-arrow" style="transform: rotate(180deg)">▾</span>
+                <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
               </button>
               <div class="lfhlc-map-content open" id="lfhlc-terrain-content">
                 <img src="${lodge.terrain.aerialImage}" alt="${lodge.name} terrain"
@@ -973,7 +973,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
             <button class="lfhlc-terrain-toggle" id="lfhlc-terrain-details-toggle">
               <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
               Terrain Details
-              <span class="lfhlc-terrain-arrow" style="transform: rotate(180deg)">▾</span>
+              <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
             </button>
             <div class="lfhlc-terrain-content open" id="lfhlc-terrain-details-content">
               <div class="lfhlc-terrain-details">
@@ -1041,14 +1041,14 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     function bindToggle(toggleId, contentId) {
       content.querySelector(`#${toggleId}`)?.addEventListener('click', () => {
         const panel = content.querySelector(`#${contentId}`);
-        const arrow = content.querySelector(`#${toggleId} .lfhlc-terrain-arrow`);
+        const arrow = content.querySelector(`#${toggleId} .lfhlc-toggle-arrow`);
         const isOpen = panel.classList.contains('open');
         if (isOpen) {
           panel.classList.remove('open');
-          if (arrow) arrow.style.transform = 'rotate(0deg)';
+          if (arrow) arrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
         } else {
           panel.classList.add('open');
-          if (arrow) arrow.style.transform = 'rotate(180deg)';
+          if (arrow) arrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
         }
       });
     }
@@ -1643,9 +1643,15 @@ function buildModalStyles() {
 }
 .lfhlc-terrain-toggle:hover { background: rgba(0,0,0,0.03); }
 .lfhlc-terrain-toggle-icon { display: flex; align-items: center; }
-.lfhlc-terrain-arrow {
-  margin-left: auto; font-size: 12px;
-  transition: transform 0.2s;
+.lfhlc-toggle-arrow {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: ${LFH_COLORS.border}; color: ${LFH_COLORS.textPrimary};
+  flex-shrink: 0; transition: all 0.2s; margin-left: auto;
+}
+.lfhlc-terrain-toggle:hover .lfhlc-toggle-arrow,
+.lfhlc-map-toggle:hover .lfhlc-toggle-arrow {
+  background: ${LFH_COLORS.primaryRed}; color: #fff;
 }
 .lfhlc-terrain-content {
   max-height: 0; overflow: hidden;

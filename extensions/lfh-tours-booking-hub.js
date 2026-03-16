@@ -337,43 +337,7 @@ function buildBookingFormStyles() {
   background: ${LFH_COLORS.border}; border-radius: 3px;
 }
 
-/* Experience Cards */
-.lfhte-bf-exp-cards { display: flex; gap: 8px; margin-bottom: 12px; }
-.lfhte-bf-exp-card {
-  flex: 1; padding: 10px 8px; border: 1.5px solid ${LFH_COLORS.border};
-  border-radius: 8px; text-align: center; cursor: pointer;
-  transition: all 0.2s; background: #fff; font-size: 12px; font-weight: 600;
-  color: ${LFH_COLORS.textPrimary};
-}
-.lfhte-bf-exp-card:hover {
-  border-color: ${LFH_COLORS.primaryRed};
-  background: ${LFH_COLORS.selectedTint};
-}
-.lfhte-bf-exp-card.selected {
-  border-color: ${LFH_COLORS.primaryRed};
-  background: ${LFH_COLORS.selectedTint};
-  box-shadow: 0 0 0 1px ${LFH_COLORS.primaryRed};
-  color: ${LFH_COLORS.primaryRed};
-}
-.lfhte-bf-exp-card-label { font-size: 13px; font-weight: 700; }
-.lfhte-bf-exp-card-sub { font-size: 10px; color: ${LFH_COLORS.textSecondary}; margin-top: 2px; }
-
-/* Toggle Pills */
-.lfhte-bf-toggle-row { display: flex; gap: 8px; margin-bottom: 12px; }
-.lfhte-bf-toggle-pill {
-  flex: 1; padding: 9px 12px; border: 1.5px solid ${LFH_COLORS.border};
-  border-radius: 20px; text-align: center; cursor: pointer;
-  transition: all 0.2s; background: #fff; font-size: 12px; font-weight: 600;
-  color: ${LFH_COLORS.textPrimary};
-}
-.lfhte-bf-toggle-pill:hover {
-  border-color: ${LFH_COLORS.primaryRed};
-}
-.lfhte-bf-toggle-pill.selected {
-  border-color: ${LFH_COLORS.primaryRed};
-  background: ${LFH_COLORS.primaryRed};
-  color: #fff;
-}
+/* Experience/toggle cards removed — converted to <select> dropdowns */
 
 /* Custom dates message */
 .lfhte-bf-custom-dates {
@@ -527,7 +491,7 @@ function buildBookingFormStyles() {
 @media (max-width: 500px) {
   .lfhte-bf-row { flex-direction: column; gap: 0; }
   .lfhte-bf-request-types { flex-direction: column; }
-  .lfhte-bf-exp-cards { flex-direction: column; }
+
   .lfhte-bf-tour-card { flex-direction: column; text-align: center; }
   .lfhte-bf-tour-thumb { width: 100%; height: 80px; }
   .lfhte-bf-container { padding: 14px; }
@@ -625,7 +589,7 @@ export function renderBookingForm(container, options = {}) {
         <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
         <div class="lfhte-bf-tour-info">
           <p class="lfhte-bf-tour-name">${tour.name}</p>
-          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay} &middot; ${tour.verticalGuarantee} vertical</p>
+          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
           <p class="lfhte-bf-tour-price">From $${tour.priceFrom.toLocaleString()} CAD</p>
         </div>
       </div>
@@ -689,38 +653,33 @@ export function renderBookingForm(container, options = {}) {
         <!-- Experience -->
         <div class="lfhte-bf-section-title">Your Experience</div>
 
-        <div class="lfhte-bf-field" style="margin-bottom:4px">
-          <label>Skiing days per year</label>
-        </div>
-        <div class="lfhte-bf-exp-cards" id="lfhte-bf-ski-days">
-          <div class="lfhte-bf-exp-card" data-value="0-10">
-            <div class="lfhte-bf-exp-card-label">0–10</div>
-            <div class="lfhte-bf-exp-card-sub">days/yr</div>
-          </div>
-          <div class="lfhte-bf-exp-card" data-value="10-30">
-            <div class="lfhte-bf-exp-card-label">10–30</div>
-            <div class="lfhte-bf-exp-card-sub">days/yr</div>
-          </div>
-          <div class="lfhte-bf-exp-card" data-value="30+">
-            <div class="lfhte-bf-exp-card-label">30+</div>
-            <div class="lfhte-bf-exp-card-sub">days/yr</div>
-          </div>
+        <div class="lfhte-bf-field" style="margin-bottom:12px">
+          <label>Skiing days per year.</label>
+          <select id="lfhte-bf-ski-days" class="lfhte-bf-select">
+            <option value="">Select...</option>
+            <option value="0-10">0\u201310 days per year</option>
+            <option value="10-30">10\u201330 days per year</option>
+            <option value="30+">30+ days per year</option>
+          </select>
         </div>
 
-        <div class="lfhte-bf-field" style="margin-bottom:4px">
-          <label>Cat skied before?</label>
-        </div>
-        <div class="lfhte-bf-toggle-row" id="lfhte-bf-cat-skied">
-          <div class="lfhte-bf-toggle-pill" data-value="yes">Yes</div>
-          <div class="lfhte-bf-toggle-pill" data-value="no">No</div>
-        </div>
-
-        <div class="lfhte-bf-field" style="margin-bottom:4px">
-          <label>Heli skied before?</label>
-        </div>
-        <div class="lfhte-bf-toggle-row" id="lfhte-bf-heli-skied">
-          <div class="lfhte-bf-toggle-pill" data-value="yes">Yes</div>
-          <div class="lfhte-bf-toggle-pill" data-value="no">No</div>
+        <div class="lfhte-bf-row">
+          <div class="lfhte-bf-field">
+            <label>Cat skied?</label>
+            <select id="lfhte-bf-cat-skied" class="lfhte-bf-select">
+              <option value="">\u2013</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="lfhte-bf-field">
+            <label>Heli skied?</label>
+            <select id="lfhte-bf-heli-skied" class="lfhte-bf-select">
+              <option value="">\u2013</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
         </div>
 
         <!-- Next Button -->
@@ -788,7 +747,7 @@ export function renderBookingForm(container, options = {}) {
         <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
         <div class="lfhte-bf-tour-info">
           <p class="lfhte-bf-tour-name">${tour.name}</p>
-          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay} &middot; ${tour.verticalGuarantee} vertical</p>
+          <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
           <p class="lfhte-bf-tour-price">From $${tour.priceFrom.toLocaleString()} CAD</p>
         </div>
       </div>
@@ -936,45 +895,20 @@ export function renderBookingForm(container, options = {}) {
   // ======================================================================
 
   function wireExperienceCards() {
-    // Ski days cards
-    const skiDaysContainer = formWrap.querySelector('#lfhte-bf-ski-days');
-    if (skiDaysContainer) {
-      const cards = skiDaysContainer.querySelectorAll('.lfhte-bf-exp-card');
-      // Restore selection
-      if (selectedSkiDays) {
-        cards.forEach(c => c.classList.toggle('selected', c.dataset.value === selectedSkiDays));
-      }
-      cards.forEach(card => {
-        card.addEventListener('click', () => {
-          cards.forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
-          selectedSkiDays = card.dataset.value;
-        });
-      });
-    }
+    // Ski days select
+    const skiDaysSelect = formWrap.querySelector('#lfhte-bf-ski-days');
+    if (skiDaysSelect && selectedSkiDays) skiDaysSelect.value = selectedSkiDays;
+    if (skiDaysSelect) skiDaysSelect.addEventListener('change', () => { selectedSkiDays = skiDaysSelect.value; });
 
-    // Cat skied toggle
-    wireToggle('#lfhte-bf-cat-skied', selectedCatSkied, (val) => { selectedCatSkied = val; });
+    // Cat skied select
+    const catSkiedSelect = formWrap.querySelector('#lfhte-bf-cat-skied');
+    if (catSkiedSelect && selectedCatSkied) catSkiedSelect.value = selectedCatSkied;
+    if (catSkiedSelect) catSkiedSelect.addEventListener('change', () => { selectedCatSkied = catSkiedSelect.value; });
 
-    // Heli skied toggle
-    wireToggle('#lfhte-bf-heli-skied', selectedHeliSkied, (val) => { selectedHeliSkied = val; });
-  }
-
-  function wireToggle(selector, currentVal, setter) {
-    const container = formWrap.querySelector(selector);
-    if (!container) return;
-    const pills = container.querySelectorAll('.lfhte-bf-toggle-pill');
-    // Restore selection
-    if (currentVal) {
-      pills.forEach(p => p.classList.toggle('selected', p.dataset.value === currentVal));
-    }
-    pills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        pills.forEach(p => p.classList.remove('selected'));
-        pill.classList.add('selected');
-        setter(pill.dataset.value);
-      });
-    });
+    // Heli skied select
+    const heliSkiedSelect = formWrap.querySelector('#lfhte-bf-heli-skied');
+    if (heliSkiedSelect && selectedHeliSkied) heliSkiedSelect.value = selectedHeliSkied;
+    if (heliSkiedSelect) heliSkiedSelect.addEventListener('change', () => { selectedHeliSkied = heliSkiedSelect.value; });
   }
 
   // ======================================================================

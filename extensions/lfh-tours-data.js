@@ -29,11 +29,11 @@ export const LFH_TOURS = [
     id: '4day',
     name: '4-Day Tour',
     subtitle: 'The Quick Getaway',
-    description: 'Perfect for a focused heliski experience. Four days of world-class powder in the remote mountains of Northern BC, with a guaranteed 17,500 meters of vertical skiing. Available in March only.',
+    description: 'Perfect for a focused heliski experience when time is at a premium. Four days of skiing available in March only.',
     lodges: ['bell2', 'ripley'],
     duration: '4 days',
     durationDays: 4,
-    verticalGuarantee: '17,500m',
+    verticalGuarantee: '',
     months: ['mar'],
     pricing: {
       bell2: { peak: '$13,220' },
@@ -81,7 +81,7 @@ export const LFH_TOURS = [
     id: '5day',
     name: '5-Day Tour',
     subtitle: 'The Sweet Spot',
-    description: 'Our most popular package balancing time and value. Five days of helicopter skiing with a 22,000-meter vertical guarantee. Available January through April at both lodges, this tour gives you enough time to settle into the rhythm of mountain life.',
+    description: 'Our most popular package balances time and value. Five days of helicopter skiing with a 22,000 vertical meter guarantee. Available January through April at both lodges, this tour gives you enough time to settle into the rhythm of mountain life.',
     lodges: ['bell2', 'ripley'],
     duration: '5 days',
     durationDays: 5,
@@ -682,8 +682,8 @@ export function openTourExplorerModal(focusTourId = null) {
           <h3 class="lfhte-card-title">${tour.name}</h3>
           <div class="lfhte-card-stats">
             <span>${tour.duration}</span>
-            <span class="lfhte-stat-divider">|</span>
-            <span>${tour.verticalGuarantee}</span>
+            ${tour.verticalGuarantee ? `<span class="lfhte-stat-divider">|</span>
+            <span>${tour.verticalGuarantee}</span>` : ''}
             <span class="lfhte-stat-divider">|</span>
             <span>4 guests/guide</span>
           </div>
@@ -857,10 +857,10 @@ export function openTourExplorerModal(focusTourId = null) {
             <div class="lfhte-stat-value">${tour.duration}</div>
             <div class="lfhte-stat-label">Duration</div>
           </div>
-          <div class="lfhte-stat-box">
-            <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' ? '*' : ''}</div>
+          ${tour.verticalGuarantee ? `<div class="lfhte-stat-box">
+            <div class="lfhte-stat-value">${tour.verticalGuarantee}${tour.id !== 'private' && tour.id !== '4day' ? '*' : ''}</div>
             <div class="lfhte-stat-label">Vertical Guarantee</div>
-          </div>
+          </div>` : ''}
           <div class="lfhte-stat-box">
             <div class="lfhte-stat-value">${tour.skillLevel.replace(' / Expert', '')}</div>
             <div class="lfhte-stat-label">Skill Level</div>
@@ -870,7 +870,7 @@ export function openTourExplorerModal(focusTourId = null) {
             <div class="lfhte-stat-label">${tour.id === 'private' ? 'of 4 (up to 8 pax)' : 'Guest:Guide'}</div>
           </div>
         </div>
-        ${tour.id !== 'private' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
+        ${tour.id !== 'private' && tour.id !== '4day' ? '<p class="lfhte-vertical-note">*Vertical guarantee varies by week and time of season.</p>' : ''}
 
         <!-- Pricing Table -->
         <div class="lfhte-detail-section">
@@ -890,7 +890,7 @@ export function openTourExplorerModal(focusTourId = null) {
 
         <!-- Action Buttons -->
         <div class="lfhte-detail-actions">
-          <button class="lfhte-btn-primary lfhte-action-book" data-tour-id="${tour.id}">I Want to Book</button>
+          <button class="lfhte-btn-primary lfhte-action-book" data-tour-id="${tour.id}">Check Availability</button>
           <button class="lfhte-btn-outline lfhte-action-ask" data-tour-id="${tour.id}">Ask About This Tour</button>
           <button class="lfhte-btn-text lfhte-back-link" id="lfhte-back-link">Back to All Tours</button>
         </div>
@@ -984,7 +984,7 @@ export function openTourExplorerModal(focusTourId = null) {
 
     const rows = [
       { label: 'Duration', fn: (t) => t.duration },
-      { label: 'Vertical Guarantee', fn: (t) => t.verticalGuarantee },
+      { label: 'Vertical Guarantee', fn: (t) => t.verticalGuarantee || '—' },
       { label: 'Lodges', fn: (t) => t.lodges.map(lodgeName).join(' & ') },
       { label: 'Skill Level', fn: (t) => t.skillLevel },
       { label: 'Starting Price', fn: (t) => `$${t.priceFrom.toLocaleString()} CAD` },
@@ -1538,7 +1538,7 @@ function buildModalStyles() {
 
 /* Pricing Table */
 .lfhte-pricing-table {
-  width: 100%; border-collapse: collapse; font-size: 12px;
+  width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;
 }
 .lfhte-pricing-table th {
   padding: 10px 8px; background: ${LFH_COLORS.textPrimary};
@@ -1556,7 +1556,7 @@ function buildModalStyles() {
 }
 .lfhte-vertical-note {
   font-size: 11px; color: ${LFH_COLORS.textSecondary};
-  font-style: italic; margin: 4px 0 0 0; text-align: center;
+  font-style: italic; margin: 8px 0 20px 0; text-align: left;
 }
 
 /* Included Grid */
@@ -1639,7 +1639,10 @@ function buildModalStyles() {
 /* Mobile breakpoint */
 @media (max-width: 500px) {
   .lfhte-stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .lfhte-pricing-table { display: block; overflow-x: auto; }
+  .lfhte-pricing-table { display: block; overflow-x: auto; min-width: 100%; }
+  .lfhte-pricing-table thead,
+  .lfhte-pricing-table tbody,
+  .lfhte-pricing-table tr { display: table; width: 100%; table-layout: fixed; }
   .lfhte-compare-table { min-width: 500px; }
   .lfhte-hero-image { height: 200px; }
   .lfhte-filter-bar { padding: 10px 12px; }
