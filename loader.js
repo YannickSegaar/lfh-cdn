@@ -258,6 +258,8 @@
     }
   });
 
+  window.__lfh_load_time = Date.now();
+
   // ============================================
   // 5. POST-LOAD: Proactive messages
   // ============================================
@@ -274,9 +276,7 @@
       payload: { message: 'I can show you around!' }
     });
   }, 3000);
-  setTimeout(function() {
-    window.voiceflow.chat.open();
-  }, 4000);
+
 
   // ============================================
   // 6. POST-LOAD: Shadow DOM style injection
