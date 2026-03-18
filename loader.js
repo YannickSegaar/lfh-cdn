@@ -27,6 +27,7 @@
     'lastfrontierheli.com',       // Production website
     'www.lastfrontierheli.com',   // Production website (www)
     'yannicksegaar.github.io',    // CDN test page
+    'staging-lastfrontierheliskiing.kinsta.cloud',  // Kinsta staging
     'localhost',                   // Local development
     '127.0.0.1',                  // Local development
   ];
