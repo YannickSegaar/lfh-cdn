@@ -4,6 +4,10 @@
 (async function() {
   'use strict';
 
+  // Prevent double initialization on cold-cache loads
+  if (window.__lfh_loading) return;
+  window.__lfh_loading = true;
+
   // ============================================
   // CONFIGURATION
   // ============================================
@@ -160,8 +164,18 @@
   // ============================================
   // 2. LOAD VOICEFLOW WIDGET BUNDLE + SNOWIFY
   // ============================================
+  // Preload hint lets the browser start downloading the bundle alongside other resources
+  // instead of waiting for the script tag to be parsed
+  var bundleUrl = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
+  var bundlePreload = document.createElement('link');
+  bundlePreload.rel = 'preload';
+  bundlePreload.as = 'script';
+  bundlePreload.href = bundleUrl;
+  bundlePreload.crossOrigin = 'anonymous';
+  document.head.appendChild(bundlePreload);
+
   var script = document.createElement('script');
-  script.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
+  script.src = bundleUrl;
   script.type = 'text/javascript';
   document.head.appendChild(script);
 
