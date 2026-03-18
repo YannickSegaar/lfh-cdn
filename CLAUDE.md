@@ -37,6 +37,7 @@ CHANGELOG.md               # Version history
 3. **Never delete extension files** without checking EXTENSIONS.md dependency graph
 4. **Never rename trace types** — they must match what VoiceFlow canvas sends
 5. **Check loader.js** after any file rename — import paths must match
+6. **Before modifying any extension**, read `ACTIVE-EXTENSIONS.md` — only extensions listed under "Active" are triggered by the production VoiceFlow canvas. Do not modify inactive/legacy extensions unless explicitly asked to.
 
 ## Branch Strategy
 
