@@ -1,53 +1,68 @@
 /**
- * LFH Extension: Lodges Modal
- * Production ID: lfh-lodges-modal
- * Trace types: N/A (opened by other extensions)
- * Origin: lfh-lodge-compare-modal-v2-unified.js
- * Dependencies: lfh-tours-data, lfh-tours-modal, lfh-weather-modal
- * Last modified: 2026-03-10
- */
-
-/**
- * Last Frontier Lodge Compare - Shared Modal Module
+ * Last Frontier Lodge Compare - Full-Screen Modal Extension
+ * VoiceFlow-Ready — Unified Event Architecture
  *
- * Full-screen overlay modal with 3-tab navigation:
+ * Self-contained version for VoiceFlow widget (no ES module imports).
+ * Cross-modal navigation uses window.__lfh namespace.
+ *
+ * Full-screen overlay modal with 4-tab navigation:
  * - Overview: Side-by-side comparison
  * - Bell 2 Lodge: Full detail view with video, gallery, terrain
  * - Ripley Creek: Full detail view with video, gallery, terrain
+ * - Terrain: Side-by-side terrain comparison with run photos
  *
- * Imported by the in-chat lodge compare widget.
+ * Uses the Unified Event Architecture for all agent interactions:
+ *   - ext_user_action  (lodge_recommendation_request, terrain_recommendation_request,
+ *                       view_lodge_tours, lodge_inquiry)
+ *   - ext_modal_closed (lodge_compare)
  *
- * Unified Event Architecture: All interact calls use { type: 'event', payload: { event, data } }
- *
- * @version 2.0.1-unified
+ * @version 2.0.1-vf
  * @author Last Frontier Heliskiing / RomAIx
  */
 
-// Import shared constants from tour explorer
-import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
-// Import tour explorer for lodge→tour handoff
-import { openTourExplorerModalWithBookingUnified } from './lfh-tours-modal.js';
-// Import weather modal for cross-navigation
-import { openWeatherConditionsModal } from './lfh-weather-modal.js';
-
-// Re-export for widget use
-export { LFH_COLORS, LFH_ASSETS };
-
 // ============================================================================
-// VIMEO VIDEO IDS
+// SHARED CONSTANTS (inlined — no ES module import)
 // ============================================================================
 
-export const LFH_LODGE_VIDEOS = {
-  lodging: '237992712',
-  location: '234398800',
-  dayInLife: '247898299',
+const LFH_COLORS_LC = {
+  primaryRed: '#e62b1e',
+  textPrimary: '#42494e',
+  textSecondary: '#666666',
+  background: '#FFFFFF',
+  infoBox: '#F5F5F5',
+  border: '#E5E8EB',
+  selectedTint: 'rgba(230, 43, 30, 0.04)',
 };
+
+const LFH_ASSETS_LC = {
+  bgImage: 'https://yannicksegaar.github.io/RomAIx-Logo/LFH_bg_content_and_image_black.png',
+  logo: 'https://yannicksegaar.github.io/RomAIx-Logo/LFH_Logo_FullName_White.svg',
+  videoMask: 'https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/videos-img-mask.png',
+};
+
+// ============================================================================
+// VIDEO IDS
+// ============================================================================
+
+const LFH_LODGE_VIDEOS_LC = {
+  lodging: 'RwYTOkbnEgw',
+  location: '4CaKMMpebJM',
+  dayInLife: 'liycyjm5xs8',
+};
+
+function _lcGetVideoEmbedUrl(videoId) {
+  // YouTube IDs contain letters; Vimeo IDs are purely numeric
+  if (/^\d+$/.test(videoId)) {
+    return 'https://player.vimeo.com/video/' + videoId + '?autoplay=1&title=0&byline=0&portrait=0';
+  }
+  return 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+}
 
 // ============================================================================
 // LODGE DATA
 // ============================================================================
 
-export const LFH_LODGES = {
+const LFH_LODGES_LC = {
   bell2: {
     id: 'bell2',
     name: 'Bell 2 Lodge',
@@ -56,10 +71,11 @@ export const LFH_LODGES = {
     location: 'Skeena Mountains',
     style: 'Log Cabins',
     description:
-      'A purpose-built heliski village nestled in the heart of the Skeena Mountains. Cozy log chalet rooms with wood-burning soapstone stoves, a main lodge with bar and dining room, plus hot tub, sauna, gym and games room.',
+      'Off-the-grid village custom-built for heli skiing. A purpose-built heliski village nestled in the heart of the Skeena Mountains, Bell 2 Lodge offers total immersion in the wilderness with no distractions.',
     fullDescription:
-      "Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. You'll stay in our cozy log chalet rooms, each equipped with wood-burning soapstone stoves and extremely comfortable beds. Social gatherings come alive in our main lodge where you'll find the bar and dining room. Other amenities include: gear room, ski tuning shop, hot tub, sauna, gym and games room.",
+      'Bell 2 Lodge is a purpose-built heliski village nestled in the heart of the Skeena Mountains. This off-the-grid sanctuary offers total immersion in the wilderness—no cell service, no distractions, just pristine powder and mountain living. The lodge features cozy log chalets with wood-burning soapstone stoves, a main lodge with world-class dining, and a true sense of adventure community.',
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
+    videoId: 'RwYTOkbnEgw',
     images: {
       hero: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
       dusk: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/05-bell-2-lodge-dusk.jpg',
@@ -69,29 +85,30 @@ export const LFH_LODGES = {
       chalet: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/03-log-chalet-village.jpg',
       bonfire: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/04-bonfire-bell-2-lodge.jpg',
       fitness: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/19-fitness-centre.jpg',
-      roomUpstairs: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-upstairs.jpg',
-      roomDownstairs: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-downstairs.jpg',
+      room: 'https://www.lastfrontierheli.com/wp-content/uploads/2023/04/2023-02-01-Bell-2-Lodge-Steve-Rosset-27-2.jpg',
+      hotTub: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/08-outdoor-hot-tub-northern-bc.jpg',
       aerial: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/08/2-bell-2-lodge-skeena-mountains-aerial-context.jpg',
     },
     gallery: [
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-bell-2-lodge-heliski-village.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-upstairs.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/room-downstairs.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/05-bell-2-lodge-dusk.jpg',
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/06-dining-room-bell-2-lodge.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/03-log-chalet-village.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/08-outdoor-hot-tub-northern-bc.jpg',
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/09-bell-2-lodge-rustic-bar.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/boot-room.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/bell2/sauna.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/04-bonfire-bell-2-lodge.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/19-fitness-centre.jpg',
     ],
     features: {
       accommodation: 'Cozy log chalet rooms with wood-burning soapstone stoves.',
-      dining: 'Communal dining room in the main lodge with a full bar upstairs.',
+      dining: 'Main lodge dining room with full bar and professional chefs.',
       amenities: ['Hot tub', 'Sauna', 'Fitness centre', 'Games room', 'Gift shop', 'Bar', 'Boot room'],
       activities: ['Snowshoeing', 'Fat biking', 'Polar Dips', 'Skeet shooting'],
       connectivity: 'Off-grid, no cell service, high-speed internet available.',
       helipad: 'On-site, depart directly from lodge.',
     },
     terrain: {
-      skillLevel: 'Strong Intermediate.',
+      skillLevel: 'Intermediate to Expert.',
       type: 'Coast and Skeena Mountains.',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Close to lodge. Natural and man-made gladed skiing.',
@@ -116,17 +133,18 @@ export const LFH_LODGES = {
     location: 'Stewart, BC (Alaska Border)',
     style: 'Heritage Hotel',
     description:
-      'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn — funky heritage buildings with hot tub, sauna, and soulful food at the Bitter Creek Cafe.',
+      'Historic mining town of Stewart, BC offers a unique character-filled experience. The Ripley Creek Inn features quirky heritage rooms in converted prospector houses and old shops, with the charming town of Stewart at your doorstep.',
     fullDescription:
-      'Our Ripley Creek base is nestled in the quirky old mining town of Stewart BC, at the edge of the Alaskan Panhandle. Guests are housed in the Ripley Creek Inn, which is made up of funky heritage buildings. This lodge is about the bare essentials: hot tub and sauna for the muscles, and soulful food served across the street at the Bitter Creek Cafe, which conveniently doubles up as our Bar.',
+      'Ripley Creek offers a completely different heliski experience in the historic mining town of Stewart, BC, at the Alaska border. The quirky heritage accommodations are spread across converted prospector houses and old shops, each with unique character. After skiing the massive Coast Mountain terrain, explore the charming town, visit local establishments, and experience the legendary "getting Hyderized" across the border in Hyder, Alaska.',
     heroImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
+    videoId: 'RwYTOkbnEgw',
     images: {
       hero: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
       boardwalk: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-ocean-boardwalk-stewart-bc.jpg',
       room: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/04-guest-room-ripley-creek-inn.jpg',
       dining: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/05-dinner-dining-room-stewart.jpg',
       bar: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/06-last-frontier-bar-stewart.jpg',
-      lounge: 'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/ripley/lounge-interior.jpg',
+      lounge: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/10-lounging-area-ripley-creek.jpg',
       bootRoom: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/14-ski-boot-room-ripley-creek.jpg',
       giftShop: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/11-gift-shop-stewart-bc.jpg',
       stewartDusk: 'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/12-stweart-bc-dusk-winter.jpg',
@@ -135,17 +153,17 @@ export const LFH_LODGES = {
     },
     gallery: [
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/02-ripley-creek-inn-stewart.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/ripley/lounge-interior.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/01-ocean-boardwalk-stewart-bc.jpg',
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/04-guest-room-ripley-creek-inn.jpg',
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/05-dinner-dining-room-stewart.jpg',
       'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/06-last-frontier-bar-stewart.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/ripley/inn-mountains-dusk.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/ripley/patio-mountain-view.jpg',
-      'https://yannicksegaar.github.io/lfh-cdn/images/lodge-images/ripley/peterson-house-snow.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/10-lounging-area-ripley-creek.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2018/09/12-stweart-bc-dusk-winter.jpg',
+      'https://www.lastfrontierheli.com/wp-content/uploads/2019/10/4-ripley-creek-stewart-bc-aerial-context2.jpg',
     ],
     features: {
       accommodation: 'Unique heritage rooms - converted prospector houses and old shops.',
-      dining: 'Communal dining in the Bitter Creek Cafe.',
+      dining: 'Bitter Creek Cafe across the street, legendary local cuisine.',
       amenities: ['Hot tub', 'Sauna', 'Lounge areas', 'Gift shop', 'Boot room', 'Bar'],
       activities: ['Explore Stewart', 'Museum visits', 'Get Hyderized in Alaska', 'Local pubs', 'Polar Dips in Ocean', 'Snowshoeing'],
       connectivity: 'Cell service and medium-speed internet.',
@@ -156,7 +174,7 @@ export const LFH_LODGES = {
       type: 'Coast Mountains',
       characteristics: ['Peaks', 'Wide Open Bowls', 'Glaciers', 'Natural Glades', 'Tree Skiing'],
       treeSkiing: 'Further from town. Natural old growth forest. Steeper pitches.',
-      commute: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.',
+      commute: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.',
       snowfall: '15-25 meters per winter.',
       aerialImage: 'https://www.lastfrontierheli.com/wp-content/uploads/2019/10/4-ripley-creek-stewart-bc-aerial-context2.jpg',
       runPhotos: [
@@ -175,28 +193,28 @@ export const LFH_LODGES = {
 // COMPARISON DATA
 // ============================================================================
 
-const COMPARISON_CATEGORIES = [
+const COMPARISON_CATEGORIES_LC = [
   {
     label: 'Capacity',
-    bell2: '36 guests.',
-    ripley: '24 guests.',
+    bell2: '36 Guests',
+    ripley: '24 Guests',
     icon: '●●',
   },
   {
     label: 'Location',
-    bell2: 'Skeena Mountains.',
-    ripley: 'Stewart, BC.',
+    bell2: 'Coast and Skeena Mountains.',
+    ripley: 'Stewart, BC',
     icon: '◉',
   },
   {
     label: 'Accommodation Style',
-    bell2: 'Log cabin chalets.',
-    ripley: 'Heritage hotel rooms.',
+    bell2: 'Log Cabin Chalets',
+    ripley: 'Heritage Hotel Rooms',
     icon: '⌂',
   },
   {
     label: 'Terrain Level',
-    bell2: 'Strong Intermediate.',
+    bell2: 'Intermediate to Expert.',
     ripley: 'Advanced to Expert.',
     icon: '⛰',
   },
@@ -209,28 +227,34 @@ const COMPARISON_CATEGORIES = [
   {
     label: 'Commute to Terrain',
     bell2: 'Lodge departures. 5 min flights to closest runs.',
-    ripley: 'Town departure for group 1. Groups 2 and 3 commute 15-40 min.',
+    ripley: 'Town departure for group 1. Groups 2 and 4 commute 15-40 min.',
     icon: '→',
   },
   {
     label: 'Connectivity',
-    bell2: 'Off-grid (WiFi available).',
-    ripley: 'Cell service + WiFi.',
+    bell2: 'Off-Grid (WiFi Available)',
+    ripley: 'Cell Service + WiFi',
     icon: '◎',
   },
   {
     label: 'Vibe',
-    bell2: 'Wilderness immersion.',
-    ripley: 'Town character & culture.',
+    bell2: 'Wilderness Immersion',
+    ripley: 'Town Character & Culture',
     icon: '★',
   },
 ];
 
 // ============================================================================
+// CROSS-MODAL NAMESPACE
+// ============================================================================
+
+window.__lfh = window.__lfh || {};
+
+// ============================================================================
 // HELPER: VoiceFlow Agent Communication (Unified Event Architecture)
 // ============================================================================
 
-function silentVariableUpdate(name, value) {
+function _lcSilentVariableUpdate(name, value) {
   try {
     if (window.voiceflow?.chat) {
       window.voiceflow.chat.proactive.push({ type: 'save', payload: { [name]: value } });
@@ -240,7 +264,7 @@ function silentVariableUpdate(name, value) {
   }
 }
 
-function interactWithAgent(eventName, data) {
+function _lcInteractWithAgent(eventName, data) {
   try {
     window.voiceflow?.chat?.interact({
       type: 'event',
@@ -256,8 +280,8 @@ function interactWithAgent(eventName, data) {
 // LIGHTBOX: Location Layout
 // ============================================================================
 
-function showLayoutLightbox(lodgeId) {
-  const lodge = LFH_LODGES[lodgeId];
+function _lcShowLayoutLightbox(lodgeId) {
+  const lodge = LFH_LODGES_LC[lodgeId];
   if (!lodge?.terrain?.locationLayoutImage) return;
 
   const lightbox = document.createElement('div');
@@ -304,15 +328,15 @@ function showLayoutLightbox(lodgeId) {
   };
   document.addEventListener('keydown', escHandler);
 
-  silentVariableUpdate('ext_viewed_layout', lodgeId);
+  _lcSilentVariableUpdate('ext_viewed_layout', lodgeId);
 }
 
 // ============================================================================
 // LIGHTBOX: Terrain Aerial
 // ============================================================================
 
-function showTerrainLightbox(lodgeId) {
-  const lodge = LFH_LODGES[lodgeId];
+function _lcShowTerrainLightbox(lodgeId) {
+  const lodge = LFH_LODGES_LC[lodgeId];
   if (!lodge?.terrain?.aerialImage) return;
 
   const lightbox = document.createElement('div');
@@ -339,7 +363,9 @@ function showTerrainLightbox(lodgeId) {
 
   let touchStartY = 0;
   const contentEl = lightbox.querySelector('.lfhlc-lightbox-content');
-  contentEl?.addEventListener('touchstart', (e) => { touchStartY = e.changedTouches[0].screenY; }, { passive: true });
+  contentEl?.addEventListener('touchstart', (e) => {
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
   contentEl?.addEventListener('touchend', (e) => {
     if (e.changedTouches[0].screenY - touchStartY > 100) closeLightbox();
   }, { passive: true });
@@ -354,8 +380,8 @@ function showTerrainLightbox(lodgeId) {
 // LIGHTBOX: Run Photo
 // ============================================================================
 
-function showRunPhotoLightbox(lodgeId, photoIndex) {
-  const lodge = LFH_LODGES[lodgeId];
+function _lcShowRunPhotoLightbox(lodgeId, photoIndex) {
+  const lodge = LFH_LODGES_LC[lodgeId];
   if (!lodge?.terrain?.runPhotos?.[photoIndex]) return;
 
   const photos = lodge.terrain.runPhotos;
@@ -435,15 +461,17 @@ function showRunPhotoLightbox(lodgeId, photoIndex) {
   updateLightboxContent();
   document.body.appendChild(lightbox);
 
-  silentVariableUpdate('ext_viewed_run_photo', `${lodgeId}_${photoIndex}`);
+  _lcSilentVariableUpdate('ext_viewed_run_photo', `${lodgeId}_${photoIndex}`);
 }
 
 // ============================================================================
 // MODAL: Open
 // ============================================================================
 
-export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview') {
+function openLodgeCompareModal(focusLodge = null, initialTab = 'overview', isMobile = false) {
   if (document.getElementById('lfh-lodge-compare-modal')) return;
+
+  const C = LFH_COLORS_LC;
 
   // Map old tab names to new ones
   if (initialTab === 'lodges' || initialTab === 'terrain') {
@@ -469,7 +497,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   const modal = document.createElement('div');
   modal.style.cssText = `
     width: 90%; max-width: 960px; height: 85%; max-height: 780px;
-    background: ${LFH_COLORS.background}; border-radius: 12px;
+    background: ${C.background}; border-radius: 12px;
     overflow: hidden; display: flex; flex-direction: column;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: lfhlc-slideUp 0.4s ease;
@@ -477,15 +505,16 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
 
   // --- Inject Styles ---
   const styleEl = document.createElement('style');
-  styleEl.textContent = buildModalStyles();
+  styleEl.textContent = _lcBuildModalStyles(C);
   modal.appendChild(styleEl);
+  if (isMobile) modal.classList.add('lfhlc-mobile');
 
   // --- Header Bar ---
   const headerBar = document.createElement('div');
   headerBar.className = 'lfhlc-header-bar';
   headerBar.innerHTML = `
-    <span class="lfhlc-header-title">Lodge Compare</span>
-    <button class="lfhlc-close-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+    <span class="lfhlc-header-title">Last Frontier Heliskiing</span>
+    <button class="lfhlc-close-btn" aria-label="Close">&times;</button>
   `;
   modal.appendChild(headerBar);
 
@@ -521,9 +550,9 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   renderActiveTab();
 
   // Silent variable update
-  silentVariableUpdate('ext_last_action', 'lodge_compare_opened');
+  _lcSilentVariableUpdate('ext_last_action', 'lodge_compare_opened');
   if (focusLodge) {
-    silentVariableUpdate('ext_focus_lodge', focusLodge);
+    _lcSilentVariableUpdate('ext_focus_lodge', focusLodge);
   }
 
   // ========================================================================
@@ -537,9 +566,9 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     if (activeTab === 'overview') {
       renderOverviewTab();
     } else if (activeTab === 'bell2') {
-      renderLodgeDetail(LFH_LODGES.bell2);
+      renderLodgeDetail(LFH_LODGES_LC.bell2);
     } else if (activeTab === 'ripley') {
-      renderLodgeDetail(LFH_LODGES.ripley);
+      renderLodgeDetail(LFH_LODGES_LC.ripley);
     } else if (activeTab === 'terrain') {
       renderTerrainTab();
     }
@@ -550,8 +579,8 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   // ========================================================================
 
   function renderOverviewTab() {
-    const bell2 = LFH_LODGES.bell2;
-    const ripley = LFH_LODGES.ripley;
+    const bell2 = LFH_LODGES_LC.bell2;
+    const ripley = LFH_LODGES_LC.ripley;
 
     content.innerHTML = `
       <div class="lfhlc-overview">
@@ -568,7 +597,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-overview-quick-stats">
                 <span class="lfhlc-quick-stat">${bell2.capacity} guests</span>
                 <span class="lfhlc-quick-stat">${bell2.style}</span>
-                <span class="lfhlc-quick-stat">${bell2.terrain.skillLevel.replace(/\.$/, '')}+</span>
+                <span class="lfhlc-quick-stat">${bell2.terrain.skillLevel.replace(' to ', ' \u2013 ').replace(/\.$/, '')}</span>
               </div>
               <div class="lfhlc-card-actions">
                 <button class="lfhlc-btn-primary lfhlc-view-lodge-btn" data-lodge="bell2">Explore Bell 2</button>
@@ -588,7 +617,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-overview-quick-stats">
                 <span class="lfhlc-quick-stat">${ripley.capacity} guests</span>
                 <span class="lfhlc-quick-stat">${ripley.style}</span>
-                <span class="lfhlc-quick-stat">${ripley.terrain.skillLevel.replace(/\.$/, '')}+</span>
+                <span class="lfhlc-quick-stat">${ripley.terrain.skillLevel.replace(' to ', ' \u2013 ').replace(/\.$/, '')}</span>
               </div>
               <div class="lfhlc-card-actions">
                 <button class="lfhlc-btn-primary lfhlc-view-lodge-btn" data-lodge="ripley">Explore Ripley Creek</button>
@@ -607,7 +636,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-comp-cell lfhlc-comp-lodge">Bell 2 Lodge</div>
               <div class="lfhlc-comp-cell lfhlc-comp-lodge">Ripley Creek</div>
             </div>
-            ${COMPARISON_CATEGORIES.map(
+            ${COMPARISON_CATEGORIES_LC.map(
               (cat) => `
               <div class="lfhlc-comparison-row">
                 <div class="lfhlc-comp-cell lfhlc-comp-label">
@@ -635,7 +664,6 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               &#9729; Check Conditions
             </button>
           </div>
-          <p class="lfhlc-cta-subtext">Our AI will ask about your preferences and recommend the best fit</p>
         </div>
       </div>
     `;
@@ -662,42 +690,42 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
       btn.addEventListener('click', () => {
         const lodgeId = btn.dataset.lodge;
         actionTaken = true;
-        closeModal();
+        actualCloseModal();
         setTimeout(() => {
-          openTourExplorerModalWithBookingUnified(null, {
+          window.__lfh.openTourExplorer?.(null, {
             initialLodgeFilter: lodgeId,
             onCompareLodges: (returnLodgeId) => {
               openLodgeCompareModal(returnLodgeId || lodgeId);
             },
-            onCheckConditions: () => openWeatherConditionsModal(),
+            onCheckConditions: () => window.__lfh.openWeatherConditions?.(),
           });
         }, 350);
       });
     });
 
     content.querySelector('.lfhlc-help-choose-btn')?.addEventListener('click', () => {
-      interactWithAgent('ext_user_action', { action: 'lodge_recommendation_request', source: 'lodge_compare' });
+      _lcInteractWithAgent('ext_user_action', { action: 'lodge_recommendation_request', source: 'lodge_compare' });
       actionTaken = true;
-      closeModal();
+      actualCloseModal();
     });
 
     content.querySelector('.lfhlc-browse-tours-btn')?.addEventListener('click', () => {
       actionTaken = true;
-      closeModal();
+      actualCloseModal();
       setTimeout(() => {
-        openTourExplorerModalWithBookingUnified(null, {
+        window.__lfh.openTourExplorer?.(null, {
           onCompareLodges: (lodgeId) => {
             openLodgeCompareModal(lodgeId || null);
           },
-          onCheckConditions: () => openWeatherConditionsModal(),
+          onCheckConditions: () => window.__lfh.openWeatherConditions?.(),
         });
       }, 350);
     });
 
     content.querySelector('.lfhlc-conditions-btn')?.addEventListener('click', () => {
       actionTaken = true;
-      closeModal();
-      setTimeout(() => openWeatherConditionsModal(), 350);
+      actualCloseModal();
+      setTimeout(() => window.__lfh.openWeatherConditions?.(), 350);
     });
   }
 
@@ -706,16 +734,16 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   // ========================================================================
 
   function renderTerrainTab() {
-    const bell2 = LFH_LODGES.bell2;
-    const ripley = LFH_LODGES.ripley;
+    const bell2 = LFH_LODGES_LC.bell2;
+    const ripley = LFH_LODGES_LC.ripley;
 
     const terrainCategories = [
       { label: 'Skill Level', bell2: bell2.terrain.skillLevel, ripley: ripley.terrain.skillLevel, icon: '⛰' },
       { label: 'Mountain Range', bell2: bell2.terrain.type, ripley: ripley.terrain.type, icon: '◉' },
+      { label: 'Alpine Terrain', bell2: 'Peaks, wide open bowls and glaciers.', ripley: 'Peaks, wide open bowls and glaciers.', icon: '★' },
       { label: 'Snowfall', bell2: bell2.terrain.snowfall, ripley: ripley.terrain.snowfall, icon: '❄' },
       { label: 'Bad Weather Skiing', bell2: bell2.terrain.treeSkiing, ripley: ripley.terrain.treeSkiing, icon: '↟' },
       { label: 'Commute', bell2: bell2.terrain.commute, ripley: ripley.terrain.commute, icon: '→' },
-      { label: 'Terrain', bell2: bell2.terrain.characteristics.join(', '), ripley: ripley.terrain.characteristics.join(', '), icon: '★' },
     ];
 
     // Generate run photos HTML
@@ -728,7 +756,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
 
     content.innerHTML = `
       <div class="lfhlc-terrain-tab">
-        <h3 class="lfhlc-section-title">Terrain Comparison</h3>
+        <h3 class="lfhlc-section-title">Lodge to Terrain Context</h3>
 
         <!-- Aerial Context Section -->
         <div class="lfhlc-aerial-context-section">
@@ -797,27 +825,26 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               Browse All Tours &rarr;
             </button>
           </div>
-          <p class="lfhlc-cta-subtext">Our AI will help match you to the right terrain</p>
         </div>
       </div>
     `;
 
     // Event listener for CTA
     content.querySelector('.lfhlc-terrain-recommend-btn')?.addEventListener('click', () => {
-      interactWithAgent('ext_user_action', { action: 'terrain_recommendation_request', source: 'lodge_compare' });
+      _lcInteractWithAgent('ext_user_action', { action: 'terrain_recommendation_request', source: 'lodge_compare' });
       actionTaken = true;
-      closeModal();
+      actualCloseModal();
     });
 
     content.querySelector('.lfhlc-browse-tours-btn')?.addEventListener('click', () => {
       actionTaken = true;
-      closeModal();
+      actualCloseModal();
       setTimeout(() => {
-        openTourExplorerModalWithBookingUnified(null, {
+        window.__lfh.openTourExplorer?.(null, {
           onCompareLodges: (lodgeId) => {
             openLodgeCompareModal(lodgeId || null);
           },
-          onCheckConditions: () => openWeatherConditionsModal(),
+          onCheckConditions: () => window.__lfh.openWeatherConditions?.(),
         });
       }, 350);
     });
@@ -825,14 +852,14 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     // Event listeners for layout buttons
     content.querySelectorAll('.lfhlc-layout-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        showLayoutLightbox(btn.dataset.lodge);
+        _lcShowLayoutLightbox(btn.dataset.lodge);
       });
     });
 
     // Event listeners for run photos
     content.querySelectorAll('.lfhlc-run-photo').forEach((photo) => {
       photo.addEventListener('click', () => {
-        showRunPhotoLightbox(photo.dataset.lodge, parseInt(photo.dataset.index));
+        _lcShowRunPhotoLightbox(photo.dataset.lodge, parseInt(photo.dataset.index));
       });
     });
   }
@@ -870,10 +897,6 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
           <!-- Hero Media -->
           <div class="lfhlc-hero-media" id="lfhlc-hero-media">
             <div class="lfhlc-hero-image" style="background-image: url('${lodge.gallery[0]}')">
-              ${lodge.videoId ? `<button class="lfhlc-play-btn" id="lfhlc-play-video" data-vimeo="${lodge.videoId}">
-                <span class="lfhlc-play-triangle"></span>
-              </button>
-              <div class="lfhlc-hero-label">Watch: Lodging Experience</div>` : ''}
             </div>
           </div>
 
@@ -896,12 +919,12 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <div class="lfhlc-stat-label">Accommodation</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">${lodge.terrain.skillLevel.replace(/\.$/, '')}</div>
+              <div class="lfhlc-stat-value">${lodge.terrain.skillLevel.replace(' to ', ' \u2013 ').replace(/\.$/, '')}</div>
               <div class="lfhlc-stat-label">Skill Level</div>
             </div>
             <div class="lfhlc-stat-box">
-              <div class="lfhlc-stat-value">${lodge.id === 'ripley' ? 'Stewart, BC' : '4:1'}</div>
-              <div class="lfhlc-stat-label">${lodge.id === 'ripley' ? 'Frontier Town' : 'Guest:Guide'}</div>
+              <div class="lfhlc-stat-value">4:1</div>
+              <div class="lfhlc-stat-label">Guest:Guide</div>
             </div>
           </div>
 
@@ -945,7 +968,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <button class="lfhlc-map-toggle" id="lfhlc-layout-toggle">
                 <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
                 Lodge Layout
-                <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
+                <span class="lfhlc-terrain-arrow lfhlc-layout-arrow" style="transform: rotate(180deg)">▾</span>
               </button>
               <div class="lfhlc-map-content open" id="lfhlc-layout-content">
                 <img src="${lodge.terrain.locationLayoutImage}" alt="${lodge.name} property layout"
@@ -958,7 +981,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
               <button class="lfhlc-map-toggle" id="lfhlc-terrain-toggle">
                 <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-10 4 10"/><path d="M2 21l6-14 3 7"/><path d="M15 7l5 14"/></svg></span>
                 Terrain Overview
-                <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
+                <span class="lfhlc-terrain-arrow" style="transform: rotate(180deg)">▾</span>
               </button>
               <div class="lfhlc-map-content open" id="lfhlc-terrain-content">
                 <img src="${lodge.terrain.aerialImage}" alt="${lodge.name} terrain"
@@ -973,7 +996,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
             <button class="lfhlc-terrain-toggle" id="lfhlc-terrain-details-toggle">
               <span class="lfhlc-terrain-toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
               Terrain Details
-              <span class="lfhlc-toggle-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
+              <span class="lfhlc-terrain-arrow" style="transform: rotate(180deg)">▾</span>
             </button>
             <div class="lfhlc-terrain-content open" id="lfhlc-terrain-details-content">
               <div class="lfhlc-terrain-details">
@@ -1008,7 +1031,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
           <!-- Action Buttons -->
           <div class="lfhlc-detail-actions">
             <button class="lfhlc-btn-primary lfhlc-action-book" data-lodge="${lodge.id}">
-              Book ${lodge.name}
+              Check Availability
             </button>
             <button class="lfhlc-btn-outline lfhlc-action-ask" data-lodge="${lodge.id}">
               Ask About ${lodge.name}
@@ -1032,23 +1055,18 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
       });
     });
 
-    // Play video
-    content.querySelector('#lfhlc-play-video')?.addEventListener('click', (e) => {
-      playVideo(e.currentTarget.dataset.vimeo, lodge);
-    });
-
     // Collapsible toggles (layout, terrain overview, terrain details)
     function bindToggle(toggleId, contentId) {
       content.querySelector(`#${toggleId}`)?.addEventListener('click', () => {
         const panel = content.querySelector(`#${contentId}`);
-        const arrow = content.querySelector(`#${toggleId} .lfhlc-toggle-arrow`);
+        const arrow = content.querySelector(`#${toggleId} .lfhlc-terrain-arrow`);
         const isOpen = panel.classList.contains('open');
         if (isOpen) {
           panel.classList.remove('open');
-          if (arrow) arrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
         } else {
           panel.classList.add('open');
-          if (arrow) arrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
+          if (arrow) arrow.style.transform = 'rotate(180deg)';
         }
       });
     }
@@ -1058,49 +1076,49 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
 
     // Map thumbnail lightbox clicks
     content.querySelectorAll('[data-action="layout-lightbox"]').forEach(img => {
-      img.addEventListener('click', () => showLayoutLightbox(img.dataset.lodge));
+      img.addEventListener('click', () => _lcShowLayoutLightbox(img.dataset.lodge));
     });
     content.querySelectorAll('[data-action="terrain-lightbox"]').forEach(img => {
-      img.addEventListener('click', () => showTerrainLightbox(img.dataset.lodge));
+      img.addEventListener('click', () => _lcShowTerrainLightbox(img.dataset.lodge));
     });
 
-    // Book CTA → notify AI, then hand off to Tour Explorer pre-filtered to this lodge
+    // Book CTA -> notify AI, then hand off to Tour Explorer pre-filtered to this lodge
     content.querySelector('.lfhlc-action-book')?.addEventListener('click', () => {
-      silentVariableUpdate('ext_lodge_selected', lodge.id);
+      _lcSilentVariableUpdate('ext_lodge_selected', lodge.id);
       actionTaken = true;
 
       // Fire event so AI responds with contextual message in chat
-      interactWithAgent('ext_user_action', {
+      _lcInteractWithAgent('ext_user_action', {
         action: 'view_lodge_tours',
         source: 'lodge_compare',
         lodge: lodge.id,
         lodgeName: lodge.name,
       });
 
-      closeModal();
+      actualCloseModal();
 
       // Open Tour Explorer after AI has time to respond (~1.5s)
       setTimeout(() => {
-        openTourExplorerModalWithBookingUnified(null, {
+        window.__lfh.openTourExplorer?.(null, {
           initialLodgeFilter: lodge.id,
           onCompareLodges: (lodgeId) => {
             openLodgeCompareModal(lodgeId || lodge.id);
           },
-          onCheckConditions: () => openWeatherConditionsModal(),
+          onCheckConditions: () => window.__lfh.openWeatherConditions?.(),
         });
       }, 1500);
     });
 
     // Ask CTA
     content.querySelector('.lfhlc-action-ask')?.addEventListener('click', () => {
-      interactWithAgent('ext_user_action', {
+      _lcInteractWithAgent('ext_user_action', {
         action: 'lodge_inquiry',
         source: 'lodge_compare',
         lodge: lodge.id,
         lodgeName: lodge.name,
       });
       actionTaken = true;
-      closeModal();
+      actualCloseModal();
     });
   }
 
@@ -1108,29 +1126,8 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     const heroMedia = content.querySelector('#lfhlc-hero-media');
     heroMedia.innerHTML = `
       <div class="lfhlc-hero-image" style="background-image: url('${lodge.gallery[activeGalleryIndex]}')">
-        <button class="lfhlc-play-btn" id="lfhlc-play-video" data-vimeo="${lodge.videoId}">
-          <span class="lfhlc-play-triangle"></span>
-        </button>
-        <div class="lfhlc-hero-label">Watch: Lodging Experience</div>
       </div>
     `;
-
-    // Re-attach play button listener
-    heroMedia.querySelector('#lfhlc-play-video')?.addEventListener('click', (e) => {
-      playVideo(e.currentTarget.dataset.vimeo, lodge);
-    });
-  }
-
-  function playVideo(vimeoId, lodge) {
-    const heroMedia = content.querySelector('#lfhlc-hero-media');
-    heroMedia.innerHTML = `
-      <div class="lfhlc-video-embed">
-        <iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0"
-          allow="autoplay; fullscreen" allowfullscreen></iframe>
-      </div>
-    `;
-
-    silentVariableUpdate('ext_video_played', `lodge_${lodge.id}`);
   }
 
   // ========================================================================
@@ -1141,7 +1138,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     tabBar.querySelectorAll('.lfhlc-tab').forEach((tab) => {
       tab.classList.toggle('active', tab.dataset.tab === activeTab);
     });
-    silentVariableUpdate('ext_lodge_compare_tab', activeTab);
+    _lcSilentVariableUpdate('ext_lodge_compare_tab', activeTab);
   }
 
   // ========================================================================
@@ -1160,9 +1157,44 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   // CLOSE MODAL
   // ========================================================================
 
-  function closeModal() {
+  function showCloseConfirmation() {
+    // Don't show a second overlay if one is already showing
+    if (backdrop.querySelector('.lfhlc-close-confirm-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'lfhlc-close-confirm-overlay';
+    overlay.innerHTML = `
+      <div class="lfhlc-close-confirm-card">
+        <p class="lfhlc-close-confirm-title">Are you sure you want to return to the conversation?</p>
+        <p class="lfhlc-close-confirm-sub">You can reopen this anytime by asking the agent (e.g., 'show me tours' or 'show me lodges')</p>
+        <div class="lfhlc-close-confirm-buttons">
+          <button class="lfhlc-close-confirm-yes">Yes, return to chat</button>
+          <button class="lfhlc-close-confirm-no">No, stay here</button>
+        </div>
+      </div>
+    `;
+
+    // "Yes" button closes modal
+    overlay.querySelector('.lfhlc-close-confirm-yes').addEventListener('click', () => {
+      actualCloseModal();
+    });
+
+    // "No" button dismisses overlay
+    overlay.querySelector('.lfhlc-close-confirm-no').addEventListener('click', () => {
+      overlay.remove();
+    });
+
+    // Clicking overlay background (not card) dismisses
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
+
+    modal.appendChild(overlay);
+  }
+
+  function actualCloseModal() {
     if (!actionTaken) {
-      interactWithAgent('ext_modal_closed', {
+      _lcInteractWithAgent('ext_modal_closed', {
         modal: 'lodge_compare',
         lastTab: activeTab,
       });
@@ -1175,6 +1207,10 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     }, 300);
   }
 
+  function closeModal() {
+    showCloseConfirmation();
+  }
+
   // Close handlers
   headerBar.querySelector('.lfhlc-close-btn')?.addEventListener('click', closeModal);
   backdrop.addEventListener('click', (e) => {
@@ -1182,22 +1218,47 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && document.contains(backdrop)) {
+      // Dismiss close confirmation if showing
+      const confirmOverlay = backdrop.querySelector('.lfhlc-close-confirm-overlay');
+      if (confirmOverlay) {
+        confirmOverlay.remove();
+        return;
+      }
       closeModal();
     }
   }, { signal: abortController.signal });
 }
 
+// Register on namespace
+window.__lfh.openLodgeCompare = openLodgeCompareModal;
+
+// ============================================================================
+// VOICEFLOW EXTENSION WRAPPER
+// ============================================================================
+
+export const LastFrontierLodgeCompare = {
+  name: 'LastFrontierLodgeCompare',
+  type: 'response',
+  match: ({ trace }) =>
+    trace.type === 'ext_lodgeCompare' ||
+    trace.payload?.name === 'ext_lodgeCompare',
+  render: ({ trace, element }) => {
+    const payload = trace.payload || {};
+    openLodgeCompareModal(payload.focusLodge || null, payload.tab || 'overview', payload.device_type === 'mobile');
+  },
+};
+
 // ============================================================================
 // STYLES
 // ============================================================================
 
-function buildModalStyles() {
+function _lcBuildModalStyles(C) {
   return `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
 @font-face {
   font-family: 'Nexa Rust Sans Black 2';
-  src: url('https://yannicksegaar.github.io/lfh-cdn/fonts/NexaRustSansBlack2.woff2') format('woff2');
+  src: url('https://yannicksegaar.github.io/lastfrontier-voiceflow-styles/fonts/NexaRustSansBlack2.woff2') format('woff2');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -1206,6 +1267,46 @@ function buildModalStyles() {
 /* Animations */
 @keyframes lfhlc-fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lfhlc-fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+.lfhlc-close-confirm-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  animation: lfhlc-fadeIn 0.2s ease;
+}
+.lfhlc-close-confirm-card {
+  background: #fff; border-radius: 12px; padding: 24px;
+  max-width: 320px; width: 90%; text-align: center;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.lfhlc-close-confirm-title {
+  font-size: 16px; font-weight: 700; color: ${C.textPrimary};
+  margin: 0;
+}
+.lfhlc-close-confirm-sub {
+  font-size: 13px; color: ${C.textSecondary}; margin: 8px 0 0;
+  line-height: 1.5;
+}
+.lfhlc-close-confirm-buttons {
+  display: flex; flex-direction: column; gap: 12px; margin-top: 20px;
+}
+.lfhlc-close-confirm-yes {
+  width: 100%; padding: 10px 16px;
+  background: ${C.primaryRed}; color: #fff;
+  border: none; border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  font-weight: 600; cursor: pointer; transition: background 0.2s;
+}
+.lfhlc-close-confirm-yes:hover { background: #c4221a; }
+.lfhlc-close-confirm-no {
+  width: 100%; padding: 10px 16px;
+  background: #fff; color: ${C.textPrimary};
+  border: 1px solid ${C.border}; border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.lfhlc-close-confirm-no:hover { border-color: ${C.primaryRed}; color: ${C.primaryRed}; }
 @keyframes lfhlc-slideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1214,7 +1315,7 @@ function buildModalStyles() {
 /* Header Bar */
 .lfhlc-header-bar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px; background: ${LFH_COLORS.textPrimary};
+  padding: 14px 20px; background: ${C.textPrimary};
   flex-shrink: 0;
 }
 .lfhlc-header-title {
@@ -1223,35 +1324,35 @@ function buildModalStyles() {
   text-transform: uppercase; letter-spacing: 2px;
 }
 .lfhlc-close-btn {
-  background: rgba(255,255,255,0.12); border: none; color: #fff;
-  cursor: pointer; padding: 0;
-  width: 40px; height: 40px; display: flex;
+  background: transparent; border: none; color: #fff;
+  font-size: 28px; cursor: pointer; padding: 0;
+  width: 44px; height: 44px; display: flex;
   align-items: center; justify-content: center;
-  border-radius: 50%; transition: background 0.2s; flex-shrink: 0;
+  border-radius: 50%; transition: background 0.2s;
 }
-.lfhlc-close-btn:hover { background: rgba(255,255,255,0.25); }
+.lfhlc-close-btn:hover { background: rgba(255,255,255,0.15); }
 
 /* Tab Bar */
 .lfhlc-tab-bar {
   display: flex; gap: 8px; padding: 12px 20px;
-  background: #fff; border-bottom: 1px solid ${LFH_COLORS.border};
+  background: #fff; border-bottom: 1px solid ${C.border};
   flex-shrink: 0;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
 }
 .lfhlc-tab-bar::-webkit-scrollbar { display: none; }
 .lfhlc-tab {
-  padding: 10px 20px; background: ${LFH_COLORS.infoBox};
-  border: 1.5px solid ${LFH_COLORS.border}; border-radius: 24px;
+  padding: 10px 20px; background: ${C.infoBox};
+  border: 1.5px solid ${C.border}; border-radius: 24px;
   font-family: 'Inter', sans-serif; font-size: 13px;
-  font-weight: 600; color: ${LFH_COLORS.textSecondary};
+  font-weight: 600; color: ${C.textSecondary};
   cursor: pointer; transition: all 0.2s;
 }
 .lfhlc-tab:hover {
-  border-color: ${LFH_COLORS.primaryRed}; color: ${LFH_COLORS.textPrimary};
+  border-color: ${C.primaryRed}; color: ${C.textPrimary};
 }
 .lfhlc-tab.active {
-  background: ${LFH_COLORS.primaryRed}; border-color: ${LFH_COLORS.primaryRed};
+  background: ${C.primaryRed}; border-color: ${C.primaryRed};
   color: #fff;
 }
 
@@ -1261,8 +1362,8 @@ function buildModalStyles() {
   font-family: 'Inter', sans-serif;
 }
 .lfhlc-content::-webkit-scrollbar { width: 6px; }
-.lfhlc-content::-webkit-scrollbar-track { background: ${LFH_COLORS.infoBox}; }
-.lfhlc-content::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 3px; }
+.lfhlc-content::-webkit-scrollbar-track { background: ${C.infoBox}; }
+.lfhlc-content::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 3px; }
 
 /* ========== OVERVIEW TAB ========== */
 
@@ -1275,12 +1376,12 @@ function buildModalStyles() {
 }
 
 .lfhlc-overview-card {
-  border: 1.5px solid ${LFH_COLORS.border}; border-radius: 12px;
+  border: 1.5px solid ${C.border}; border-radius: 12px;
   overflow: hidden; cursor: pointer; transition: all 0.2s;
   background: #fff;
 }
 .lfhlc-overview-card:hover {
-  border-color: ${LFH_COLORS.primaryRed};
+  border-color: ${C.primaryRed};
   box-shadow: 0 6px 20px rgba(230, 43, 30, 0.1);
   transform: translateY(-2px);
 }
@@ -1313,55 +1414,54 @@ function buildModalStyles() {
   display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
 }
 .lfhlc-quick-stat {
-  padding: 4px 10px; background: ${LFH_COLORS.infoBox};
-  border: 1px solid ${LFH_COLORS.border}; border-radius: 14px;
-  font-size: 11px; font-weight: 500; color: ${LFH_COLORS.textPrimary};
+  padding: 4px 10px; background: ${C.infoBox};
+  border: 1px solid ${C.border}; border-radius: 14px;
+  font-size: 11px; font-weight: 500; color: ${C.textPrimary};
 }
 
 /* Comparison Section */
 .lfhlc-comparison-section { margin-bottom: 24px; }
 
 .lfhlc-section-title {
-  font-size: 14px; font-weight: 700; color: ${LFH_COLORS.textPrimary};
+  font-size: 14px; font-weight: 700; color: ${C.textPrimary};
   text-transform: uppercase; letter-spacing: 0.5px;
   margin: 0 0 14px;
 }
 
 .lfhlc-comparison-table {
-  border: 1px solid ${LFH_COLORS.border}; border-radius: 10px;
+  border: 1px solid ${C.border}; border-radius: 10px;
   overflow: hidden;
 }
 
 .lfhlc-comparison-header {
   display: grid; grid-template-columns: 160px 1fr 1fr;
   background: #fff;
-  border-bottom: 2px solid ${LFH_COLORS.primaryRed};
+  border-bottom: 2px solid ${C.primaryRed};
 }
 .lfhlc-comparison-header .lfhlc-comp-cell {
   font-weight: 700; font-size: 12px; text-transform: uppercase;
   letter-spacing: 0.3px;
-  color: ${LFH_COLORS.primaryRed};
+  color: ${C.primaryRed};
 }
 
 .lfhlc-comparison-row {
   display: grid; grid-template-columns: 160px 1fr 1fr;
-  border-bottom: 1px solid ${LFH_COLORS.border};
+  border-bottom: 1px solid ${C.border};
 }
 .lfhlc-comparison-row:last-child { border-bottom: none; }
-.lfhlc-comparison-row:hover { background: ${LFH_COLORS.selectedTint}; }
+.lfhlc-comparison-row:hover { background: ${C.selectedTint}; }
 
 .lfhlc-comp-cell {
   padding: 12px 14px; font-size: 12px;
-  color: ${LFH_COLORS.textPrimary};
+  color: ${C.textPrimary};
 }
 .lfhlc-comp-label {
-  background: ${LFH_COLORS.infoBox}; font-weight: 600;
+  background: ${C.infoBox}; font-weight: 600;
   display: flex; align-items: center; gap: 8px;
-  overflow-wrap: break-word; word-break: break-word;
 }
 .lfhlc-comp-icon {
   font-size: 14px;
-  color: ${LFH_COLORS.textSecondary};
+  color: ${C.textSecondary};
   font-family: sans-serif;
 }
 .lfhlc-comp-lodge { text-align: center; }
@@ -1370,7 +1470,7 @@ function buildModalStyles() {
 .lfhlc-overview-cta { text-align: center; padding: 10px 0 20px; }
 .lfhlc-help-choose-btn { }
 .lfhlc-cta-subtext {
-  font-size: 12px; color: ${LFH_COLORS.textSecondary};
+  font-size: 12px; color: ${C.textSecondary};
   margin: 10px 0 0;
 }
 
@@ -1385,12 +1485,12 @@ function buildModalStyles() {
 
 .lfhlc-terrain-card {
   border-radius: 10px; overflow: hidden;
-  border: 1.5px solid ${LFH_COLORS.border};
+  border: 1.5px solid ${C.border};
   background: #fff;
 }
 
 .lfhlc-terrain-card-img {
-  width: 100%; height: 180px; object-fit: cover;
+  width: 100%; height: auto; object-fit: cover;
   display: block;
 }
 
@@ -1400,11 +1500,11 @@ function buildModalStyles() {
 }
 .lfhlc-terrain-card-label strong {
   font-family: 'Nexa Rust Sans Black 2', sans-serif;
-  font-size: 14px; font-weight: 900; color: ${LFH_COLORS.textPrimary};
+  font-size: 14px; font-weight: 900; color: ${C.textPrimary};
   text-transform: uppercase; letter-spacing: 0.5px;
 }
 .lfhlc-terrain-card-label span {
-  font-size: 12px; color: ${LFH_COLORS.textSecondary};
+  font-size: 12px; color: ${C.textSecondary};
   font-style: italic;
 }
 
@@ -1427,14 +1527,14 @@ function buildModalStyles() {
 }
 .lfhlc-layout-btn {
   padding: 8px 16px; background: transparent;
-  border: 1.5px solid ${LFH_COLORS.border}; border-radius: 20px;
+  border: 1.5px solid ${C.border}; border-radius: 20px;
   font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 600; color: ${LFH_COLORS.textSecondary};
+  font-size: 12px; font-weight: 600; color: ${C.textSecondary};
   cursor: pointer; transition: all 0.2s;
 }
 .lfhlc-layout-btn:hover {
-  border-color: ${LFH_COLORS.primaryRed};
-  color: ${LFH_COLORS.primaryRed};
+  border-color: ${C.primaryRed};
+  color: ${C.primaryRed};
 }
 
 /* Run Photos Gallery */
@@ -1448,21 +1548,21 @@ function buildModalStyles() {
   margin-bottom: 0;
 }
 .lfhlc-run-photos-label {
-  font-size: 12px; font-weight: 700; color: ${LFH_COLORS.textSecondary};
+  font-size: 12px; font-weight: 700; color: ${C.textSecondary};
   text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px;
 }
 .lfhlc-run-photos-strip {
   display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px;
 }
 .lfhlc-run-photos-strip::-webkit-scrollbar { height: 4px; }
-.lfhlc-run-photos-strip::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 2px; }
+.lfhlc-run-photos-strip::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 2px; }
 .lfhlc-run-photo {
   flex: 0 0 200px; height: 112px;
   border-radius: 8px; background-size: cover; background-position: center;
   cursor: pointer; border: 2px solid transparent; transition: all 0.2s;
 }
 .lfhlc-run-photo:hover {
-  border-color: ${LFH_COLORS.primaryRed};
+  border-color: ${C.primaryRed};
   transform: scale(1.02);
 }
 
@@ -1546,12 +1646,12 @@ function buildModalStyles() {
   justify-content: center; transition: all 0.2s;
 }
 .lfhlc-play-btn:hover {
-  background: ${LFH_COLORS.primaryRed}; transform: scale(1.1);
+  background: ${C.primaryRed}; transform: scale(1.1);
 }
 .lfhlc-play-btn:hover .lfhlc-play-triangle { border-left-color: #fff; }
 .lfhlc-play-triangle {
   width: 0; height: 0;
-  border-left: 18px solid ${LFH_COLORS.textPrimary};
+  border-left: 18px solid ${C.textPrimary};
   border-top: 11px solid transparent;
   border-bottom: 11px solid transparent;
   margin-left: 4px; transition: border-color 0.2s;
@@ -1573,19 +1673,19 @@ function buildModalStyles() {
   padding-bottom: 8px; margin-bottom: 20px;
 }
 .lfhlc-gallery-strip::-webkit-scrollbar { height: 4px; }
-.lfhlc-gallery-strip::-webkit-scrollbar-thumb { background: ${LFH_COLORS.border}; border-radius: 2px; }
+.lfhlc-gallery-strip::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 2px; }
 .lfhlc-gallery-thumb {
   flex: 0 0 120px; height: 80px; border-radius: 8px;
   background-size: cover; background-position: center;
   border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
 }
-.lfhlc-gallery-thumb:hover { border-color: ${LFH_COLORS.primaryRed}; }
-.lfhlc-gallery-thumb.active { border-color: ${LFH_COLORS.primaryRed}; }
+.lfhlc-gallery-thumb:hover { border-color: ${C.primaryRed}; }
+.lfhlc-gallery-thumb.active { border-color: ${C.primaryRed}; }
 
 /* Detail Sections */
 .lfhlc-detail-section { margin-bottom: 20px; }
 .lfhlc-full-desc {
-  font-size: 13px; line-height: 1.7; color: ${LFH_COLORS.textPrimary};
+  font-size: 13px; line-height: 1.7; color: ${C.textPrimary};
   margin: 0;
 }
 
@@ -1596,14 +1696,14 @@ function buildModalStyles() {
 }
 .lfhlc-stat-box {
   text-align: center; padding: 14px 8px;
-  background: ${LFH_COLORS.infoBox}; border-radius: 8px;
+  background: ${C.infoBox}; border-radius: 8px;
 }
 .lfhlc-stat-value {
-  font-size: 15px; font-weight: 700; color: ${LFH_COLORS.primaryRed};
+  font-size: 15px; font-weight: 700; color: ${C.primaryRed};
   margin-bottom: 3px;
 }
 .lfhlc-stat-label {
-  font-size: 10px; color: ${LFH_COLORS.textSecondary};
+  font-size: 10px; color: ${C.textSecondary};
   text-transform: uppercase; letter-spacing: 0.3px;
 }
 
@@ -1614,24 +1714,24 @@ function buildModalStyles() {
 }
 .lfhlc-feature-section { }
 .lfhlc-feature-title {
-  font-size: 11px; font-weight: 700; color: ${LFH_COLORS.textSecondary};
+  font-size: 11px; font-weight: 700; color: ${C.textSecondary};
   text-transform: uppercase; letter-spacing: 0.5px;
   margin: 0 0 8px;
 }
 .lfhlc-feature-text {
-  font-size: 13px; line-height: 1.5; color: ${LFH_COLORS.textPrimary};
+  font-size: 13px; line-height: 1.5; color: ${C.textPrimary};
   margin: 0;
 }
 .lfhlc-feature-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .lfhlc-feature-tag {
-  padding: 5px 12px; background: ${LFH_COLORS.infoBox};
-  border: 1px solid ${LFH_COLORS.border}; border-radius: 16px;
-  font-size: 11px; font-weight: 500; color: ${LFH_COLORS.textPrimary};
+  padding: 5px 12px; background: ${C.infoBox};
+  border: 1px solid ${C.border}; border-radius: 16px;
+  font-size: 11px; font-weight: 500; color: ${C.textPrimary};
 }
 
 /* Terrain Section */
 .lfhlc-terrain-section {
-  background: ${LFH_COLORS.infoBox}; border-radius: 10px;
+  background: ${C.infoBox}; border-radius: 10px;
   margin-bottom: 24px; overflow: hidden;
 }
 .lfhlc-terrain-toggle {
@@ -1639,20 +1739,14 @@ function buildModalStyles() {
   background: transparent; border: none;
   display: flex; align-items: center; gap: 10px;
   font-family: 'Inter', sans-serif; font-size: 14px;
-  font-weight: 700; color: ${LFH_COLORS.textPrimary};
+  font-weight: 700; color: ${C.textPrimary};
   cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
 }
 .lfhlc-terrain-toggle:hover { background: rgba(0,0,0,0.03); }
 .lfhlc-terrain-toggle-icon { display: flex; align-items: center; }
-.lfhlc-toggle-arrow {
-  display: flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border-radius: 50%;
-  background: ${LFH_COLORS.border}; color: ${LFH_COLORS.textPrimary};
-  flex-shrink: 0; transition: all 0.2s; margin-left: auto;
-}
-.lfhlc-terrain-toggle:hover .lfhlc-toggle-arrow,
-.lfhlc-map-toggle:hover .lfhlc-toggle-arrow {
-  background: ${LFH_COLORS.primaryRed}; color: #fff;
+.lfhlc-terrain-arrow {
+  margin-left: auto; font-size: 12px;
+  transition: transform 0.2s;
 }
 .lfhlc-terrain-content {
   max-height: 0; overflow: hidden;
@@ -1660,7 +1754,7 @@ function buildModalStyles() {
   padding: 0 18px;
 }
 .lfhlc-terrain-content.open {
-  max-height: 500px; padding: 0 18px 18px;
+  max-height: 1000px; padding: 0 18px 18px;
 }
 /* Maps Grid: side by side on desktop */
 .lfhlc-maps-grid {
@@ -1668,14 +1762,14 @@ function buildModalStyles() {
   margin-bottom: 16px;
 }
 .lfhlc-map-card {
-  background: ${LFH_COLORS.background}; border: 1px solid ${LFH_COLORS.border};
+  background: ${C.background}; border: 1px solid ${C.border};
   border-radius: 8px; overflow: hidden;
 }
 .lfhlc-map-toggle {
   width: 100%; display: flex; align-items: center; gap: 8px;
   padding: 10px 14px; background: none; border: none;
   cursor: pointer; font-family: inherit; font-size: 13px;
-  font-weight: 600; color: ${LFH_COLORS.textPrimary};
+  font-weight: 600; color: ${C.textPrimary};
   text-align: left;
 }
 .lfhlc-map-toggle:hover { background: rgba(0,0,0,0.03); }
@@ -1688,25 +1782,25 @@ function buildModalStyles() {
 .lfhlc-map-thumb {
   width: 100%; height: auto; border-radius: 6px;
   cursor: pointer; transition: opacity 0.2s;
-  border: 1px solid ${LFH_COLORS.border};
+  border: 1px solid ${C.border};
 }
 .lfhlc-map-thumb:hover { opacity: 0.85; }
 .lfhlc-map-hint {
-  text-align: center; font-size: 11px; color: ${LFH_COLORS.textSecondary};
+  text-align: center; font-size: 11px; color: ${C.textSecondary};
   margin-top: 6px;
 }
 .lfhlc-terrain-details { }
 .lfhlc-terrain-row {
   display: flex; align-items: flex-start; gap: 12px;
-  padding: 10px 0; border-bottom: 1px solid ${LFH_COLORS.border};
+  padding: 10px 0; border-bottom: 1px solid ${C.border};
 }
 .lfhlc-terrain-row:last-child { border-bottom: none; }
 .lfhlc-terrain-label {
   flex: 0 0 120px; font-size: 11px; font-weight: 700;
-  color: ${LFH_COLORS.textSecondary}; text-transform: uppercase;
+  color: ${C.textSecondary}; text-transform: uppercase;
 }
 .lfhlc-terrain-value {
-  flex: 1; font-size: 13px; color: ${LFH_COLORS.textPrimary};
+  flex: 1; font-size: 13px; color: ${C.textPrimary};
 }
 .lfhlc-terrain-value.lfhlc-highlight {
   color: #2E7D32; font-weight: 600;
@@ -1715,13 +1809,13 @@ function buildModalStyles() {
 /* Detail Actions */
 .lfhlc-detail-actions {
   display: flex; gap: 12px; padding: 16px 0;
-  border-top: 1px solid ${LFH_COLORS.border};
+  border-top: 1px solid ${C.border};
 }
 
 /* Buttons */
 .lfhlc-btn-primary {
   flex: 1; padding: 12px 20px;
-  background: ${LFH_COLORS.primaryRed}; color: #fff;
+  background: ${C.primaryRed}; color: #fff;
   border: none; border-radius: 8px; font-family: 'Inter', sans-serif;
   font-size: 13px; font-weight: 600; cursor: pointer;
   transition: all 0.2s; text-align: center;
@@ -1729,22 +1823,22 @@ function buildModalStyles() {
 .lfhlc-btn-primary:hover { background: #c4221a; transform: translateY(-1px); }
 .lfhlc-btn-outline {
   flex: 1; padding: 12px 20px;
-  background: #fff; color: ${LFH_COLORS.textPrimary};
-  border: 1.5px solid ${LFH_COLORS.border}; border-radius: 8px;
+  background: #fff; color: ${C.textPrimary};
+  border: 1.5px solid ${C.border}; border-radius: 8px;
   font-family: 'Inter', sans-serif; font-size: 13px;
   font-weight: 600; cursor: pointer; transition: all 0.2s;
   text-align: center;
 }
 .lfhlc-btn-outline:hover {
-  border-color: ${LFH_COLORS.primaryRed};
-  color: ${LFH_COLORS.primaryRed};
+  border-color: ${C.primaryRed};
+  color: ${C.primaryRed};
 }
 .lfhlc-btn-text {
   background: transparent; border: none;
-  color: ${LFH_COLORS.textSecondary}; font-family: 'Inter', sans-serif;
+  color: ${C.textSecondary}; font-family: 'Inter', sans-serif;
   font-size: 12px; cursor: pointer; padding: 8px; transition: color 0.2s;
 }
-.lfhlc-btn-text:hover { color: ${LFH_COLORS.primaryRed}; }
+.lfhlc-btn-text:hover { color: ${C.primaryRed}; }
 .lfhlc-card-actions { display: flex; gap: 8px; }
 .lfhlc-card-actions .lfhlc-btn-primary,
 .lfhlc-card-actions .lfhlc-btn-outline { font-size: 12px; padding: 10px 14px; }
@@ -1764,10 +1858,9 @@ function buildModalStyles() {
 
   .lfhlc-comparison-header,
   .lfhlc-comparison-row {
-    grid-template-columns: 110px 1fr 1fr;
+    grid-template-columns: 100px 1fr 1fr;
   }
   .lfhlc-comp-cell { padding: 10px 8px; font-size: 11px; }
-  .lfhlc-comp-label { font-size: 10px; }
   .lfhlc-comp-icon { display: none; }
 
   .lfhlc-stats-bar { grid-template-columns: repeat(2, 1fr); }
@@ -1785,8 +1878,8 @@ function buildModalStyles() {
   .lfhlc-tab-bar { gap: 6px; padding: 10px 16px; }
 
   .lfhlc-terrain-images { grid-template-columns: 1fr; }
+  .lfhlc-terrain-card-img { height: auto; }
   .lfhlc-maps-grid { grid-template-columns: 1fr; }
-  .lfhlc-terrain-card-img { height: 160px; }
 
   /* Run Photos - smaller on tablet */
   .lfhlc-run-photo { flex: 0 0 160px; height: 90px; }
@@ -1850,8 +1943,8 @@ function buildModalStyles() {
   }
   .lfhlc-lightbox-caption { font-size: 12px; margin-top: 10px; }
 
-  /* Terrain card images smaller */
-  .lfhlc-terrain-card-img { height: 140px; }
+  /* Terrain card images - full width on mobile */
+  .lfhlc-terrain-card-img { height: auto; }
 
   /* Section titles */
   .lfhlc-section-title { font-size: 13px; }
@@ -1865,6 +1958,45 @@ function buildModalStyles() {
     border-bottom-width: 8px;
     margin-left: 3px;
   }
+}
+
+/* Mobile overrides via device_type */
+.lfhlc-mobile .lfhlc-comparison-header,
+.lfhlc-mobile .lfhlc-comparison-row {
+  grid-template-columns: 1fr;
+}
+.lfhlc-mobile .lfhlc-comp-label {
+  border-bottom: none;
+  padding-bottom: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.lfhlc-mobile .lfhlc-comp-cell {
+  padding: 8px 14px;
+}
+.lfhlc-mobile .lfhlc-comparison-header .lfhlc-comp-lodge {
+  display: inline-block;
+  font-size: 10px;
+}
+.lfhlc-mobile .lfhlc-comparison-row .lfhlc-comp-cell:not(.lfhlc-comp-label) {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px;
+}
+.lfhlc-mobile .lfhlc-comparison-row .lfhlc-comp-cell:not(.lfhlc-comp-label)::before {
+  content: attr(data-lodge);
+  font-weight: 600;
+  color: ${C.primaryRed};
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.lfhlc-mobile .lfhlc-overview-hero { height: 140px; }
+.lfhlc-mobile .lfhlc-hero-image { height: 180px; }
+.lfhlc-mobile .lfhlc-run-photo { flex: 0 0 160px; height: 90px; }
+.lfhlc-mobile .lfhlc-run-photos-strip {
+  position: relative;
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
 }
 `;
 }
