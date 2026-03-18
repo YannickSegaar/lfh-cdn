@@ -29,7 +29,7 @@ Modals are opened programmatically by other extensions (not registered with Voic
 
 | File | Trace Type | Purpose |
 |------|-----------|---------|
-| `lfh-disclaimer.js` | `AI_Disclaimer_Modal` | AI disclosure modal (first-time visitors, blocking) |
+| `lfh-input-gate.js` | `ext_inputGate` | Hides/restores chat input during native disclaimer flow. Payload: `{ "action": "disable" \| "enable" }` |
 | `lfh-welcome.js` | `ext_welcomeGrid_v2` | Welcome screen with quick-start options |
 | `lfh-snowfall.js` | `ext_snowfall1` | Decorative snowfall animation |
 
@@ -60,6 +60,12 @@ Modals are opened programmatically by other extensions (not registered with Voic
 | `lfh-hub-tab-tours.js` | `renderToursTab`, `getToursTabState`, `buildToursStyles` | `lfh-hub` |
 | `lfh-hub-tab-lodges.js` | `renderLodgesTab`, `getLodgesTabState`, `buildLodgesStyles` | `lfh-hub` |
 | `lfh-hub-tab-weather.js` | `renderWeatherTab`, `getWeatherTabState`, `buildWeatherStyles` | `lfh-hub` |
+
+### Removed / Legacy (not loaded by loader.js)
+
+| File | Reason |
+|------|--------|
+| `lfh-disclaimer.js` | Replaced 2026-03-18. The `ext_aiDisclaimer` + localStorage approach was unreliable (string/boolean type mismatch). AI disclosure now uses native VoiceFlow text + choice blocks with `lfh-input-gate.js` for input control. |
 
 ## Dependency Graph
 
