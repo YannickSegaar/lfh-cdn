@@ -70,10 +70,6 @@
     localStorage.setItem('lfh_visit_count', String(visitCount));
   } catch (e) {}
 
-  // AI disclaimer tracking
-  var disclaimerAccepted = false;
-  try { disclaimerAccepted = localStorage.getItem('lfh_ai_disclaimer_accepted') === 'true'; } catch (e) {}
-
   // Visitor ID (persistent)
   var visitorId = '';
   try {
@@ -126,8 +122,7 @@
     page_url: window.location.href,
     page_path: window.location.pathname,
     referrer: document.referrer || '',
-    utm: utmParams,
-    disclaimer_accepted: disclaimerAccepted
+    utm: utmParams
   };
 
   // Store for cross-page awareness
@@ -183,20 +178,20 @@
   try {
     if (useFallback) {
       // FALLBACK MODE: Only load lead capture + feedback (text-chat with forms)
-      var [disclaimerMod, leadMod, feedbackMod] = await Promise.all([
-        import(CDN + '/extensions/lfh-disclaimer.js'),
+      var [inputGateMod, leadMod, feedbackMod] = await Promise.all([
+        import(CDN + '/extensions/lfh-input-gate.js'),
         import(CDN + '/extensions/lfh-lead-form.js'),
         import(CDN + '/extensions/lfh-feedback.js'),
       ]);
       extensions = [
-        disclaimerMod.LFHDisclaimerModal,
+        inputGateMod.LFHInputGate,
         leadMod.LastFrontierLeadForm_v4_Unified,
         feedbackMod.FeedbackExtension10,
       ].filter(Boolean);
     } else {
       // FULL MODE: Load all production extensions
       var [
-        disclaimerMod,
+        inputGateMod,
         leadMod, feedbackMod, ssWidgetMod, ssModalMod,
         lodgeWidgetMod, lodgeModalMod,
         tourGridMod, tourModalMod,
@@ -204,7 +199,7 @@
         welcomeGridMod, snowfallMod, hubModalMod,
         menuMod
       ] = await Promise.all([
-        import(CDN + '/extensions/lfh-disclaimer.js'),
+        import(CDN + '/extensions/lfh-input-gate.js'),
         import(CDN + '/extensions/lfh-lead-form.js'),
         import(CDN + '/extensions/lfh-feedback.js'),
         import(CDN + '/extensions/lfh-selfservice-widget.js'),
@@ -221,7 +216,7 @@
         import(CDN + '/extensions/lfh-menu-button.js'),
       ]);
       extensions = [
-        disclaimerMod.LFHDisclaimerModal,
+        inputGateMod.LFHInputGate,
         leadMod.LastFrontierLeadForm_v4_Unified,
         feedbackMod.FeedbackExtension10,
         ssWidgetMod.LastFrontierBrowserSelfService_v4_Unified,
