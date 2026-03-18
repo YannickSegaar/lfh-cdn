@@ -40,6 +40,9 @@ const LFH_ASSETS_LC = {
   videoMask: 'https://www.lastfrontierheli.com/wp-content/themes/lastfrontier/dist/images/videos-img-mask.png',
 };
 
+// Re-export shared constants for other CDN extensions (lfh-lodges-widget, lfh-hub-shared)
+export { LFH_COLORS_LC as LFH_COLORS, LFH_ASSETS_LC as LFH_ASSETS };
+
 // ============================================================================
 // VIDEO IDS
 // ============================================================================
@@ -2000,3 +2003,6 @@ function _lcBuildModalStyles(C) {
 }
 `;
 }
+
+// Re-export data and functions for other CDN extensions
+export { LFH_LODGES_LC as LFH_LODGES, LFH_LODGE_VIDEOS_LC as LFH_LODGE_VIDEOS, openLodgeCompareModal };

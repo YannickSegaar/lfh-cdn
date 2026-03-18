@@ -1939,3 +1939,6 @@ function _teBuildMobileOverrides(C) {
 }\
 ';
 }
+
+// Re-export for other CDN extensions (lfh-tours-grid, lfh-weather-modal)
+export { openTourExplorerModal as openTourExplorerModalWithBookingUnified };
