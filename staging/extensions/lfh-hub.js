@@ -400,7 +400,7 @@ export const LastFrontierHub = {
       tourId: payload.tourId || null,
       lodgeId: payload.lodgeId || null,
       device_type: payload.device_type || 'desktop',
-      webhookUrl: payload.webhookUrl || '',
+      webhookUrl: payload.webhookUrl || 'https://n8n.romaix-n8n.xyz/webhook/LFH_BookingAvailability',
       conversationId: payload.conversationId || null,
       userId: payload.userId || null,
       visitorContext: payload.visitorContext || {},
