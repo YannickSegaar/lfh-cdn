@@ -389,6 +389,10 @@ export const LastFrontierHub = {
   match: ({ trace }) =>
     trace.type === 'ext_hubModal' || trace.payload?.name === 'ext_hubModal',
   render: ({ trace, element }) => {
+    // Skip modal re-render during session resume (replayed traces)
+    if (window.__lfh_load_time && (Date.now() - window.__lfh_load_time) < 3000) {
+      return;
+    }
     const payload = trace.payload || {};
     openHubModal({
       variant: payload.variant || 'modal',
