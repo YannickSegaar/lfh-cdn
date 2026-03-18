@@ -261,21 +261,40 @@
   window.__lfh_load_time = Date.now();
 
   // ============================================
-  // 5. POST-LOAD: Proactive messages
+  // 5. POST-LOAD: Proactive messages (once per session)
   // ============================================
-  window.voiceflow.chat.proactive.clear();
-  setTimeout(function() {
-    window.voiceflow.chat.proactive.push({
-      type: 'text',
-      payload: { message: 'Curious about heliskiing in Northern BC?' }
+  var proactiveShown = false;
+  try { proactiveShown = sessionStorage.getItem('lfh_proactive_shown') === '1'; } catch (e) {}
+
+  if (!proactiveShown) {
+    // Track widget open state via VoiceFlow postMessage events
+    var widgetIsOpen = false;
+    window.addEventListener('message', function(event) {
+      try {
+        var data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data.type === 'voiceflow:open') widgetIsOpen = true;
+        if (data.type === 'voiceflow:close') widgetIsOpen = false;
+      } catch (e) {}
     });
-  }, 1000);
-  setTimeout(function() {
-    window.voiceflow.chat.proactive.push({
-      type: 'text',
-      payload: { message: 'I can show you around!' }
-    });
-  }, 3000);
+
+    setTimeout(function() {
+      if (widgetIsOpen) return;
+      window.voiceflow.chat.proactive.clear();
+      window.voiceflow.chat.proactive.push({
+        type: 'text',
+        payload: { message: 'Curious about heliskiing in Northern BC?' }
+      });
+    }, 1000);
+
+    setTimeout(function() {
+      if (widgetIsOpen) return;
+      window.voiceflow.chat.proactive.push({
+        type: 'text',
+        payload: { message: 'I can show you around!' }
+      });
+      try { sessionStorage.setItem('lfh_proactive_shown', '1'); } catch (e) {}
+    }, 3000);
+  }
 
 
   // ============================================
