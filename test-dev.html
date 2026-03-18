@@ -369,7 +369,10 @@
 <script>
 (function() {
   var isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
-  var CDN = isLocal ? location.origin : 'https://yannicksegaar.github.io/lfh-cdn';
+  var isStaging = location.pathname.indexOf('/staging/') !== -1;
+  var CDN = isLocal ? location.origin
+         : isStaging ? 'https://yannicksegaar.github.io/lfh-cdn/staging'
+         : 'https://yannicksegaar.github.io/lfh-cdn';
   var PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
 
   document.getElementById('cdn-source').innerHTML = '<code>' + CDN + '</code>';
@@ -476,7 +479,7 @@
 
       vfScript.onload = function() {
         Promise.all([
-          import(CDN + '/extensions/lfh-disclaimer.js'),
+          import(CDN + '/extensions/lfh-input-gate.js'),
           import(CDN + '/extensions/lfh-lead-form.js'),
           import(CDN + '/extensions/lfh-feedback.js'),
           import(CDN + '/extensions/lfh-selfservice-widget.js'),
@@ -493,7 +496,7 @@
           import(CDN + '/extensions/lfh-menu-button.js'),
         ]).then(function(mods) {
           loadedExtensions = [
-            mods[0].LFHDisclaimerModal,        // lfh-disclaimer.js
+            mods[0].LFHInputGate,              // lfh-input-gate.js
             mods[1].LastFrontierLeadForm_v4_Unified, // lfh-lead-form.js
             mods[2].FeedbackExtension10,       // lfh-feedback.js
             mods[3].LastFrontierBrowserSelfService_v4_Unified, // lfh-selfservice-widget.js
