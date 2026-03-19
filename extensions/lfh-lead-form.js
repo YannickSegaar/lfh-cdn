@@ -100,6 +100,7 @@ export const LastFrontierLeadForm_v4_Unified = {
       ? `${Date.now()}-${crypto.randomUUID()}`
       : `${Date.now()}-${Math.random().toString(36).substr(2, 12)}`;
 
+    element.style.width = '100%';
     element.innerHTML = '';
 
     const container = document.createElement('div');
@@ -1373,6 +1374,8 @@ export const LastFrontierLeadForm_v4_Unified = {
         tourDateDropdown.style.display = isOpen ? 'none' : 'block';
       });
 
+      tourDateDropdown.addEventListener('click', (e) => { e.stopPropagation(); });
+
       tourDateDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.addEventListener('change', () => {
           selectedTourDates = Array.from(tourDateDropdown.querySelectorAll('input:checked')).map(c => c.value);
@@ -1388,7 +1391,7 @@ export const LastFrontierLeadForm_v4_Unified = {
         tourDateDropdown.style.display = 'none';
       });
 
-      document.addEventListener('click', (e) => {
+      container.getRootNode().addEventListener('click', (e) => {
         if (!e.target.closest('#lfh-v3-tourDateMulti')) {
           tourDateDropdown.style.display = 'none';
         }
