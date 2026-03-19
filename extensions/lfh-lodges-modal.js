@@ -517,6 +517,10 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
 
+  // Lock body scroll while modal is open
+  const origBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+
   // --- Render Initial View ---
   renderActiveTab();
 
@@ -1168,6 +1172,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
       });
     }
 
+    document.body.style.overflow = origBodyOverflow;
     abortController.abort();
     backdrop.style.animation = 'lfhlc-fadeOut 0.3s ease forwards';
     setTimeout(() => {
@@ -1259,6 +1264,7 @@ function buildModalStyles() {
 .lfhlc-content {
   flex: 1; overflow-y: auto; padding: 20px;
   font-family: 'Inter', sans-serif;
+  overscroll-behavior: contain;
 }
 .lfhlc-content::-webkit-scrollbar { width: 6px; }
 .lfhlc-content::-webkit-scrollbar-track { background: ${LFH_COLORS.infoBox}; }

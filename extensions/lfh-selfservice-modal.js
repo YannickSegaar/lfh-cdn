@@ -329,6 +329,7 @@ function buildModalStyles() {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
+  overscroll-behavior: contain;
 }
 
 /* Section Header */
@@ -779,6 +780,10 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
 
+  // Lock body scroll while modal is open
+  const origBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+
   // ========================================================================
   // TAB SWITCHING
   // ========================================================================
@@ -1029,6 +1034,7 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
       interactWithAgent('ext_modal_closed', { modal: 'browser_ss', lastTab: activeTab });
     }
 
+    document.body.style.overflow = origBodyOverflow;
     backdrop.style.animation = 'lfhbss-fadeOut 0.3s ease forwards';
     setTimeout(() => {
       backdrop.remove();
