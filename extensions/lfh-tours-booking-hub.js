@@ -586,7 +586,7 @@ export function renderBookingForm(container, options = {}) {
     formWrap.innerHTML = `
       <!-- Tour Summary -->
       <div class="lfhte-bf-tour-card">
-        <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
+        <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.heroImage}')"></div>
         <div class="lfhte-bf-tour-info">
           <p class="lfhte-bf-tour-name">${tour.name}</p>
           <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
@@ -744,7 +744,7 @@ export function renderBookingForm(container, options = {}) {
     formWrap.innerHTML = `
       <!-- Tour Summary -->
       <div class="lfhte-bf-tour-card">
-        <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
+        <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.heroImage}')"></div>
         <div class="lfhte-bf-tour-info">
           <p class="lfhte-bf-tour-name">${tour.name}</p>
           <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
@@ -796,7 +796,7 @@ export function renderBookingForm(container, options = {}) {
           <input type="checkbox" id="lfhte-bf-consent">
           <label for="lfhte-bf-consent">
             I agree to receive communications from Last Frontier Heliskiing.
-            View our <a href="https://lastfrontierheli.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.
+            View our <a href="https://www.lastfrontierheli.com/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.
           </label>
         </div>
         <div class="lfhte-bf-consent-error" id="lfhte-bf-consent-error">Please accept the privacy policy</div>
@@ -1084,9 +1084,9 @@ export function renderBookingForm(container, options = {}) {
       // Build payload
       // Collect selected dates from multi-select checkboxes
       const dateCheckboxes = formWrap.querySelectorAll('#lfhte-bf-date-dropdown input:checked');
-      const collectedDates = dateCheckboxes.length > 0
-        ? Array.from(dateCheckboxes).map(cb => cb.value).join('; ')
-        : '';
+      const selectedTourDates = dateCheckboxes.length > 0
+        ? Array.from(dateCheckboxes).map(cb => cb.value)
+        : [];
       const notesField = formWrap.querySelector('#lfhte-bf-notes');
 
       const payload = {
@@ -1106,7 +1106,7 @@ export function renderBookingForm(container, options = {}) {
           tourName: tour.name,
           tourDuration: tour.duration,
           tourLodges: lodgesDisplay,
-          requestedDate: collectedDates,
+          requestedDates: selectedTourDates,
           groupSize,
           requestType: selectedRequestType,
           additionalNotes: notesField?.value.trim() || '',
