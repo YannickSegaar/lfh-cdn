@@ -519,7 +519,9 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
 
   // Lock body scroll while modal is open
   const origBodyOverflow = document.body.style.overflow;
+  const origHtmlOverflow = document.documentElement.style.overflow;
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
 
   // --- Render Initial View ---
   renderActiveTab();
@@ -1173,6 +1175,7 @@ export function openLodgeCompareModal(focusLodge = null, initialTab = 'overview'
     }
 
     document.body.style.overflow = origBodyOverflow;
+    document.documentElement.style.overflow = origHtmlOverflow;
     abortController.abort();
     backdrop.style.animation = 'lfhlc-fadeOut 0.3s ease forwards';
     setTimeout(() => {

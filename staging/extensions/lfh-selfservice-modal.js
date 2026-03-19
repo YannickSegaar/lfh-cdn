@@ -782,7 +782,9 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
 
   // Lock body scroll while modal is open
   const origBodyOverflow = document.body.style.overflow;
+  const origHtmlOverflow = document.documentElement.style.overflow;
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
 
   // ========================================================================
   // TAB SWITCHING
@@ -1035,6 +1037,7 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
     }
 
     document.body.style.overflow = origBodyOverflow;
+    document.documentElement.style.overflow = origHtmlOverflow;
     backdrop.style.animation = 'lfhbss-fadeOut 0.3s ease forwards';
     setTimeout(() => {
       backdrop.remove();

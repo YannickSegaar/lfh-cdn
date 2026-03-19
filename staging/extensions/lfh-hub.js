@@ -176,7 +176,9 @@ export function openHubModal(config = {}) {
 
   // Lock body scroll while modal is open (prevents iOS horizontal drift)
   const origBodyOverflow = document.body.style.overflow;
+  const origHtmlOverflow = document.documentElement.style.overflow;
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
 
   // --- Tab switch function (shared with tab modules via config) ---
   function switchToTab(targetTab, options = {}) {
@@ -353,6 +355,7 @@ export function openHubModal(config = {}) {
 
     abortController.abort();
     document.body.style.overflow = origBodyOverflow;
+    document.documentElement.style.overflow = origHtmlOverflow;
     backdrop.style.animation = 'lfhub-fadeOut 0.3s ease forwards';
     setTimeout(() => backdrop.remove(), 300);
   }
