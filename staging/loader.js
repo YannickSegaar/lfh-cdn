@@ -267,7 +267,7 @@
       extensions: extensions
     },
     session: {
-      resumeOnReload: false
+      resumeOnReload: true
     }
   });
 
