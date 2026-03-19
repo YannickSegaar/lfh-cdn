@@ -248,6 +248,10 @@ export function openTourExplorerModalWithBookingUnified(focusTourId = null, conf
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
 
+  // Lock body scroll while modal is open
+  const origBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+
   // --- Apply initial lodge filter if set ---
   if (initialLodgeFilter !== 'all') {
     modal.querySelector('#lfhte-filter-lodge').value = initialLodgeFilter;
@@ -881,6 +885,7 @@ export function openTourExplorerModalWithBookingUnified(focusTourId = null, conf
       });
     }
 
+    document.body.style.overflow = origBodyOverflow;
     abortController.abort();
     backdrop.style.animation = 'lfhte-fadeOut 0.3s ease forwards';
     setTimeout(() => backdrop.remove(), 300);
@@ -997,6 +1002,7 @@ function buildModalStyles() {
 .lfhte-content {
   flex: 1; overflow-y: auto; padding: 20px;
   font-family: 'Inter', sans-serif;
+  overscroll-behavior: contain;
 }
 .lfhte-content::-webkit-scrollbar { width: 6px; }
 .lfhte-content::-webkit-scrollbar-track { background: ${LFH_COLORS.infoBox}; }

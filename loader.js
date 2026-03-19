@@ -171,7 +171,6 @@
   bundlePreload.rel = 'preload';
   bundlePreload.as = 'script';
   bundlePreload.href = bundleUrl;
-  bundlePreload.crossOrigin = 'anonymous';
   document.head.appendChild(bundlePreload);
 
   var script = document.createElement('script');
