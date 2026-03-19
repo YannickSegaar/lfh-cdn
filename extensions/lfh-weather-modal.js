@@ -147,6 +147,12 @@ export function openWeatherConditionsModal() {
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
 
+  // Lock body scroll while modal is open
+  const origBodyOverflow = document.body.style.overflow;
+  const origHtmlOverflow = document.documentElement.style.overflow;
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+
   // Silent variable update
   silentVariableUpdate('ext_last_action', 'weather_conditions_opened');
 
@@ -234,6 +240,8 @@ export function openWeatherConditionsModal() {
       interactWithAgent('ext_modal_closed', { modal: 'weather', viewDurationMs });
     }
 
+    document.body.style.overflow = origBodyOverflow;
+    document.documentElement.style.overflow = origHtmlOverflow;
     abortController.abort();
     backdrop.style.animation = 'lfhwc-fadeOut 0.3s ease forwards';
     setTimeout(() => {
