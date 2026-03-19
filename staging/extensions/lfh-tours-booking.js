@@ -244,6 +244,31 @@ function buildBookingFormStyles() {
   background: ${LFH_COLORS.border}; border-radius: 3px;
 }
 
+/* Date Multi-Select */
+.lfhte-bf-date-multi { position: relative; }
+.lfhte-bf-date-btn {
+  width: 100%; padding: 9px 11px; font-size: 13px;
+  font-family: 'Inter', sans-serif; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; background: #fff; color: ${LFH_COLORS.textPrimary};
+  cursor: pointer; box-sizing: border-box;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-align: left;
+}
+.lfhte-bf-date-btn:hover { border-color: ${LFH_COLORS.primaryRed}; }
+.lfhte-bf-date-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+  background: #fff; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 4px; padding: 6px 0; max-height: 200px; overflow-y: auto;
+}
+.lfhte-bf-date-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; font-family: 'Inter', sans-serif;
+  font-size: 12px; color: ${LFH_COLORS.textPrimary}; cursor: pointer;
+}
+.lfhte-bf-date-item:hover { background: ${LFH_COLORS.infoBox}; }
+.lfhte-bf-date-item input { accent-color: ${LFH_COLORS.primaryRed}; }
+
 /* Custom dates message */
 .lfhte-bf-custom-dates {
   padding: 10px 12px; background: ${LFH_COLORS.infoBox};
@@ -476,23 +501,25 @@ export function renderBookingForm(container, options = {}) {
       </div>
     `;
   } else if (tourDates && tourDates.length > 0) {
-    const dateOpts = tourDates.map(d => `<option value="${d.value}">${d.label}</option>`).join('');
+    const dateCheckboxes = tourDates.map(d =>
+      `<label class="lfhte-bf-date-item"><input type="checkbox" value="${d.value}"> ${d.label}</label>`
+    ).join('');
     dateFieldHTML = `
       <div class="lfhte-bf-field">
-        <label for="lfhte-bf-date">Preferred Date</label>
-        <select id="lfhte-bf-date" class="lfhte-bf-select">
-          <option value="">Select a date (optional)</option>
-          ${dateOpts}
-        </select>
+        <label>Preferred Date(s)</label>
+        <div class="lfhte-bf-date-multi" id="lfhte-bf-date-multi">
+          <div class="lfhte-bf-date-btn" id="lfhte-bf-date-btn">Select dates (optional)</div>
+          <div class="lfhte-bf-date-dropdown" id="lfhte-bf-date-dropdown" style="display:none;">
+            ${dateCheckboxes}
+          </div>
+        </div>
       </div>
     `;
   } else {
     dateFieldHTML = `
       <div class="lfhte-bf-field">
-        <label for="lfhte-bf-date">Preferred Date</label>
-        <select id="lfhte-bf-date" class="lfhte-bf-select">
-          <option value="">No dates available</option>
-        </select>
+        <label>Preferred Date</label>
+        <div class="lfhte-bf-custom-dates" style="color:${LFH_COLORS.textSecondary};font-size:12px;">No dates available</div>
       </div>
     `;
   }
@@ -509,7 +536,7 @@ export function renderBookingForm(container, options = {}) {
   formWrap.innerHTML = `
     <!-- Tour Summary -->
     <div class="lfhte-bf-tour-card">
-      <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.thumbnailImage}')"></div>
+      <div class="lfhte-bf-tour-thumb" style="background-image:url('${tour.heroImage}')"></div>
       <div class="lfhte-bf-tour-info">
         <p class="lfhte-bf-tour-name">${tour.name}</p>
         <p class="lfhte-bf-tour-meta">${tour.duration} &middot; ${lodgesDisplay}${tour.verticalGuarantee ? ` &middot; ${tour.verticalGuarantee} vertical` : ''}</p>
@@ -579,7 +606,7 @@ export function renderBookingForm(container, options = {}) {
         <input type="checkbox" id="lfhte-bf-consent">
         <label for="lfhte-bf-consent">
           I agree to receive communications from Last Frontier Heliskiing.
-          View our <a href="https://lastfrontierheli.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.
+          View our <a href="https://www.lastfrontierheli.com/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.
         </label>
       </div>
       <div class="lfhte-bf-consent-error" id="lfhte-bf-consent-error">Please accept the privacy policy</div>
@@ -673,6 +700,31 @@ export function renderBookingForm(container, options = {}) {
     });
   }
 
+  // Date multi-select dropdown
+  const dateBtn = formWrap.querySelector('#lfhte-bf-date-btn');
+  const dateDropdown = formWrap.querySelector('#lfhte-bf-date-dropdown');
+  if (dateBtn && dateDropdown) {
+    dateBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dateDropdown.style.display !== 'none';
+      dateDropdown.style.display = isOpen ? 'none' : 'block';
+    });
+    dateDropdown.addEventListener('click', (e) => { e.stopPropagation(); });
+    formWrap.querySelectorAll('#lfhte-bf-date-dropdown input').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const selected = Array.from(formWrap.querySelectorAll('#lfhte-bf-date-dropdown input:checked'));
+        dateBtn.textContent = selected.length === 0
+          ? 'Select dates (optional)'
+          : `${selected.length} date${selected.length > 1 ? 's' : ''} selected`;
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!formWrap.querySelector('#lfhte-bf-date-multi')?.contains(e.target)) {
+        dateDropdown.style.display = 'none';
+      }
+    });
+  }
+
   // Request type selection
   const rtCards = formWrap.querySelectorAll('.lfhte-bf-rt-card');
   const rtError = formWrap.querySelector('#lfhte-bf-rt-error');
@@ -749,7 +801,10 @@ export function renderBookingForm(container, options = {}) {
     if (!allValid) return;
 
     // Build payload
-    const dateSelect = formWrap.querySelector('#lfhte-bf-date');
+    const dateCheckboxes = formWrap.querySelectorAll('#lfhte-bf-date-dropdown input:checked');
+    const selectedTourDates = dateCheckboxes.length > 0
+      ? Array.from(dateCheckboxes).map(cb => cb.value)
+      : [];
     const payload = {
       lead: {
         firstName: formWrap.querySelector('#lfhte-bf-fname').value.trim(),
@@ -763,7 +818,7 @@ export function renderBookingForm(container, options = {}) {
         tourName: tour.name,
         tourDuration: tour.duration,
         tourLodges: lodgesDisplay,
-        requestedDate: dateSelect ? dateSelect.value : '',
+        requestedDates: selectedTourDates,
         groupSize,
         requestType: selectedRequestType,
       },
