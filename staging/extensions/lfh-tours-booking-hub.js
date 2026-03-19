@@ -487,6 +487,26 @@ function buildBookingFormStyles() {
   font-size: 13px; color: ${LFH_COLORS.textSecondary}; margin: 0;
 }
 
+/* Phone Combo (dial code + number) */
+.lfhte-bf-phone-combo { display: flex; gap: 6px; }
+.lfhte-bf-phone-code {
+  width: 100px; flex-shrink: 0;
+  padding: 9px 8px; font-size: 13px;
+  font-family: 'Inter', sans-serif; border: 1px solid ${LFH_COLORS.border};
+  border-radius: 6px; background: #fff; color: ${LFH_COLORS.textPrimary};
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 6px center;
+  padding-right: 20px; cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  box-sizing: border-box;
+}
+.lfhte-bf-phone-code:focus {
+  border-color: ${LFH_COLORS.primaryRed};
+  box-shadow: 0 0 0 2px rgba(230, 43, 30, 0.08);
+}
+.lfhte-bf-phone-number { flex: 1; min-width: 0; }
+
 /* Mobile */
 @media (max-width: 500px) {
   .lfhte-bf-row { flex-direction: column; gap: 0; }
@@ -632,7 +652,47 @@ export function renderBookingForm(container, options = {}) {
         <div class="lfhte-bf-row">
           <div class="lfhte-bf-field">
             <label for="lfhte-bf-phone">Phone <span class="lfhte-bf-req">*</span></label>
-            <input type="tel" id="lfhte-bf-phone" class="lfhte-bf-input" placeholder="+1 (555) 123-4567" autocomplete="tel" required>
+            <div class="lfhte-bf-phone-combo">
+              <select id="lfhte-bf-dialCode" class="lfhte-bf-phone-code" autocomplete="tel-country-code">
+                <option value="+1" selected>\u{1F1E8}\u{1F1E6} +1</option>
+                <option value="+1">\u{1F1FA}\u{1F1F8} +1</option>
+                <option value="+44">\u{1F1EC}\u{1F1E7} +44</option>
+                <option value="+61">\u{1F1E6}\u{1F1FA} +61</option>
+                <option value="+64">\u{1F1F3}\u{1F1FF} +64</option>
+                <option value="+49">\u{1F1E9}\u{1F1EA} +49</option>
+                <option value="+43">\u{1F1E6}\u{1F1F9} +43</option>
+                <option value="+41">\u{1F1E8}\u{1F1ED} +41</option>
+                <option value="+33">\u{1F1EB}\u{1F1F7} +33</option>
+                <option value="+31">\u{1F1F3}\u{1F1F1} +31</option>
+                <option value="+32">\u{1F1E7}\u{1F1EA} +32</option>
+                <option value="+39">\u{1F1EE}\u{1F1F9} +39</option>
+                <option value="+34">\u{1F1EA}\u{1F1F8} +34</option>
+                <option value="+351">\u{1F1F5}\u{1F1F9} +351</option>
+                <option value="+46">\u{1F1F8}\u{1F1EA} +46</option>
+                <option value="+47">\u{1F1F3}\u{1F1F4} +47</option>
+                <option value="+45">\u{1F1E9}\u{1F1F0} +45</option>
+                <option value="+358">\u{1F1EB}\u{1F1EE} +358</option>
+                <option value="+353">\u{1F1EE}\u{1F1EA} +353</option>
+                <option value="+81">\u{1F1EF}\u{1F1F5} +81</option>
+                <option value="+82">\u{1F1F0}\u{1F1F7} +82</option>
+                <option value="+86">\u{1F1E8}\u{1F1F3} +86</option>
+                <option value="+91">\u{1F1EE}\u{1F1F3} +91</option>
+                <option value="+52">\u{1F1F2}\u{1F1FD} +52</option>
+                <option value="+55">\u{1F1E7}\u{1F1F7} +55</option>
+                <option value="+54">\u{1F1E6}\u{1F1F7} +54</option>
+                <option value="+56">\u{1F1E8}\u{1F1F1} +56</option>
+                <option value="+27">\u{1F1FF}\u{1F1E6} +27</option>
+                <option value="+971">\u{1F1E6}\u{1F1EA} +971</option>
+                <option value="+966">\u{1F1F8}\u{1F1E6} +966</option>
+                <option value="+48">\u{1F1F5}\u{1F1F1} +48</option>
+                <option value="+420">\u{1F1E8}\u{1F1FF} +420</option>
+                <option value="+7">\u{1F1F7}\u{1F1FA} +7</option>
+                <option value="+380">\u{1F1FA}\u{1F1E6} +380</option>
+                <option value="+65">\u{1F1F8}\u{1F1EC} +65</option>
+                <option value="+66">\u{1F1F9}\u{1F1ED} +66</option>
+              </select>
+              <input type="tel" id="lfhte-bf-phone" class="lfhte-bf-input lfhte-bf-phone-number" placeholder="612 345 678" autocomplete="tel-national" required>
+            </div>
             <div class="lfhte-bf-error-msg">Please enter your phone number</div>
           </div>
           <div class="lfhte-bf-field">
@@ -929,10 +989,12 @@ export function renderBookingForm(container, options = {}) {
       const e = formWrap.querySelector('#lfhte-bf-email');
       const p = formWrap.querySelector('#lfhte-bf-phone');
       const h = formWrap.querySelector('#lfhte-bf-hear');
+      const dc = formWrap.querySelector('#lfhte-bf-dialCode');
       if (f) f.value = step1Values.firstName;
       if (l) l.value = step1Values.lastName;
       if (e) e.value = step1Values.email;
-      if (p) p.value = step1Values.phone;
+      if (p) p.value = step1Values.rawPhone || step1Values.phone;
+      if (dc && step1Values.dialCode) dc.value = step1Values.dialCode;
       if (h) h.value = step1Values.hearAboutUs || '';
     }
 
@@ -963,11 +1025,15 @@ export function renderBookingForm(container, options = {}) {
       if (!allValid) return;
 
       // Cache step 1 values
+      const dialCode = formWrap.querySelector('#lfhte-bf-dialCode')?.value || '+1';
+      const rawPhone = formWrap.querySelector('#lfhte-bf-phone')?.value.trim() || '';
       step1Values = {
         firstName: formWrap.querySelector('#lfhte-bf-fname')?.value.trim() || '',
         lastName: formWrap.querySelector('#lfhte-bf-lname')?.value.trim() || '',
         email: formWrap.querySelector('#lfhte-bf-email')?.value.trim() || '',
-        phone: formWrap.querySelector('#lfhte-bf-phone')?.value.trim() || '',
+        phone: rawPhone ? `${dialCode} ${rawPhone}` : '',
+        dialCode,
+        rawPhone,
         hearAboutUs: formWrap.querySelector('#lfhte-bf-hear')?.value || '',
       };
 
