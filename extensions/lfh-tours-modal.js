@@ -250,7 +250,9 @@ export function openTourExplorerModalWithBookingUnified(focusTourId = null, conf
 
   // Lock body scroll while modal is open
   const origBodyOverflow = document.body.style.overflow;
+  const origHtmlOverflow = document.documentElement.style.overflow;
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
 
   // --- Apply initial lodge filter if set ---
   if (initialLodgeFilter !== 'all') {
@@ -886,6 +888,7 @@ export function openTourExplorerModalWithBookingUnified(focusTourId = null, conf
     }
 
     document.body.style.overflow = origBodyOverflow;
+    document.documentElement.style.overflow = origHtmlOverflow;
     abortController.abort();
     backdrop.style.animation = 'lfhte-fadeOut 0.3s ease forwards';
     setTimeout(() => backdrop.remove(), 300);
