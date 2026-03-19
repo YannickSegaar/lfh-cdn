@@ -25,6 +25,7 @@ import {
   LFH_TOURS, LFH_COLORS, LFH_VIDEOS, INCLUDED_ITEMS_REGULAR, INCLUDED_ITEMS_PRIVATE,
   silentVariableUpdate, interactWithAgent, lodgeName, lodgeBadgeColor,
   trackHubTourViewed, trackHubFilterUsed, trackHubHighIntent, getVideoEmbedUrl,
+  setPendingAction,
 } from './lfh-hub-shared.js';
 import { renderBookingForm } from './lfh-tours-booking-hub.js';
 
@@ -594,7 +595,7 @@ export function renderToursTab(container, config, savedState) {
   // ========================================================================
 
   function handleBookingSuccess(tour, payload) {
-    interactWithAgent('ext_user_action', {
+    setPendingAction({
       action: 'booking_request_submitted',
       source: 'tour_explorer',
       tourId: tour.id,
