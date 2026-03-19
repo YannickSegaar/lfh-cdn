@@ -1049,6 +1049,32 @@ export const LastFrontierLeadForm_v4_Unified = {
 
     element.appendChild(container);
 
+    // Fix VoiceFlow message bubble width constraint
+    // VoiceFlow wraps extensions in .vfrc-message (inline-block with padding),
+    // which can cause width changes between steps. Force full width.
+    requestAnimationFrame(() => {
+      let parent = element.closest
+        ? element.closest('.vfrc-message')
+        : null;
+      if (!parent) {
+        let p = element.parentElement;
+        while (p && p.tagName !== 'BODY') {
+          if (p.classList?.contains('vfrc-message')) {
+            parent = p;
+            break;
+          }
+          p = p.parentElement;
+        }
+      }
+      if (parent) {
+        parent.style.display = 'block';
+        parent.style.width = '100%';
+        parent.style.padding = '0';
+        parent.style.background = 'none';
+        parent.style.boxShadow = 'none';
+      }
+    });
+
     // ========================================================================
     // DISABLE CHAT INPUT while form is visible in the DOM
     // ========================================================================
