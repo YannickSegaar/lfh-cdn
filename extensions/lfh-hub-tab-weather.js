@@ -47,7 +47,7 @@ export function getWeatherTabState() {
  * @param {Object|null} savedState - Restored state from tab snapshot
  */
 export function renderWeatherTab(container, config, savedState) {
-  const { onSwitchTab, onActionTaken, isMobile = false } = config;
+  const { onSwitchTab, onActionTaken, onCloseHubSilent, isMobile = false } = config;
 
   _state = {
     loaded: savedState?.loaded || false,
@@ -130,6 +130,16 @@ export function renderWeatherTab(container, config, savedState) {
         action: 'weather_view_external',
         source: 'weather_modal',
       });
+
+      // On mobile, close hub modal and minimize widget so user sees clean page on return
+      if (isMobile) {
+        if (typeof onCloseHubSilent === 'function') onCloseHubSilent();
+        try {
+          if (typeof window.voiceflow?.chat?.close === 'function') {
+            window.voiceflow.chat.close();
+          }
+        } catch (e) { /* silent */ }
+      }
     });
   }
 
