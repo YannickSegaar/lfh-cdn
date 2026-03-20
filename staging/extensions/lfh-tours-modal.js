@@ -1020,7 +1020,7 @@ function buildModalStyles() {
 }
 .lfhte-tour-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 4px 16px rgba(230, 43, 30, 0.1);
+  box-shadow: 0 4px 16px rgba(218, 41, 28, 0.1);
 }
 .lfhte-card-image {
   height: 160px; background-size: cover;

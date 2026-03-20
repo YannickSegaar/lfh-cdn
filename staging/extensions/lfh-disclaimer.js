@@ -121,7 +121,7 @@ export const LFHDisclaimerModal = {
 
         .lfh-disclaimer-btn {
           display: inline-block;
-          background: #e62b1e;
+          background: #DA291C;
           color: #FFFFFF;
           font-family: 'Nexa Rust Sans Black 2', sans-serif;
           font-size: 15px;

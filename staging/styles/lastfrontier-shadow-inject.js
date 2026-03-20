@@ -68,7 +68,7 @@
   justify-content: center !important;
   gap: 5px !important;
   height: 32px !important;
-  background: #E62B1E !important;
+  background: #DA291C !important;
   background-image: none !important;
   color: #fff !important;
   font-size: 12px !important;
@@ -128,8 +128,8 @@
   cursor: pointer !important;
 }
 .vfrc-widget .lfh-ss-v4-tab.active {
-  color: #e62b1e !important;
-  border-bottom-color: #e62b1e !important;
+  color: #DA291C !important;
+  border-bottom-color: #DA291C !important;
   background: #FFFFFF !important;
 }
 
@@ -196,7 +196,7 @@
 .vfrc-widget .lfh-ss-v4-faq-icon {
   font-size: 16px !important;
   font-weight: 700 !important;
-  color: #e62b1e !important;
+  color: #DA291C !important;
   flex-shrink: 0 !important;
   margin-left: 10px !important;
 }
@@ -221,7 +221,7 @@
 
 /* Resource arrow */
 .vfrc-widget .lfh-ss-v4-resource-arrow {
-  color: #e62b1e !important;
+  color: #DA291C !important;
   font-size: 16px !important;
   flex-shrink: 0 !important;
 }
@@ -411,7 +411,7 @@
   height: 24px !important;
   border-radius: 50% !important;
   border: none !important;
-  background: linear-gradient(180deg, #ee2e24, #CC3333) !important;
+  background: linear-gradient(180deg, #E0342E, #DA291C) !important;
   color: #fff !important;
   font-size: 13px !important;
   font-weight: 700 !important;
@@ -423,12 +423,12 @@
   padding: 0 !important;
   line-height: 1 !important;
   transition: filter 0.2s, box-shadow 0.2s !important;
-  box-shadow: 0 2px 6px rgba(204, 51, 51, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(218, 41, 28, 0.3) !important;
 }
 
 .vfrc-widget .lf-help-circle:hover {
   filter: brightness(1.1) !important;
-  box-shadow: 0 3px 10px rgba(204, 51, 51, 0.45) !important;
+  box-shadow: 0 3px 10px rgba(218, 41, 28, 0.45) !important;
 }
 
 .vfrc-widget .lf-help-balloon {
@@ -483,7 +483,7 @@
   font-family: 'Nexa Rust Sans Black 2', system-ui, sans-serif !important;
   font-size: 12px !important;
   font-weight: 700 !important;
-  color: #CC3333 !important;
+  color: #DA291C !important;
   letter-spacing: 0.3px !important;
 }
 
@@ -501,7 +501,7 @@
 
 .vfrc-widget .lf-help-balloon li::before {
   content: '\\2022' !important;
-  color: #CC3333 !important;
+  color: #DA291C !important;
   font-weight: 700 !important;
   display: inline-block !important;
   width: 14px !important;

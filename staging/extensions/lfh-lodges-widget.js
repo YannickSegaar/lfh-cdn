@@ -115,7 +115,7 @@ export const LFHLodgeCompareWidgetV2Unified = {
 }
 .lfhlc-w-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 6px 16px rgba(230, 43, 30, 0.12);
+  box-shadow: 0 6px 16px rgba(218, 41, 28, 0.12);
   transform: translateY(-2px);
 }
 

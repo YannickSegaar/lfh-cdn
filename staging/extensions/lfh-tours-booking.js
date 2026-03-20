@@ -211,7 +211,7 @@ function buildBookingFormStyles() {
 }
 .lfhte-bf-input:focus, .lfhte-bf-select:focus {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 0 0 2px rgba(230, 43, 30, 0.08);
+  box-shadow: 0 0 0 2px rgba(218, 41, 28, 0.08);
 }
 .lfhte-bf-input::placeholder { color: #aaa; }
 .lfhte-bf-input.lfhte-bf-error, .lfhte-bf-select.lfhte-bf-error {

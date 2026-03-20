@@ -85,13 +85,13 @@ export const LastFrontierLeadForm_v4_Unified = {
 
     // --- Color Palette (from MailChimp template) ---
     const colors = {
-      primaryRed: '#e62b1e',
+      primaryRed: '#DA291C',
       textPrimary: '#42494e',
       textSecondary: '#666666',
       background: '#FFFFFF',
       infoBox: '#F5F5F5',
       border: '#E5E8EB',
-      selectedTint: 'rgba(230, 43, 30, 0.04)',
+      selectedTint: 'rgba(218, 41, 28, 0.04)',
     };
 
     let currentStep = 1;
@@ -337,7 +337,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 .lfh-v3-textarea:focus {
   outline: none;
   border-color: ${colors.primaryRed};
-  box-shadow: 0 0 0 3px rgba(230, 43, 30, 0.08);
+  box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.08);
 }
 
 .lfh-v3-input::placeholder,
@@ -446,7 +446,7 @@ export const LastFrontierLeadForm_v4_Unified = {
 .lfh-v3-country-input:focus {
   outline: none;
   border-color: ${colors.primaryRed};
-  box-shadow: 0 0 0 3px rgba(230, 43, 30, 0.08);
+  box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.08);
 }
 
 .lfh-v3-country-input::placeholder {
@@ -552,7 +552,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   border-radius: 50%;
   background: ${colors.primaryRed};
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(230, 43, 30, 0.3);
+  box-shadow: 0 2px 6px rgba(218, 41, 28, 0.3);
 }
 
 .lfh-v3-slider::-moz-range-thumb {
@@ -562,7 +562,7 @@ export const LastFrontierLeadForm_v4_Unified = {
   background: ${colors.primaryRed};
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 6px rgba(230, 43, 30, 0.3);
+  box-shadow: 0 2px 6px rgba(218, 41, 28, 0.3);
 }
 
 /* ===== CHECKBOX ===== */
@@ -811,7 +811,7 @@ export const LastFrontierLeadForm_v4_Unified = {
     <div class="lfh-v3-progress-bar">
       <div class="lfh-v3-progress-fill" style="width: 0%"></div>
     </div>
-    <div class="lfh-v3-progress-label">Trip Details <span class="lfh-v3-progress-optional">(optional)</span></div>
+    <div class="lfh-v3-progress-label">Trip Details</div>
   </div>
 </div>
 
