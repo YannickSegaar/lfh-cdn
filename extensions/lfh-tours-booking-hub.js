@@ -489,7 +489,7 @@ function buildBookingFormStyles() {
 
 /* Mobile */
 @media (max-width: 500px) {
-  .lfhte-bf-row { flex-direction: column; gap: 0; }
+  .lfhte-bf-row { flex-direction: column; gap: 12px; }
   .lfhte-bf-request-types { flex-direction: column; }
 
   .lfhte-bf-tour-card { flex-direction: column; text-align: center; }
