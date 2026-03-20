@@ -229,6 +229,7 @@ export function openHubModal(config = {}) {
       onSwitchTab: switchToTab,
       onActionTaken: () => { hubState.actionTaken = true; },
       onCloseHub: closeModal,
+      onCloseHubSilent: () => actualCloseModal(),
       /**
        * Gate a leave-modal action behind confirmation.
        * Stores the action payload, then shows confirmation dialog.
