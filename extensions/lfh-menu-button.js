@@ -117,9 +117,9 @@ var MENU_STYLES = `
 
 .lf-menu-trigger.lf-menu-active {
   background: #fff;
-  border-color: rgba(204, 51, 51, 0.25);
-  color: #cc3333;
-  box-shadow: 0 2px 8px rgba(204, 51, 51, 0.1);
+  border-color: rgba(218, 41, 28, 0.25);
+  color: #DA291C;
+  box-shadow: 0 2px 8px rgba(218, 41, 28, 0.1);
 }
 
 .lf-menu-trigger svg {
@@ -203,7 +203,7 @@ var MENU_STYLES = `
   height: 34px;
   border-radius: 10px;
   background: #FEF2F2;
-  color: #cc3333;
+  color: #DA291C;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +211,7 @@ var MENU_STYLES = `
 }
 
 .lf-menu-option:hover .lf-menu-option-icon {
-  background: #cc3333;
+  background: #DA291C;
   color: #fff;
 }
 
@@ -278,7 +278,7 @@ var MENU_STYLES = `
   padding: 9px 16px;
   border: none;
   border-radius: 10px;
-  background: #cc3333;
+  background: #DA291C;
   color: #fff;
   font-size: 13px;
   font-weight: 600;

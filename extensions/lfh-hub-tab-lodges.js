@@ -910,7 +910,7 @@ export function buildLodgesStyles() {
 }
 .lfhlc-overview-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 6px 20px rgba(230, 43, 30, 0.1);
+  box-shadow: 0 6px 20px rgba(218, 41, 28, 0.1);
   transform: translateY(-2px);
 }
 .lfhlc-overview-hero {
@@ -951,11 +951,11 @@ export function buildLodgesStyles() {
 }
 .lfhlc-comparison-header {
   display: grid; grid-template-columns: 160px 1fr 1fr;
-  background: #fff; border-bottom: 2px solid ${LFH_COLORS.primaryRed};
+  background: #fff; border-bottom: 2px solid ${LFH_COLORS.textPrimary};
 }
 .lfhlc-comparison-header .lfhlc-comp-cell {
   font-weight: 700; font-size: 12px; text-transform: uppercase;
-  letter-spacing: 0.3px; color: ${LFH_COLORS.primaryRed};
+  letter-spacing: 0.3px; color: ${LFH_COLORS.textPrimary};
 }
 .lfhlc-comparison-row {
   display: grid; grid-template-columns: 160px 1fr 1fr;
@@ -989,7 +989,7 @@ export function buildLodgesStyles() {
 }
 .lfhlc-terrain-grid-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 2px 8px rgba(230, 43, 30, 0.12);
+  box-shadow: 0 2px 8px rgba(218, 41, 28, 0.12);
 }
 .lfhlc-terrain-grid-img { width: 100%; height: auto; object-fit: contain; display: block; background: ${LFH_COLORS.infoBox}; }
 .lfhlc-terrain-grid-label {
@@ -1296,21 +1296,21 @@ export function buildLodgesStyles() {
 }
 .lfhlc-collapse-toggle:hover { background: ${LFH_COLORS.selectedTint}; }
 .lfhlc-collapse-toggle:hover .lfhlc-toggle-arrow {
-  background: ${LFH_COLORS.primaryRed}; color: #fff;
+  background: ${LFH_COLORS.textPrimary}; color: #fff;
 }
 
 .lfhlc-comparison-toggle {
   cursor: pointer; display: flex; align-items: center; gap: 8px;
   padding: 12px 14px; margin: 0 -12px 10px;
-  background: #fff; border: 2px solid ${LFH_COLORS.primaryRed};
+  background: #fff; border: 2px solid ${LFH_COLORS.textPrimary};
   border-radius: 8px; transition: all 0.2s;
-  font-size: 13px; font-weight: 700; color: ${LFH_COLORS.primaryRed};
+  font-size: 13px; font-weight: 700; color: ${LFH_COLORS.textPrimary};
 }
 .lfhlc-comparison-toggle:hover {
   background: ${LFH_COLORS.selectedTint};
 }
 .lfhlc-comparison-toggle:hover .lfhlc-toggle-arrow {
-  background: ${LFH_COLORS.primaryRed}; color: #fff;
+  background: ${LFH_COLORS.textPrimary}; color: #fff;
 }
 .lfhlc-comparison-collapsed { display: none !important; }
 .lfhlc-comparison-expanded { display: block !important; }

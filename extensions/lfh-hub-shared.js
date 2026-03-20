@@ -149,7 +149,7 @@ export function lodgeName(id) {
  */
 export function lodgeBadgeColor(lodges) {
   if (lodges.includes('both')) return '#8B6914';
-  if (lodges.includes('ripley') && lodges.includes('bell2')) return '#e62b1e';
+  if (lodges.includes('ripley') && lodges.includes('bell2')) return '#DA291C';
   if (lodges.includes('ripley')) return '#2E7D32';
   return '#1565C0';
 }

@@ -24,8 +24,6 @@
 
 // Import shared constants from tour explorer
 import { LFH_COLORS, LFH_ASSETS } from './lfh-tours-data.js';
-import { openHubModal } from './lfh-hub.js';
-
 // Re-export for widget use
 export { LFH_COLORS, LFH_ASSETS };
 
@@ -390,7 +388,7 @@ function buildModalStyles() {
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   width: 40px; height: 40px;
-  background: rgba(230, 43, 30, 0.9);
+  background: rgba(218, 41, 28, 0.9);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -619,7 +617,7 @@ function buildModalStyles() {
 }
 .lfhbss-resource-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 2px 8px rgba(230, 43, 30, 0.1);
+  box-shadow: 0 2px 8px rgba(218, 41, 28, 0.1);
 }
 .lfhbss-resource-icon {
   flex-shrink: 0;
@@ -1002,19 +1000,17 @@ export function openBrowserSelfServiceModal(initialTab = 'videos') {
         actionTaken = true;
 
         if (handler === 'open_tours') {
+          closeModal();
           interactWithAgent('ext_user_action', {
             action: 'ss_browse_tours',
             source: 'browser_self_service'
           });
-          closeModal();
-          setTimeout(() => openHubModal({ tab: 'tours' }), 350);
         } else if (handler === 'open_lodges') {
+          closeModal();
           interactWithAgent('ext_user_action', {
             action: 'ss_compare_lodges',
             source: 'browser_self_service'
           });
-          closeModal();
-          setTimeout(() => openHubModal({ tab: 'lodges' }), 350);
         }
       });
     });

@@ -1290,7 +1290,7 @@ function buildModalStyles() {
 }
 .lfhlc-overview-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 6px 20px rgba(230, 43, 30, 0.1);
+  box-shadow: 0 6px 20px rgba(218, 41, 28, 0.1);
   transform: translateY(-2px);
 }
 
@@ -1344,12 +1344,12 @@ function buildModalStyles() {
 .lfhlc-comparison-header {
   display: grid; grid-template-columns: 160px 1fr 1fr;
   background: #fff;
-  border-bottom: 2px solid ${LFH_COLORS.primaryRed};
+  border-bottom: 2px solid ${LFH_COLORS.textPrimary};
 }
 .lfhlc-comparison-header .lfhlc-comp-cell {
   font-weight: 700; font-size: 12px; text-transform: uppercase;
   letter-spacing: 0.3px;
-  color: ${LFH_COLORS.primaryRed};
+  color: ${LFH_COLORS.textPrimary};
 }
 
 .lfhlc-comparison-row {
