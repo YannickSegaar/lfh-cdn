@@ -120,7 +120,7 @@ export const LastFrontierWelcomeGridV2 = {
       .lfh-grid-card:hover {
         transform: scale(1.02);
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        border-color: #E62B1E;
+        border-color: #DA291C;
       }
       .lfh-grid-card:active {
         transform: scale(0.98);
@@ -192,7 +192,7 @@ export const LastFrontierWelcomeGridV2 = {
         justify-content: center;
         gap: 5px;
         height: 32px;
-        background: #E62B1E;
+        background: #DA291C;
         color: #fff;
         font-size: 12px;
         font-weight: 600;

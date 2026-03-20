@@ -141,7 +141,7 @@ export const FeedbackExtension10 = {
           font-family: 'Open Sans', sans-serif !important;
           resize: vertical;
         }
-        .romaix-feedback__comment-input:focus { outline: none; border-color: #CC3333; }
+        .romaix-feedback__comment-input:focus { outline: none; border-color: #DA291C; }
 
         .romaix-feedback__status-bar {
           display: flex;
@@ -167,7 +167,7 @@ export const FeedbackExtension10 = {
         .romaix-feedback__dot {
           width: 4px;
           height: 4px;
-          background: #CC3333;
+          background: #DA291C;
           border-radius: 50%;
           opacity: 0.3;
           animation: romaix-pulse 1.4s ease-in-out infinite;
@@ -193,7 +193,7 @@ export const FeedbackExtension10 = {
           font-family: 'Open Sans', sans-serif !important;
           transition: background 0.2s;
         }
-        .romaix-feedback__comment-btn--submit { background: #CC3333; color: white; }
+        .romaix-feedback__comment-btn--submit { background: #DA291C; color: white; }
         .romaix-feedback__comment-btn--submit:hover { background: #B32929; }
 
         /* Thank you message */

@@ -474,7 +474,7 @@ export const LastFrontierBrowserSelfService_v4_Unified = {
   transform: translate(-50%, -50%) scale(1.05);
   background: ${LFH_COLORS.primaryRed};
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 4px 12px rgba(230, 43, 30, 0.5);
+  box-shadow: 0 4px 12px rgba(218, 41, 28, 0.5);
 }
 
 .lfh-ss-v4-play-icon::after {
