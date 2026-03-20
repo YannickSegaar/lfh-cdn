@@ -1302,7 +1302,7 @@ export function buildLodgesStyles() {
 .lfhlc-comparison-toggle {
   cursor: pointer; display: flex; align-items: center; gap: 8px;
   padding: 12px 14px; margin: 0 -12px 10px;
-  background: #fff; border: 2px solid ${LFH_COLORS.textPrimary};
+  background: #fff; border: 1.5px solid ${LFH_COLORS.border};
   border-radius: 8px; transition: all 0.2s;
   font-size: 13px; font-weight: 700; color: ${LFH_COLORS.textPrimary};
 }
