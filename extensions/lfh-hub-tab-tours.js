@@ -913,7 +913,7 @@ export function buildToursStyles() {
 }
 .lfhte-tour-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 4px 16px rgba(230, 43, 30, 0.1);
+  box-shadow: 0 4px 16px rgba(218, 41, 28, 0.1);
 }
 .lfhte-card-image {
   height: 160px; background-size: cover;
@@ -1184,7 +1184,7 @@ export function buildToursStyles() {
   text-align: left; vertical-align: top; color: ${LFH_COLORS.textPrimary};
 }
 .lfhte-compare-th { background: ${LFH_COLORS.infoBox}; min-width: 160px; }
-.lfhte-compare-tour-name { font-size: 14px; font-weight: 700; color: ${LFH_COLORS.primaryRed}; }
+.lfhte-compare-tour-name { font-size: 14px; font-weight: 700; color: ${LFH_COLORS.textPrimary}; }
 .lfhte-compare-tour-sub { font-size: 11px; color: ${LFH_COLORS.textSecondary}; margin-top: 2px; }
 .lfhte-compare-label { font-weight: 600; background: ${LFH_COLORS.infoBox}; white-space: nowrap; }
 .lfhte-compare-actions {
@@ -1213,7 +1213,7 @@ export function buildToursStyles() {
 }
 .lfhte-compare-card-row:last-child { border-bottom: none; }
 .lfhte-compare-card-tour {
-  color: ${LFH_COLORS.primaryRed}; font-weight: 600; font-size: 12px;
+  color: ${LFH_COLORS.textPrimary}; font-weight: 700; font-size: 12px;
 }
 
 /* Slide Panel */

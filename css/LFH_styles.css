@@ -20,7 +20,7 @@
    ========================================================================== */
 
 .vfrc-header {
-  background-color: #cc3333 !important;
+  background-color: #DA291C !important;
   border-bottom: none !important;
   position: relative !important;
   overflow: visible !important;
@@ -28,7 +28,7 @@
 }
 
 .vfrc-header--container-inner {
-  background-color: #cc3333 !important;
+  background-color: #DA291C !important;
 }
 
 .vfrc-header--title {
@@ -122,7 +122,7 @@
 }
 
 .vfrc-assistant-info--avatar-container {
-  border: 3px solid #cc3333 !important;
+  border: 3px solid #DA291C !important;
   border-radius: 50% !important;
 }
 
@@ -164,7 +164,7 @@
 
 /* User messages - Last Frontier Red */
 .vfrc-user-response .vfrc-message {
-  background-color: #cc3333 !important;
+  background-color: #DA291C !important;
   color: #FFFFFF !important;
   font-weight: normal !important;
   font-size: 14px !important;
@@ -179,7 +179,7 @@
 /* Buttons: No overrides — VoiceFlow project-level outline/ghost style applies */
 
 .vfrc-system-response--action {
-  color: #cc3333 !important;
+  color: #DA291C !important;
   font-weight: 500 !important;
   font-size: 14px !important;
 }
@@ -205,7 +205,7 @@
    ========================================================================== */
 
 .vfrc-avatar {
-  border: 2px solid #cc3333 !important;
+  border: 2px solid #DA291C !important;
   border-radius: 50% !important;
 }
 
@@ -214,7 +214,7 @@
    ========================================================================== */
 
 .vfrc-launcher {
-  background-color: #cc3333 !important;
+  background-color: #DA291C !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   border-radius: 50px !important;
 }
@@ -228,7 +228,7 @@
 }
 
 .vfrc-launcher__container {
-  background-color: #cc3333 !important;
+  background-color: #DA291C !important;
   border-radius: 50px !important;
 }
 
@@ -247,18 +247,18 @@
 }
 
 .vfrc-proactive__card {
-  background-color: #e62b1e !important;
+  background-color: #DA291C !important;
   color: #FFFFFF !important;
   font-weight: 600 !important;
   font-size: 13px !important;
   border-radius: 20px !important;
   padding: 8px 16px !important;
-  box-shadow: 0 2px 8px rgba(230, 43, 30, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(218, 41, 28, 0.3) !important;
 }
 
 .vfrc-proactive__close-button {
   color: #FFFFFF !important;
-  background-color: rgba(230, 43, 30, 0.8) !important;
+  background-color: rgba(218, 41, 28, 0.8) !important;
   border-radius: 50% !important;
 }
 
@@ -341,6 +341,6 @@
 }
 
 .vfrc-privacy__primary-button {
-  background-color: #cc3333 !important;
+  background-color: #DA291C !important;
   color: #FFFFFF !important;
 }

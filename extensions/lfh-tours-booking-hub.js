@@ -281,7 +281,7 @@ function buildBookingFormStyles() {
 }
 .lfhte-bf-input:focus, .lfhte-bf-select:focus, .lfhte-bf-textarea:focus {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 0 0 2px rgba(230, 43, 30, 0.08);
+  box-shadow: 0 0 0 2px rgba(218, 41, 28, 0.08);
 }
 .lfhte-bf-input::placeholder, .lfhte-bf-textarea::placeholder { color: #aaa; }
 .lfhte-bf-input.lfhte-bf-error, .lfhte-bf-select.lfhte-bf-error {
@@ -489,7 +489,7 @@ function buildBookingFormStyles() {
 
 /* Mobile */
 @media (max-width: 500px) {
-  .lfhte-bf-row { flex-direction: column; gap: 0; }
+  .lfhte-bf-row { flex-direction: column; gap: 12px; }
   .lfhte-bf-request-types { flex-direction: column; }
 
   .lfhte-bf-tour-card { flex-direction: column; text-align: center; }
@@ -561,7 +561,10 @@ export function renderBookingForm(container, options = {}) {
     if (id === 'both') return 'Both Lodges';
     return id;
   }
-  const lodgesDisplay = tour.lodges.map(lodgeName).join(' & ');
+  const isSafari = tour.id.startsWith('safari');
+  const lodgesDisplay = isSafari
+    ? 'Both Lodges'
+    : tour.lodges.map(lodgeName).join(' or ');
 
   // --- Build HTML ---
   const styleEl = document.createElement('style');
@@ -713,16 +716,30 @@ export function renderBookingForm(container, options = {}) {
       const dateCheckboxes = tourDates.map(d =>
         `<label class="lfhte-bf-date-item"><input type="checkbox" value="${d.value}"> ${d.label}</label>`
       ).join('');
+      const lodgeFieldHTML = !isSafari ? `
+        <div class="lfhte-bf-field">
+          <label>Preferred Lodge <span class="lfhte-bf-req">*</span></label>
+          <select id="lfhte-bf-lodge" class="lfhte-bf-select" required>
+            <option value="">Select a lodge</option>
+            <option value="bell2">Bell 2 Lodge</option>
+            <option value="ripley">Ripley Creek</option>
+            <option value="unsure">Unsure</option>
+          </select>
+          <div class="lfhte-bf-error-msg" id="lfhte-bf-lodge-error">Please select a lodge preference</div>
+        </div>
+      ` : '';
       dateFieldHTML = `
         <div class="lfhte-bf-field">
-          <label>Preferred Date(s)</label>
+          <label>Preferred Date(s) <span class="lfhte-bf-req">*</span></label>
           <div class="lfhte-bf-date-multi" id="lfhte-bf-date-multi">
-            <div class="lfhte-bf-date-btn" id="lfhte-bf-date-btn">Select dates (optional)</div>
+            <div class="lfhte-bf-date-btn" id="lfhte-bf-date-btn">Select preferred dates</div>
             <div class="lfhte-bf-date-dropdown" id="lfhte-bf-date-dropdown" style="display:none;">
               ${dateCheckboxes}
             </div>
           </div>
+          <div class="lfhte-bf-error-msg" id="lfhte-bf-dates-error">Please select at least one preferred date</div>
         </div>
+        ${lodgeFieldHTML}
       `;
     } else {
       dateFieldHTML = `
@@ -1016,13 +1033,27 @@ export function renderBookingForm(container, options = {}) {
         cb.addEventListener('change', () => {
           const selected = Array.from(formWrap.querySelectorAll('#lfhte-bf-date-dropdown input:checked'));
           dateBtn.textContent = selected.length === 0
-            ? 'Select dates (optional)'
+            ? 'Select preferred dates'
             : selected.map(c => c.parentElement.textContent.trim()).join(', ');
+          const dErr = formWrap.querySelector('#lfhte-bf-dates-error');
+          if (selected.length > 0 && dErr) dErr.classList.remove('visible');
         });
       });
       document.addEventListener('click', (e) => {
         if (!formWrap.querySelector('#lfhte-bf-date-multi')?.contains(e.target)) {
           dateDropdown.style.display = 'none';
+        }
+      });
+    }
+
+    // Lodge dropdown clear error on change
+    const lodgeEl = formWrap.querySelector('#lfhte-bf-lodge');
+    if (lodgeEl) {
+      lodgeEl.addEventListener('change', () => {
+        const lErr = formWrap.querySelector('#lfhte-bf-lodge-error');
+        if (lodgeEl.value) {
+          if (lErr) lErr.classList.remove('visible');
+          lodgeEl.classList.remove('lfhte-bf-error');
         }
       });
     }
@@ -1060,6 +1091,28 @@ export function renderBookingForm(container, options = {}) {
       e.preventDefault();
 
       let allValid = true;
+
+      // Dates mandatory
+      const dateChecked = formWrap.querySelectorAll('#lfhte-bf-date-dropdown input:checked');
+      const datesError = formWrap.querySelector('#lfhte-bf-dates-error');
+      if (formWrap.querySelector('#lfhte-bf-date-dropdown') && dateChecked.length === 0) {
+        if (datesError) datesError.classList.add('visible');
+        allValid = false;
+      } else {
+        if (datesError) datesError.classList.remove('visible');
+      }
+
+      // Lodge mandatory (non-Safari only)
+      const lodgeSelect = formWrap.querySelector('#lfhte-bf-lodge');
+      const lodgeError = formWrap.querySelector('#lfhte-bf-lodge-error');
+      if (lodgeSelect && !lodgeSelect.value) {
+        if (lodgeError) lodgeError.classList.add('visible');
+        lodgeSelect.classList.add('lfhte-bf-error');
+        allValid = false;
+      } else {
+        if (lodgeError) lodgeError.classList.remove('visible');
+        if (lodgeSelect) lodgeSelect.classList.remove('lfhte-bf-error');
+      }
 
       // Request type
       if (!selectedRequestType) {
@@ -1107,6 +1160,7 @@ export function renderBookingForm(container, options = {}) {
           tourName: tour.name,
           tourDuration: tour.duration,
           tourLodges: lodgesDisplay,
+          preferredLodge: formWrap.querySelector('#lfhte-bf-lodge')?.value || '',
           requestedDates: selectedTourDates,
           groupSize,
           requestType: selectedRequestType,

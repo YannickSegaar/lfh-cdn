@@ -315,13 +315,13 @@ export const LFH_TOURS = [
 // ============================================================================
 
 export const LFH_COLORS = {
-  primaryRed: '#e62b1e',
+  primaryRed: '#DA291C',
   textPrimary: '#42494e',
   textSecondary: '#666666',
   background: '#FFFFFF',
   infoBox: '#F5F5F5',
   border: '#E5E8EB',
-  selectedTint: 'rgba(230, 43, 30, 0.04)',
+  selectedTint: 'rgba(218, 41, 28, 0.04)',
 };
 
 export const LFH_ASSETS = {
@@ -1229,7 +1229,7 @@ function buildModalStyles() {
 }
 .lfhte-tour-card:hover {
   border-color: ${LFH_COLORS.primaryRed};
-  box-shadow: 0 4px 16px rgba(230, 43, 30, 0.1);
+  box-shadow: 0 4px 16px rgba(218, 41, 28, 0.1);
 }
 .lfhte-card-image {
   height: 160px; background-size: cover;
