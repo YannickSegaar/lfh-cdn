@@ -1,6 +1,6 @@
 // loader.js — Last Frontier Heliskiing AI Agent Loader
-// Version: 1.1.0
-// Usage: <script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"></script>
+// Version: 1.2.0
+// Usage: <script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.2.0"></script>
 (async function() {
   'use strict';
 
@@ -279,7 +279,7 @@
   var proactiveShown = false;
   try { proactiveShown = sessionStorage.getItem('lfh_proactive_shown') === '1'; } catch (e) {}
 
-  if (!proactiveShown) {
+  if (!proactiveShown && deviceType !== 'mobile') {
     // Track widget open state via VoiceFlow postMessage events
     var widgetIsOpen = false;
     window.addEventListener('message', function(event) {
