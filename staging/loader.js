@@ -4,6 +4,9 @@
 (async function() {
   'use strict';
 
+  // Don't load widget inside iframes (e.g. hub modal weather tab)
+  try { if (window.self !== window.top) return; } catch (e) { return; }
+
   // Prevent double initialization on cold-cache loads
   if (window.__lfh_loading) return;
   window.__lfh_loading = true;
