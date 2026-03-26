@@ -1,8 +1,11 @@
 // loader.js — Last Frontier Heliskiing AI Agent Loader
-// Version: 1.1.0
-// Usage: <script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.1.0"></script>
+// Version: 1.2.0
+// Usage: <script type="module" src="https://yannicksegaar.github.io/lfh-cdn/loader.js?v=1.2.0"></script>
 (async function() {
   'use strict';
+
+  // Don't load widget inside iframes (e.g. hub modal weather tab)
+  try { if (window.self !== window.top) return; } catch (e) { return; }
 
   // Prevent double initialization on cold-cache loads
   if (window.__lfh_loading) return;
@@ -279,7 +282,7 @@
   var proactiveShown = false;
   try { proactiveShown = sessionStorage.getItem('lfh_proactive_shown') === '1'; } catch (e) {}
 
-  if (!proactiveShown) {
+  if (!proactiveShown && deviceType !== 'mobile') {
     // Track widget open state via VoiceFlow postMessage events
     var widgetIsOpen = false;
     window.addEventListener('message', function(event) {
@@ -325,11 +328,13 @@
   document.head.appendChild(fontBoost);
 
   // ============================================
-  // 7. POST-LOAD: Notification sound
+  // 7. POST-LOAD: Notification sound (desktop only)
   // ============================================
-  var soundScript = document.createElement('script');
-  soundScript.src = CDN + '/styles/notification-sound.js';
-  document.head.appendChild(soundScript);
+  if (deviceType !== 'mobile') {
+    var soundScript = document.createElement('script');
+    soundScript.src = CDN + '/styles/notification-sound.js';
+    document.head.appendChild(soundScript);
+  }
 
   // ============================================
   // 8. CROSS-PAGE AWARENESS
