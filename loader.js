@@ -328,11 +328,13 @@
   document.head.appendChild(fontBoost);
 
   // ============================================
-  // 7. POST-LOAD: Notification sound
+  // 7. POST-LOAD: Notification sound (desktop only)
   // ============================================
-  var soundScript = document.createElement('script');
-  soundScript.src = CDN + '/styles/notification-sound.js';
-  document.head.appendChild(soundScript);
+  if (deviceType !== 'mobile') {
+    var soundScript = document.createElement('script');
+    soundScript.src = CDN + '/styles/notification-sound.js';
+    document.head.appendChild(soundScript);
+  }
 
   // ============================================
   // 8. CROSS-PAGE AWARENESS
