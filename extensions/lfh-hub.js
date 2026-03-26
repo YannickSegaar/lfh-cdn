@@ -174,6 +174,13 @@ export function openHubModal(config = {}) {
   backdrop.appendChild(modal);
   document.body.appendChild(backdrop);
 
+  // Minimize chat widget while hub modal is open
+  try {
+    if (typeof window.voiceflow?.chat?.close === 'function') {
+      window.voiceflow.chat.close();
+    }
+  } catch (e) { /* silent */ }
+
   // Lock body scroll while modal is open (prevents iOS horizontal drift)
   const origBodyOverflow = document.body.style.overflow;
   const origHtmlOverflow = document.documentElement.style.overflow;
@@ -353,6 +360,13 @@ export function openHubModal(config = {}) {
         actionTaken: false,
       });
     }
+
+    // Restore chat widget when hub modal closes
+    try {
+      if (typeof window.voiceflow?.chat?.open === 'function') {
+        window.voiceflow.chat.open();
+      }
+    } catch (e) { /* silent */ }
 
     abortController.abort();
     document.body.style.overflow = origBodyOverflow;
