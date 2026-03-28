@@ -252,18 +252,15 @@
   }
 
   // ============================================
-  // 4. LOAD VOICEFLOW CHAT
+  // 4. LOAD VOICEFLOW CHAT (deferred launch)
   // ============================================
+  // Session/transcript is NOT created here — only the widget UI loads.
+  // The launch event is deferred until the user opens the widget (see section 4b).
   await window.voiceflow.chat.load({
     verify: { projectID: VF_PROJECT_ID },
     url: 'https://general-runtime.voiceflow.com',
     versionID: VF_VERSION,
-    launch: {
-      event: {
-        type: 'launch',
-        payload: sessionData
-      }
-    },
+    // NO launch event — deferred to voiceflow:open to avoid ghost transcripts
     assistant: {
       stylesheet: CDN + '/css/LFH_styles.css',
       description: "Smart assistant — always good to double-check details",
@@ -277,22 +274,46 @@
   window.__lfh_load_time = Date.now();
 
   // ============================================
+  // 4b. DEFERRED LAUNCH: Send launch event on first widget open
+  // ============================================
+  // Prevents ghost transcripts for users who never open the chat.
+  // Browsing history collected before open is included in the launch payload.
+  var launchSent = false;
+  try { launchSent = sessionStorage.getItem('lfh_launch_sent') === '1'; } catch (e) {}
+
+  var widgetIsOpen = false;
+  window.addEventListener('message', function(event) {
+    try {
+      var data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      if (data.type === 'voiceflow:open') {
+        widgetIsOpen = true;
+        if (!launchSent) {
+          launchSent = true;
+          try { sessionStorage.setItem('lfh_launch_sent', '1'); } catch (e) {}
+          // Include pre-open browsing history in launch payload
+          try {
+            var pagesVisited = JSON.parse(sessionStorage.getItem('lfh_pages_visited') || '[]');
+            if (pagesVisited.length > 0) {
+              sessionData.pages_visited_before_open = pagesVisited;
+            }
+          } catch (e) {}
+          window.voiceflow.chat.interact({
+            type: 'launch',
+            payload: sessionData
+          });
+        }
+      }
+      if (data.type === 'voiceflow:close') widgetIsOpen = false;
+    } catch (e) {}
+  });
+
+  // ============================================
   // 5. POST-LOAD: Proactive messages (once per session)
   // ============================================
   var proactiveShown = false;
   try { proactiveShown = sessionStorage.getItem('lfh_proactive_shown') === '1'; } catch (e) {}
 
   if (!proactiveShown && deviceType !== 'mobile') {
-    // Track widget open state via VoiceFlow postMessage events
-    var widgetIsOpen = false;
-    window.addEventListener('message', function(event) {
-      try {
-        var data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-        if (data.type === 'voiceflow:open') widgetIsOpen = true;
-        if (data.type === 'voiceflow:close') widgetIsOpen = false;
-      } catch (e) {}
-    });
-
     setTimeout(function() {
       if (widgetIsOpen) return;
       window.voiceflow.chat.proactive.clear();
@@ -344,23 +365,32 @@
   try { sessionStorage.setItem('lfh_current_page', pageType); } catch (e) {}
 
   if (previousPage && previousPage !== pageType) {
-    // User navigated to a different page — silently update VoiceFlow variables
-    setTimeout(function() {
-      try {
-        window.voiceflow.chat.interact({
-          type: 'event',
-          payload: {
-            event: 'page_context_update',
-            page_type: pageType,
-            page_topic: '',
-            page_path: window.location.pathname,
-            page_url: window.location.href
-          }
-        });
-      } catch (e) {
-        console.warn('[LFH] Page context update failed:', e);
-      }
-    }, 2000);
+    // Always track pages locally (available in launch payload when widget opens)
+    try {
+      var visited = JSON.parse(sessionStorage.getItem('lfh_pages_visited') || '[]');
+      visited.push({ page: pageType, path: window.location.pathname, time: Date.now() });
+      sessionStorage.setItem('lfh_pages_visited', JSON.stringify(visited));
+    } catch (e) {}
+
+    // Only send to VoiceFlow if the session has been launched (user opened the chat)
+    if (launchSent) {
+      setTimeout(function() {
+        try {
+          window.voiceflow.chat.interact({
+            type: 'event',
+            payload: {
+              event: 'page_context_update',
+              page_type: pageType,
+              page_topic: '',
+              page_path: window.location.pathname,
+              page_url: window.location.href
+            }
+          });
+        } catch (e) {
+          console.warn('[LFH] Page context update failed:', e);
+        }
+      }, 2000);
+    }
   }
 
 })();
