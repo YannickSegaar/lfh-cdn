@@ -254,15 +254,26 @@
   }
 
   // ============================================
-  // 4. LOAD VOICEFLOW CHAT (deferred launch)
+  // 4. LOAD VOICEFLOW CHAT
   // ============================================
-  // Session/transcript is NOT created here — only the widget UI loads.
-  // The launch event is deferred until the user opens the widget (see section 4b).
+  // Include pre-open browsing history in session payload
+  try {
+    var pagesVisited = JSON.parse(sessionStorage.getItem('lfh_pages_visited') || '[]');
+    if (pagesVisited.length > 0) {
+      sessionData.pages_visited_before_open = pagesVisited;
+    }
+  } catch (e) {}
+
   await window.voiceflow.chat.load({
     verify: { projectID: VF_PROJECT_ID },
     url: 'https://general-runtime.voiceflow.com',
     versionID: VF_VERSION,
-    // NO launch event — deferred to voiceflow:open to avoid ghost transcripts
+    launch: {
+      event: {
+        type: 'launch',
+        payload: sessionData
+      }
+    },
     assistant: {
       stylesheet: CDN + '/css/LFH_styles.css',
       description: "Smart assistant — always good to double-check details",
@@ -275,11 +286,7 @@
 
   window.__lfh_load_time = Date.now();
 
-  // ============================================
-  // 4b. DEFERRED LAUNCH: Send launch event on first widget open
-  // ============================================
-  // Prevents ghost transcripts for users who never open the chat.
-  // Browsing history collected before open is included in the launch payload.
+  // Track widget open state and launch status for page_context_update guard
   var launchSent = false;
   try { launchSent = sessionStorage.getItem('lfh_launch_sent') === '1'; } catch (e) {}
 
@@ -292,17 +299,6 @@
         if (!launchSent) {
           launchSent = true;
           try { sessionStorage.setItem('lfh_launch_sent', '1'); } catch (e) {}
-          // Include pre-open browsing history in launch payload
-          try {
-            var pagesVisited = JSON.parse(sessionStorage.getItem('lfh_pages_visited') || '[]');
-            if (pagesVisited.length > 0) {
-              sessionData.pages_visited_before_open = pagesVisited;
-            }
-          } catch (e) {}
-          window.voiceflow.chat.interact({
-            type: 'launch',
-            payload: sessionData
-          });
         }
       }
       if (data.type === 'voiceflow:close') widgetIsOpen = false;
