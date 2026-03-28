@@ -23,7 +23,9 @@
     CDN = scriptUrl.origin + scriptUrl.pathname.replace(/\/loader\.js$/, '');
     useFallback = scriptUrl.searchParams.get('fallback') === 'true';
   } catch (e) {}
-  var VF_PROJECT_ID = '69b13dffb59c7feeb0e8e2dd';
+  // STAGING: Using duplicated test agent with page_context_update handler
+  // Production agent: 69b13dffb59c7feeb0e8e2dd
+  var VF_PROJECT_ID = '69c7d5f363291db5effd639c';
   var VF_VERSION = 'production';
 
   // ============================================
