@@ -363,34 +363,13 @@
   try { sessionStorage.setItem('lfh_current_page', pageType); } catch (e) {}
 
   if (previousPage && previousPage !== pageType) {
-    // Always track pages locally (available in launch payload when widget opens)
+    // Track pages locally — included in launch payload via pages_visited_before_open.
+    // NOT sent to VoiceFlow as an event (consumes turns from the AI memory budget).
     try {
       var visited = JSON.parse(sessionStorage.getItem('lfh_pages_visited') || '[]');
       visited.push({ page: pageType, path: window.location.pathname, time: Date.now() });
       sessionStorage.setItem('lfh_pages_visited', JSON.stringify(visited));
     } catch (e) {}
-
-    // Only send to VoiceFlow if the session has been launched (user opened the chat)
-    if (launchSent) {
-      setTimeout(function() {
-        try {
-          window.voiceflow.chat.interact({
-            type: 'event',
-            payload: {
-              event: { name: 'page_context_update' },
-              data: {
-                page_type: pageType,
-                page_topic: '',
-                page_path: window.location.pathname,
-                page_url: window.location.href
-              }
-            }
-          });
-        } catch (e) {
-          console.warn('[LFH] Page context update failed:', e);
-        }
-      }, 2000);
-    }
   }
 
 })();
