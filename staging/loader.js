@@ -377,11 +377,13 @@
           window.voiceflow.chat.interact({
             type: 'event',
             payload: {
-              event: 'page_context_update',
-              page_type: pageType,
-              page_topic: '',
-              page_path: window.location.pathname,
-              page_url: window.location.href
+              event: { name: 'page_context_update' },
+              data: {
+                page_type: pageType,
+                page_topic: '',
+                page_path: window.location.pathname,
+                page_url: window.location.href
+              }
             }
           });
         } catch (e) {
