@@ -304,12 +304,30 @@
   });
 
   // ============================================
+  // 4b. POST-LOAD: Email deep link — ?chat=open[&q=...]
+  // Every chat CTA in the newsletter points here. Without this the reader
+  // lands on the homepage with the widget shut, which is where they quit.
+  // ============================================
+  var deepLinked = false;
+  try {
+    if (urlParams && urlParams.get('chat') === 'open') {
+      deepLinked = true;
+      window.voiceflow.chat.open();
+      var deepQuestion = (urlParams.get('q') || '').trim();
+      if (deepQuestion) {
+        // cap it: the param is attacker-reachable and goes straight to the agent
+        window.voiceflow.chat.interact({ type: 'text', payload: deepQuestion.slice(0, 300) });
+      }
+    }
+  } catch (e) {}
+
+  // ============================================
   // 5. POST-LOAD: Proactive messages (once per session)
   // ============================================
   var proactiveShown = false;
   try { proactiveShown = sessionStorage.getItem('lfh_proactive_shown') === '1'; } catch (e) {}
 
-  if (!proactiveShown && deviceType !== 'mobile') {
+  if (!proactiveShown && !deepLinked && deviceType !== 'mobile') {
     setTimeout(function() {
       if (widgetIsOpen) return;
       window.voiceflow.chat.proactive.clear();
