@@ -7,6 +7,18 @@ Format: [Semantic Versioning](https://semver.org/)
 - **MINOR:** New features (new extension, new capability)
 - **PATCH:** Bug fixes, styling tweaks, content updates
 
+## [1.2.0] - 2026-09-11
+
+### Added
+- **Email deep link** — `?chat=open` opens the widget on load; `?chat=open&q=<question>`
+  also sends the question, so a newsletter CTA lands the reader mid-conversation instead
+  of on a closed widget. Question capped at 300 chars (the param is attacker-reachable).
+  Proactive messages are suppressed on a deep-linked visit.
+- `images/lfh-logo-white.png` — transparent white wordmark, 540x115, for email mastheads.
+  The site's own `dist/images/logo-white.png` has no alpha and renders a grey box on black.
+- `images/ask-me-heli.png` — ASK ME helicopter icon, 144x92 RGBA, for email chat bubbles
+  (Outlook desktop will not render the SVG the widget uses).
+
 ## [1.1.0] - 2026-03-10
 
 ### Fixed
